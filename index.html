@@ -86,10 +86,10 @@
 				display: box;
 				
 				/* Box Orient */
-				-webkit-box-orient: vertical;
-				-moz-box-orient: vertical;
-				-ms-box-orient: vertical;
-				box-orient: vertical;
+				-webkit-box-orient: horizontal;
+				-moz-box-orient: horizontal;
+				-ms-box-orient: horizontal;
+				box-orient: horizontal;
 				
 				/* Box Align */
 				-webkit-box-align: center;
@@ -104,10 +104,10 @@
 				box-pack: start;
 				
 				/* Box Direction */
-/*				-webkit-box-direction: reverse;*/
-/*				-moz-box-direction: reverse;*/
-/*				-ms-box-direction: reverse;*/
-/*				box-direction: reverse;*/
+				-webkit-box-direction: reverse;
+				-moz-box-direction: reverse;
+				-ms-box-direction: reverse;
+				box-direction: reverse;
 			}
 			
 			#box-1, #box-2 {
@@ -176,10 +176,10 @@
 		<script type="text/javascript">
 			Flexie.box({
 				"target" : document.getElementById("box-wrap"),
-				"box-orient" : "vertical",
+				"box-orient" : "horizontal",
 				"box-align" : "center",
-				"box-direction" : "normal",
-				"box-pack" : "end"
+				"box-direction" : "reverse",
+				"box-pack" : "start"
 				// "box-flex" : "0",
 				// "box-ordinal-group" : ,
 				// "box-flex-group" : ,
