@@ -96,17 +96,17 @@
 				-ms-box-orient: horizontal;
 				box-orient: horizontal;
 				
-				/* Box Pack */
-				-webkit-box-pack: justify;
-				-moz-box-pack: justify;
-				-ms-box-pack: justify;
-				box-pack: justify;
-				
 				/* Box Align */
 				-webkit-box-align: center;
 				-moz-box-align: center;
 				-ms-box-align: center;
 				box-align: center;
+				
+				/* Box Pack */
+				-webkit-box-pack: start;
+				-moz-box-pack: start;
+				-ms-box-pack: start;
+				box-pack: start;
 				
 				/* Box Direction */
 /*				-webkit-box-direction: reverse;*/
@@ -162,26 +162,27 @@
 		<script src="js/flexie.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			// $("#box-wrap").flexie({
-			// 	'box-orient' : 'horizontal',
-			// 	'box-align' : 'stretch',
-			// 	'box-direction' : 'normal',
-			// 	'box-pack' : 'start',
-			// 	'box-flex' : '0'
-			// 	// 'box-ordinal-group' : ,
-			// 	// 'box-flex-group' : ,
-			// 	// 'box-lines' : 
+			// 	"box-orient" : "horizontal",
+			// 	"box-align" : "stretch",
+			// 	"box-direction" : "normal",
+			// 	"box-pack" : "start",
+			// 	"box-flex" : "0"
+			// 	// "box-ordinal-group" : ,
+			// 	// "box-flex-group" : ,
+			// 	// "box-lines" : 
 			// });
-			
+		</script>
+		<script type="text/javascript">
 			Flexie.box({
-				'target' : document.getElementById("box-wrap"),
-				'box-orient' : 'horizontal',
-				'box-align' : 'stretch',
-				'box-direction' : 'normal',
-				'box-pack' : 'start',
-				'box-flex' : '0'
-				// 'box-ordinal-group' : ,
-				// 'box-flex-group' : ,
-				// 'box-lines' : 
+				"target" : document.getElementById("box-wrap"),
+				"box-orient" : "horizontal",
+				"box-align" : "center",
+				"box-direction" : "normal",
+				"box-pack" : "start"
+				// "box-flex" : "0",
+				// "box-ordinal-group" : ,
+				// "box-flex-group" : ,
+				// "box-lines" : 
 			});
 		</script>
 	</body>
