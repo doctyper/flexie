@@ -43,13 +43,10 @@ var Flexie = window.Flexie || (function() {
 			switch (orient) {
 				case "horizontal" :
 				case "inline-axis" :
-					
-					for (var i = 0, j = children.length; i < j; i++) {
-						var kid = children[i];
-						kid.style.cssFloat = "left";
-						kid.style.styleFloat = "left";
-					}
-
+				for (var i = 0, j = children.length; i < j; i++) {
+					var kid = children[i];
+					kid.style.cssText = "display: inline-block; zoom: 1; *display: inline;";
+				}
 				break;
 				
 				case "vertical" :
@@ -59,26 +56,30 @@ var Flexie = window.Flexie || (function() {
 		},
 		
 		applyBoxAlign : function(target, children, align) {
+			target.style.lineHeight = target.offsetHeight + "px";
+			
 			switch (align) {
 				case "stretch" :
-					
-					for (var i = 0, j = children.length; i < j; i++) {
-						var kid = children[i];
-						kid.style.height = target.offsetHeight + "px";
-					}
-
+				for (var i = 0, j = children.length; i < j; i++) {
+					var kid = children[i];
+					kid.style.height = target.offsetHeight + "px";
+				}
 				break;
 				
 				case "start" :
+				target.style.verticalAlign = "top";
 				break;
 				
 				case "end" :
+				target.style.verticalAlign = "bottom";
 				break;
 				
 				case "center":
+				target.style.verticalAlign = "middle";
 				break;
 				
 				case "baseline":
+				target.style.verticalAlign = "baseline";
 				break;
 			}
 		},
@@ -88,7 +89,27 @@ var Flexie = window.Flexie || (function() {
 		},
 		
 		applyBoxPack : function(target, children, pack) {
-			
+			// - start (default)
+			// - end
+			// - center
+			// - justify
+			switch (pack) {
+				case "start" :
+				target.style.textAlign = "left";
+				break;
+				
+				case "end" :
+				target.style.textAlign = "right";
+				break;
+				
+				case "center" :
+				target.style.textAlign = "center";
+				break;
+				
+				case "justify" :
+				target.style.textAlign = "justify";
+				break;
+			}
 		},
 		
 		flexBoxSupported : function() {
@@ -106,9 +127,15 @@ var Flexie = window.Flexie || (function() {
 			    direction = params["box-direction"] || "normal",
 			    pack = params["box-pack"] || "start";
 			
+			var node = nodes[0];
 			for (var i = 0, j = nodes.length; i < j; i++) {
-				if (nodes[i].nodeType === 1) {
-					children.push(nodes[i]);
+				if (nodes[i]) {
+					if (nodes[i].nodeType === 1) {
+						children.push(nodes[i]);
+					} else {
+						target.removeChild(nodes[i]);
+						i--;
+					}
 				}
 			}
 			
