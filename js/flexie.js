@@ -85,7 +85,16 @@ var Flexie = window.Flexie || (function() {
 		},
 		
 		applyBoxDirection : function(target, children, direction) {
-			
+			switch (direction) {
+				case "normal" :
+				break;
+				
+				case "reverse" :
+				for (var i = children.length - 1; i >= 0; i--) {
+					target.appendChild(children[i]);
+				}
+				break;
+			}
 		},
 		
 		applyBoxPack : function(target, children, pack) {
