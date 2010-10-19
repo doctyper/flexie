@@ -1,0 +1,30 @@
+/* Demo Styling. Pay no attention to the CSS behind the box */
+/* (See what I did there?) */
+
+#box-wrap, #box-wrap div {
+	margin: 0;
+	padding: 0;
+	font: normal 12px/12px Arial, sans-serif;
+}
+
+#box-wrap {
+	width: 600px;
+	height: 100px;
+	border: 1px solid black;
+}
+
+#box-wrap div {
+	padding: 10px;
+}
+
+#box-1 {
+	background: #fcc;
+}
+
+#box-2 {
+	background: #cfc;
+}
+
+#box-3 {
+	background: #ccf;
+}
