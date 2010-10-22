@@ -85,22 +85,22 @@ box-lines
 	box-orient: horizontal;
 	
 	/* Box Align */
-	-webkit-box-align: center;
-	-moz-box-align: center;
-	-ms-box-align: center;
-	box-align: center;
+	-webkit-box-align: end;
+	-moz-box-align: end;
+	-ms-box-align: end;
+	box-align: end;
 	
 	/* Box Pack */
-	-webkit-box-pack: start;
-	-moz-box-pack: start;
-	-ms-box-pack: start;
-	box-pack: start;
+	-webkit-box-pack: end;
+	-moz-box-pack: end;
+	-ms-box-pack: end;
+	box-pack: end;
 	
 	/* Box Direction */
-	-webkit-box-direction: reverse;
-	-moz-box-direction: reverse;
-	-ms-box-direction: reverse;
-	box-direction: reverse;
+	-webkit-box-direction: normal;
+	-moz-box-direction: normal;
+	-ms-box-direction: normal;
+	box-direction: normal;
 }
 
 #box-1, #box-2 {

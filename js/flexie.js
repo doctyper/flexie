@@ -337,7 +337,7 @@ var Flexie = window.Flexie || (function() {
 				case "inline-axis" :
 				for (var i = 0, j = children.length; i < j; i++) {
 					var kid = children[i];
-					kid.style.cssText = "display: inline-block; zoom: 1; *display: inline;";
+					kid.style.cssText = "float: left";
 				}
 				break;
 				
@@ -348,10 +348,19 @@ var Flexie = window.Flexie || (function() {
 		},
 		
 		applyBoxAlign : function(target, children, align) {
-			target.style.lineHeight = target.offsetHeight + "px";
+			var groupHeight = 0;
+			
+			for (var i = 0, j = children.length; i < j; i++) {
+				groupHeight += children[i].innerHeight || children[i].clientHeight;
+			}
+			
+			// target.style.lineHeight = target.offsetHeight + "px";
 			
 			switch (align) {
 				case "stretch" :
+				// target.style.verticalAlign = "top";
+				// target.style.lineHeight = 0;
+				
 				for (var i = 0, j = children.length; i < j; i++) {
 					var kid = children[i];
 					kid.style.height = target.offsetHeight + "px";
@@ -359,19 +368,21 @@ var Flexie = window.Flexie || (function() {
 				break;
 				
 				case "start" :
-				target.style.verticalAlign = "top";
+				// target.style.lineHeight = 0;
+				// target.style.verticalAlign = "top";
 				break;
 				
 				case "end" :
-				target.style.verticalAlign = "bottom";
+				// target.style.verticalAlign = "bottom";
+				children[0].style.marginTop = ((target.innerHeight || target.clientHeight) - groupHeight) + "px";
 				break;
 				
 				case "center":
-				target.style.verticalAlign = "middle";
+				// target.style.verticalAlign = "middle";
 				break;
 				
 				case "baseline":
-				target.style.verticalAlign = "baseline";
+				// target.style.verticalAlign = "baseline";
 				break;
 			}
 		},
@@ -383,13 +394,19 @@ var Flexie = window.Flexie || (function() {
 				
 				case "reverse" :
 				for (var i = children.length - 1; i >= 0; i--) {
-					target.appendChild(children[i]);
+					children[i].style.cssText = "float: right";
 				}
 				break;
 			}
 		},
 		
 		applyBoxPack : function(target, children, pack) {
+			var groupWidth = 0;
+			
+			for (var i = 0, j = children.length; i < j; i++) {
+				groupWidth += children[i].innerWidth || children[i].clientWidth;
+			}
+			
 			// - start (default)
 			// - end
 			// - center
@@ -400,7 +417,8 @@ var Flexie = window.Flexie || (function() {
 				break;
 				
 				case "end" :
-				target.style.textAlign = "right";
+				// target.style.textAlign = "right";
+				children[0].style.marginLeft = ((target.innerWidth || target.clientWidth) - groupWidth) + "px";
 				break;
 				
 				case "center" :
