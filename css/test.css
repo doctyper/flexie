@@ -79,10 +79,10 @@ box-lines
 	display: box;
 	
 	/* Box Orient */
-	-webkit-box-orient: horizontal;
-	-moz-box-orient: horizontal;
-	-ms-box-orient: horizontal;
-	box-orient: horizontal;
+	-webkit-box-orient: vertical;
+	-moz-box-orient: vertical;
+	-ms-box-orient: vertical;
+	box-orient: vertical;
 	
 	/* Box Align */
 	-webkit-box-align: start;
@@ -97,10 +97,10 @@ box-lines
 	box-pack: start;
 	
 	/* Box Direction */
-	-webkit-box-direction: reverse;
-	-moz-box-direction: reverse;
-	-ms-box-direction: reverse;
-	box-direction: reverse;
+	-webkit-box-direction: normal;
+	-moz-box-direction: normal;
+	-ms-box-direction: normal;
+	box-direction: normal;
 }
 
 #box-1, #box-2 {
