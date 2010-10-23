@@ -309,11 +309,11 @@ var Flexie = window.Flexie || (function() {
 					caller = lib(flex.selector);
 					
 					new $self.box({
-						"target" : caller[0] || caller,
-						"box-orient" : orient,
-						"box-align" : align,
-						"box-direction" : direction,
-						"box-pack" : pack
+						target : caller[0] || caller,
+						orient : orient,
+						align : align,
+						direction: direction,
+						pack : pack
 					});
 				}
 			}
@@ -321,6 +321,120 @@ var Flexie = window.Flexie || (function() {
 	};
 	
 	$self.utils = {
+		getComputedStyle : function(element, property) {
+			var PIXEL = /^\d+(px)?$/i;
+			var SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/;
+			
+			var calcPx = function(props, dir) {
+				var value;
+				dir = dir.replace(dir.charAt(0), dir.charAt(0).toUpperCase());
+
+				var globalProps = {
+					visibility : "hidden",
+					position : "absolute",
+					left : "-9999px",
+					top : "-9999px"
+				};
+
+				var dummy = element.cloneNode(true);
+
+				for (var i = 0, j = props.length; i < j; i++) {
+					dummy.style[props[i]] = "0";
+				}
+				for (var key in globalProps) {
+					dummy.style[key] = globalProps[key];
+				}
+
+				document.body.appendChild(dummy);
+				value = dummy["offset" + dir];
+				document.body.removeChild(dummy);
+
+				return value;
+			};
+			
+			var unAuto = function(prop) {
+				switch (prop) {
+					case "width" :
+					props = ["paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth"];
+					prop = calcPx(props, prop);
+					break;
+
+					case "height" :
+					props = ["paddingTop", "paddingBottom", "borderTopWidth", "borderBottomWidth"];
+					prop = calcPx(props, prop);
+					break;
+
+					default :
+					prop = style[prop];
+					break;
+				}
+
+				return prop;
+			};
+			
+			var getPixelValue = function(element, prop, name) {
+				if (PIXEL.test(prop)) {
+					return prop;
+				}
+				
+				// if property is auto, do some messy appending
+				if (prop === "auto") {
+					prop = unAuto(name);
+				} else {
+					var style = element.style.left,
+					    runtimeStyle = element.runtimeStyle.left;
+
+					element.runtimeStyle.left = element.currentStyle.left;
+					element.style.left = prop || 0;
+					prop = element.style.pixelLeft;
+					element.style.left = style;
+					element.runtimeStyle.left = runtimeStyle;
+				}
+				
+				return prop + "px";
+			};
+
+			if ("getComputedStyle" in window) {
+				return document.defaultView.getComputedStyle(element, null)[property];
+			} else {
+				property = this.toCamelCase(property);
+				
+				if (SIZES.test(property)) {
+					property = getPixelValue(element, element.currentStyle[property], property);
+				} else {
+					property = element.currentStyle[property];
+				}
+
+				/**
+				 * @returns property (or empty string if none)
+				*/
+				return property || "";
+			}
+		},
+		
+		toCamelCase : function(cssProp) {
+			var hyphen = /(-[a-z])/ig;
+			while (hyphen.exec(cssProp)) {
+				cssProp = cssProp.replace(RegExp.$1, RegExp.$1.substr(1).toUpperCase());
+			}
+			return cssProp;
+		},
+		
+		getParams : function(params) {
+			var defaults = {
+				orient : "horizontal",
+				align : "stretch",
+				direction : "normal",
+				pack : "start"
+			};
+			
+			for (var key in params) {
+				params[key] = params[key] || defaults[key];
+			}
+			
+			return params;
+		},
+		
 		clientWidth : function(element) {
 			return element.innerWidth || element.clientWidth;
 		},
@@ -470,11 +584,9 @@ var Flexie = window.Flexie || (function() {
 		boxModelRenderer : function(params) {
 			var target = params.target,
 			    nodes = target.childNodes,
-			    children = [],
-			    orient = params["box-orient"] || "horizontal",
-			    align = params["box-align"] || "stretch",
-			    direction = params["box-direction"] || "normal",
-			    pack = params["box-pack"] || "start";
+			    children = [];
+			
+			params = this.getParams(params);
 			
 			var node = nodes[0];
 			for (var i = 0, j = nodes.length; i < j; i++) {
