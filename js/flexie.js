@@ -321,6 +321,14 @@ var Flexie = window.Flexie || (function() {
 	};
 	
 	$self.utils = {
+		clientWidth : function(element) {
+			return element.innerWidth || element.clientWidth;
+		},
+		
+		clientHeight : function(element) {
+			return element.innerHeight || element.clientHeight;
+		},
+		
 		appendProperty : function(target, prop, value) {
 			var prefixes = $self.vars.prefixes,
 			    cssText = [];
