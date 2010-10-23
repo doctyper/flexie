@@ -12,10 +12,10 @@ Parent properties:
 + box-orient
 	- How should the box's children be aligned?
 	- Values:
-		- horizonal (default)
+		+ horizonal (default)
 		- vertical
 		- inherit
-		- inline-axis (maps to horizontal)
+		+ inline-axis (maps to horizontal)
 		- block-axis (maps to vertical)
 
 + box-align
@@ -23,10 +23,10 @@ Parent properties:
 	  Sets how the box's children are aligned in the box.
 	  If the orientation is horizontal it will decide the alignment vertically and vice-versa.
 	- Values:
-		- stretch (default)
-		- start
-		- end
-		- center
+		+ stretch (default)
+		+ start
+		+ end
+		+ center
 		- baseline
 
 + box-direction
@@ -35,18 +35,18 @@ Parent properties:
 	  top to bottom in the same order. The box-direction and box-ordinal-group properties may be used to
 	  change this ordering.
 	- Values:
-		- normal (default)
-		- reverse
+		+ normal (default)
+		+ reverse
 		- inherit
 
 + box-pack
 	- Sets the alignment of the box along the box-orient axis.
   	  So if box-orient is horizontal it will chose how the box's children are aligned horizontally, and vice-versa.
 	- Values:
-		- start (default)
-		- end
-		- center
-		- justify
+		+ start (default)
+		+ end
+		+ center
+		+ justify
 
 Child properties:
 --------------------------
