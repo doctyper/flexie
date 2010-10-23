@@ -394,18 +394,23 @@ var Flexie = window.Flexie || (function() {
 				
 				case "reverse" :
 				for (var i = children.length - 1; i >= 0; i--) {
-					children[i].style.cssText = "float: right";
+					// children[i].style.cssText = "float: right";
+					target.appendChild(children[i]);
 				}
 				break;
 			}
 		},
 		
 		applyBoxPack : function(target, children, pack) {
-			var groupWidth = 0;
+			var groupWidth = 0, i, j,
+			    totalWidth, fractionedWidth;
 			
-			for (var i = 0, j = children.length; i < j; i++) {
-				groupWidth += children[i].innerWidth || children[i].clientWidth;
+			for (i = 0, j = children.length; i < j; i++) {
+				groupWidth += this.clientWidth(children[i]);
 			}
+			
+			totalWidth = this.clientWidth(target) - groupWidth;
+		    fractionedWidth = Math.floor(totalWidth / (children.length - 1));
 			
 			// - start (default)
 			// - end
@@ -413,20 +418,24 @@ var Flexie = window.Flexie || (function() {
 			// - justify
 			switch (pack) {
 				case "start" :
-				target.style.textAlign = "left";
+				// target.style.textAlign = "left";
 				break;
 				
 				case "end" :
 				// target.style.textAlign = "right";
-				children[0].style.marginLeft = ((target.innerWidth || target.clientWidth) - groupWidth) + "px";
+				children[0].style.marginLeft = (totalWidth) + "px";
 				break;
 				
 				case "center" :
-				target.style.textAlign = "center";
+				// target.style.textAlign = "center";
+				children[0].style.marginLeft = (totalWidth / 2) + "px";
 				break;
 				
 				case "justify" :
-				target.style.textAlign = "justify";
+				// target.style.textAlign = "justify";
+				for (i = 1, j = children.length; i < j; i++) {
+					children[i].style.marginLeft = fractionedWidth + "px";
+				}
 				break;
 			}
 		},
