@@ -449,6 +449,14 @@ var Flexie = (function(window, doc, undefined) {
 		return target;
 	}
 	
+	function appendPixelValue(target, prop, value) {
+		var targets = target[0] ? target : [target];
+		
+		for (i = 0, j = targets.length; i < j; i++) {
+			targets[i].style[prop] = (value ? (value + "px") : "");
+		}
+	}
+	
 	function applyBoxModel(target, children) {
 		target.style.overflow = "hidden";
 	}
