@@ -16,7 +16,7 @@ Class: Flexie
 	Scoped to the Flexie Global Namespace
 */
 var Flexie = (function(window, doc, undefined) {
-	var $self = this,
+	var $self = {},
 	    i, j, k, l;
 	
 	var PIXEL = /^\d+(px)?$/i;
@@ -324,7 +324,7 @@ var Flexie = (function(window, doc, undefined) {
 		};
 	})();
 	
-	function calcPx(props, dir) {
+	function calcPx(element, props, dir) {
 		var value;
 		dir = dir.replace(dir.charAt(0), dir.charAt(0).toUpperCase());
 
@@ -351,16 +351,16 @@ var Flexie = (function(window, doc, undefined) {
 		return value;
 	};
 	
-	function unAuto(prop) {
+	function unAuto(element, prop) {
 		switch (prop) {
 			case "width" :
 			props = ["paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth"];
-			prop = calcPx(props, prop);
+			prop = calcPx(element, props, prop);
 			break;
 
 			case "height" :
 			props = ["paddingTop", "paddingBottom", "borderTopWidth", "borderBottomWidth"];
-			prop = calcPx(props, prop);
+			prop = calcPx(element, props, prop);
 			break;
 
 			default :
@@ -378,7 +378,7 @@ var Flexie = (function(window, doc, undefined) {
 		
 		// if property is auto, do some messy appending
 		if (prop === "auto") {
-			prop = unAuto(name);
+			prop = unAuto(element, name);
 		} else {
 			var style = element.style.left,
 			    runtimeStyle = element.runtimeStyle.left;
@@ -469,22 +469,23 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function applyBoxAlign(target, children, params) {
+		var targetWidth = clientWidth(target);
+	
 		var groupHeight = 0, kid,
-		    targetHeight = clientHeight(target),
-		    childHeight = clientHeight(children[0]);
+		    targetHeight = clientHeight(target);
 		
 		for (i = 0, j = children.length; i < j; i++) {
 			groupHeight += clientHeight(children[i]);
 		}
 		
-		// target.style.lineHeight = target.offsetHeight + "px";
-		
 		switch (params.align) {
 			case "stretch" :
-			// target.style.verticalAlign = "top";
-			// target.style.lineHeight = 0;
-			
-			if (params.orient === "horizontal") {
+			if (params.orient === "vertical") {
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kid.style.cssFloat = kid.style.styleFloat = "";
+				}
+			} else {
 				for (i = 0, j = children.length; i < j; i++) {
 					kid = children[i];
 					kid.style.height = targetHeight + "px";
@@ -493,8 +494,6 @@ var Flexie = (function(window, doc, undefined) {
 			break;
 			
 			case "start" :
-			// target.style.lineHeight = 0;
-			// target.style.verticalAlign = "top";
 			if (params.orient === "vertical") {
 				for (i = 0, j = children.length; i < j; i++) {
 					kid = children[i];
@@ -505,16 +504,30 @@ var Flexie = (function(window, doc, undefined) {
 			break;
 			
 			case "end" :
-			// target.style.verticalAlign = "bottom";
-			for (i = 0, j = children.length; i < j; i++) {
-				children[i].style.marginTop = (targetHeight - childHeight) + "px";
+			if (params.orient === "vertical") {
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kid.style.marginLeft = (targetWidth - clientWidth(kid)) + "px";
+				}
+			} else {
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kid.style.marginTop = (targetHeight - clientHeight(kid)) + "px";
+				}
 			}
 			break;
 			
 			case "center":
-			// target.style.verticalAlign = "middle";
-			for (i = 0, j = children.length; i < j; i++) {
-				children[i].style.marginTop = (targetHeight / 2 - childHeight / 2) + "px";
+			if (params.orient === "vertical") {
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kid.style.marginLeft = (targetWidth / 2 - clientWidth(kid) / 2) + "px";
+				}
+			} else {
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kid.style.marginTop = (targetHeight / 2 - clientHeight(kid) / 2) + "px";
+				}
 			}
 			break;
 			
@@ -539,39 +552,51 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function applyBoxPack(target, children, params) {
-		var groupWidth = 0,
-		    totalWidth, fractionedWidth;
+		var groupWidth = 0, groupHeight = 0,
+		    totalWidth, totalHeight,
+		    fractionedWidth, fractionedHeight;
 		
 		for (i = 0, j = children.length; i < j; i++) {
 			groupWidth += clientWidth(children[i]);
+			groupHeight += clientHeight(children[i]);
 		}
 		
 		totalWidth = clientWidth(target) - groupWidth;
-	    fractionedWidth = Math.floor(totalWidth / (children.length - 1));
+		totalHeight = clientHeight(target) - groupHeight;
 		
-		// - start (default)
-		// - end
-		// - center
-		// - justify
+	    fractionedWidth = Math.floor(totalWidth / (children.length - 1));
+	    fractionedHeight = Math.floor(totalHeight / (children.length - 1));
+		
 		switch (params.pack) {
 			case "start" :
 			// target.style.textAlign = "left";
 			break;
 			
 			case "end" :
-			// target.style.textAlign = "right";
-			children[0].style.marginLeft = (totalWidth) + "px";
+			if (params.orient === "vertical") {
+				children[0].style.marginTop = (totalHeight) + "px";
+			} else {
+				children[0].style.marginLeft = (totalWidth) + "px";
+			}
 			break;
 			
 			case "center" :
-			// target.style.textAlign = "center";
-			children[0].style.marginLeft = (totalWidth / 2) + "px";
+			if (params.orient === "vertical") {
+				children[0].style.marginTop = (totalHeight / 2) + "px";
+			} else {
+				children[0].style.marginLeft = (totalWidth / 2) + "px";
+			}
 			break;
 			
 			case "justify" :
-			// target.style.textAlign = "justify";
-			for (i = 1, j = children.length; i < j; i++) {
-				children[i].style.marginLeft = fractionedWidth + "px";
+			if (params.orient === "vertical") {
+				for (i = 1, j = children.length; i < j; i++) {
+					children[i].style.marginTop = fractionedHeight + "px";
+				}
+			} else {
+				for (i = 1, j = children.length; i < j; i++) {
+					children[i].style.marginLeft = fractionedWidth + "px";
+				}
 			}
 			break;
 		}
