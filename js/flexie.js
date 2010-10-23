@@ -362,10 +362,12 @@ var Flexie = window.Flexie || (function() {
 		},
 		
 		applyBoxAlign : function(target, children, align) {
-			var groupHeight = 0;
+			var groupHeight = 0, i, j, kid,
+			    targetHeight = this.clientHeight(target),
+			    childHeight = this.clientHeight(children[0]);
 			
 			for (var i = 0, j = children.length; i < j; i++) {
-				groupHeight += children[i].innerHeight || children[i].clientHeight;
+				groupHeight += this.clientHeight(children[i]);
 			}
 			
 			// target.style.lineHeight = target.offsetHeight + "px";
@@ -375,9 +377,9 @@ var Flexie = window.Flexie || (function() {
 				// target.style.verticalAlign = "top";
 				// target.style.lineHeight = 0;
 				
-				for (var i = 0, j = children.length; i < j; i++) {
-					var kid = children[i];
-					kid.style.height = target.offsetHeight + "px";
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kid.style.height = targetHeight + "px";
 				}
 				break;
 				
@@ -388,11 +390,16 @@ var Flexie = window.Flexie || (function() {
 				
 				case "end" :
 				// target.style.verticalAlign = "bottom";
-				children[0].style.marginTop = ((target.innerHeight || target.clientHeight) - groupHeight) + "px";
+				for (i = 0, j = children.length; i < j; i++) {
+					children[i].style.marginTop = (targetHeight - childHeight) + "px";
+				}
 				break;
 				
 				case "center":
 				// target.style.verticalAlign = "middle";
+				for (i = 0, j = children.length; i < j; i++) {
+					children[i].style.marginTop = (targetHeight / 2 - childHeight / 2) + "px";
+				}
 				break;
 				
 				case "baseline":
