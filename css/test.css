@@ -79,22 +79,22 @@ box-lines
 	display: box;
 	
 	/* Box Orient */
-	-webkit-box-orient: vertical;
-	-moz-box-orient: vertical;
-	-ms-box-orient: vertical;
-	box-orient: vertical;
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	-ms-box-orient: horizontal;
+	box-orient: horizontal;
 	
 	/* Box Align */
-	-webkit-box-align: start;
-	-moz-box-align: start;
-	-ms-box-align: start;
-	box-align: start;
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	-ms-box-align: center;
+	box-align: center;
 	
 	/* Box Pack */
-	-webkit-box-pack: start;
-	-moz-box-pack: start;
-	-ms-box-pack: start;
-	box-pack: start;
+	-webkit-box-pack: center;
+	-moz-box-pack: center;
+	-ms-box-pack: center;
+	box-pack: center;
 	
 	/* Box Direction */
 	-webkit-box-direction: normal;
@@ -104,8 +104,8 @@ box-lines
 }
 
 #box-1, #box-2 {
-/*	-moz-box-flex: 1;*/
-/*	-webkit-box-flex: 1;*/
-/*	-ms-box-flex: 1;*/
-/*	box-flex: 1;*/
+	-moz-box-flex: 1;
+	-webkit-box-flex: 1;
+	-ms-box-flex: 1;
+	box-flex: 1;
 }
