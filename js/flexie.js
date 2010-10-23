@@ -40,7 +40,8 @@ var Flexie = (function(window, doc, undefined) {
 	selectivizr.com
 	*/
 	var selectivizr = (function() {
-		var flexers = [];
+		var FLEX_BOXES = [],
+		    POSSIBLE_FLEX_CHILDREN = [];
 		
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
 		    RE_IMPORT = /@import\s*url\(\s*(["'])?(.*?)\1\s*\)[\w\W]*?;/g,
@@ -244,20 +245,50 @@ var Flexie = (function(window, doc, undefined) {
 					value = prop.value;
 					
 					if (property == "display" && value == "box") {
-						flexers.push(rule);
+						FLEX_BOXES.push(rule);
+					} else if (property == "box-flex" && value) {
+						
+						// Easy access for later
+						rule.flex = value;
+						
+						POSSIBLE_FLEX_CHILDREN.push(rule);
 					}
 				}
 			}
 			
-			return flexers;
+			return {
+				boxes : FLEX_BOXES,
+				children : POSSIBLE_FLEX_CHILDREN
+			};
+		}
+		
+		function matchFlexChildren(parent, lib, possibleChildren) {
+			var child, caller, matches = [];
+			
+			for (i = 0, j = possibleChildren.length; i < j; i++) {
+				child = possibleChildren[i];
+				caller = lib(child.selector);
+				
+				if (caller[0]) {
+					for (var k = 0, l = caller.length; k < l; k++) {
+						if (caller[k].parentNode === parent) {
+							child.match = caller[k];
+							matches.push(child);
+						}
+					}
+				}
+			}
+			
+			return matches;
 		}
 		
 		function buildFlexieCall(flexers) {
 			var flex, selector, properties, prop,
-			    orient, align, direction, pack, lib, caller;
+			    orient, align, direction, pack,
+			    lib, caller, children;
 			
-			for (i = 0, j = flexers.length; i < j; i++) {
-				flex = flexers[i];
+			for (i = 0, j = flexers.boxes.length; i < j; i++) {
+				flex = flexers.boxes[i];
 				
 				selector = flex.selector;
 				properties = flex.properties;
@@ -287,11 +318,22 @@ var Flexie = (function(window, doc, undefined) {
 				}
 				
 				if (orient || align || direction || pack) {
+					
+					// Determine library
 					lib = determineSelectorMethod();
+					
+					// Call it.
 					caller = lib(flex.selector);
 					
+					// In an array?
+					caller = caller[0] || caller;
+					
+					// Find possible child node matches
+					children = matchFlexChildren(caller, lib, flexers.children);
+					
 					new $self.box({
-						target : caller[0] || caller,
+						target : caller,
+						children : children,
 						orient : orient,
 						align : align,
 						direction: direction,
@@ -573,6 +615,24 @@ var Flexie = (function(window, doc, undefined) {
 		}
 	}
 	
+	function applyBoxFlex(target, children, params) {
+		var matches = params.children, kid,
+		    x, child, flex;
+		
+		for (i = 0, j = children.length; i < j; i++) {
+			kid = children[i];
+			
+			for (k = 0, l = matches.length; k < l; k++) {
+				x = matches[k];
+				
+				if (x.match === kid) {
+					child = x.match;
+					flex = x.flex;
+				}
+			}
+		}
+	}
+	
 	function flexBoxSupported() {
 		var dummy = doc.createElement("div");
 		appendProperty(dummy, "display", "box");
@@ -598,11 +658,15 @@ var Flexie = (function(window, doc, undefined) {
 			}
 		}
 		
+		// Set up parent
 		applyBoxModel(target, children);
 		applyBoxOrient(target, children, params);
 		applyBoxAlign(target, children, params);
 		applyBoxDirection(target, children, params);
 		applyBoxPack(target, children, params);
+		
+		// Children properties
+		applyBoxFlex(target, children, params);
 	}
 	
 	$self.box = function(params) {
