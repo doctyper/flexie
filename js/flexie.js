@@ -130,6 +130,12 @@ var Flexie = window.Flexie || (function() {
 		// Converts a URL fragment to a fully qualified URL using the specified
 		// context URL. Returns null if same-origin policy is broken
 		resolveUrl : function(url, contextUrl) {
+			
+			// IE9 returns a false positive sometimes(?)
+			if (!url) {
+				return;
+			}
+			
 			function getProtocolAndHost(url) {
 				return url.substring(0, url.indexOf("/", 8));
 			}
