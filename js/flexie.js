@@ -459,23 +459,24 @@ var Flexie = window.Flexie || (function() {
 			target.style.overflow = "hidden";
 		},
 		
-		applyBoxOrient : function(target, children, orient) {
-			switch (orient) {
-				case "horizontal" :
-				case "inline-axis" :
-				for (var i = 0, j = children.length; i < j; i++) {
-					var kid = children[i];
-					kid.style.cssText = "float: left";
-				}
-				break;
-				
-				case "vertical" :
-				case "block-axis":
-				break;
+		applyBoxOrient : function(target, children, params) {
+			for (var i = 0, j = children.length; i < j; i++) {
+				var kid = children[i];
+				kid.style.cssFloat = kid.style.styleFloat = "left";
 			}
+			
+			// switch (params.orient) {
+			// 	case "horizontal" :
+			// 	case "inline-axis" :
+			// 	break;
+			// 	
+			// 	case "vertical" :
+			// 	case "block-axis":
+			// 	break;
+			// }
 		},
 		
-		applyBoxAlign : function(target, children, align) {
+		applyBoxAlign : function(target, children, params) {
 			var groupHeight = 0, i, j, kid,
 			    targetHeight = this.clientHeight(target),
 			    childHeight = this.clientHeight(children[0]);
@@ -486,20 +487,29 @@ var Flexie = window.Flexie || (function() {
 			
 			// target.style.lineHeight = target.offsetHeight + "px";
 			
-			switch (align) {
+			switch (params.align) {
 				case "stretch" :
 				// target.style.verticalAlign = "top";
 				// target.style.lineHeight = 0;
 				
-				for (i = 0, j = children.length; i < j; i++) {
-					kid = children[i];
-					kid.style.height = targetHeight + "px";
+				if (params.orient === "horizontal") {
+					for (i = 0, j = children.length; i < j; i++) {
+						kid = children[i];
+						kid.style.height = targetHeight + "px";
+					}
 				}
 				break;
 				
 				case "start" :
 				// target.style.lineHeight = 0;
 				// target.style.verticalAlign = "top";
+				if (params.orient === "vertical") {
+					for (i = 0, j = children.length; i < j; i++) {
+						kid = children[i];
+						kid.style.width = this.getComputedStyle(kid, "width");
+						kid.style.cssFloat = kid.style.styleFloat = "";
+					}
+				}
 				break;
 				
 				case "end" :
@@ -522,8 +532,8 @@ var Flexie = window.Flexie || (function() {
 			}
 		},
 		
-		applyBoxDirection : function(target, children, direction) {
-			switch (direction) {
+		applyBoxDirection : function(target, children, params) {
+			switch (params.direction) {
 				case "normal" :
 				break;
 				
@@ -536,7 +546,7 @@ var Flexie = window.Flexie || (function() {
 			}
 		},
 		
-		applyBoxPack : function(target, children, pack) {
+		applyBoxPack : function(target, children, params) {
 			var groupWidth = 0, i, j,
 			    totalWidth, fractionedWidth;
 			
@@ -551,7 +561,7 @@ var Flexie = window.Flexie || (function() {
 			// - end
 			// - center
 			// - justify
-			switch (pack) {
+			switch (params.pack) {
 				case "start" :
 				// target.style.textAlign = "left";
 				break;
@@ -601,10 +611,10 @@ var Flexie = window.Flexie || (function() {
 			}
 			
 			this.applyBoxModel(target, children);
-			this.applyBoxOrient(target, children, orient);
-			this.applyBoxAlign(target, children, align);
-			this.applyBoxDirection(target, children, direction);
-			this.applyBoxPack(target, children, pack);
+			this.applyBoxOrient(target, children, params);
+			this.applyBoxAlign(target, children, params);
+			this.applyBoxDirection(target, children, params);
+			this.applyBoxPack(target, children, params);
 		}
 	};
 	
