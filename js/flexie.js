@@ -15,11 +15,20 @@ Description:
 Class: Flexie
 	Scoped to the Flexie Global Namespace
 */
-var Flexie = window.Flexie || (function() {
-	var $self = this;
+var Flexie = (function(window, doc, undefined) {
+	var $self = this,
+	    i, j, k, l;
 	
-	$self.vars = {
-		prefixes : " -o- -moz- -ms- -webkit- -khtml- ".split(" ")
+	var PIXEL = /^\d+(px)?$/i;
+	var SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/;
+	
+	var prefixes = " -o- -moz- -ms- -webkit- -khtml- ".split(" ");
+	
+	var defaults = {
+		orient : "horizontal",
+		align : "stretch",
+		direction : "normal",
+		pack : "start"
 	};
 	
 	/*
@@ -28,60 +37,60 @@ var Flexie = window.Flexie || (function() {
 
 	selectivizr.com
 	*/
-	$self.selectivizr = {
-		RE_COMMENT : /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
+	var selectivizr = (function() {
+		var flexers = [];
 		
-		RE_SELECTOR_GROUP : /(^|})\s*([^\{]*?[\[:][^{]+)/g,
-		
-		// Whitespace normalization regexp's
-		RE_TIDY_TRAILING_WHITESPACE : /([(\[+~])\s+/g,
-		RE_TIDY_LEADING_WHITESPACE : /\s+([)\]+~])/g,
-		RE_TIDY_CONSECUTIVE_WHITESPACE : /\s+/g,
-		RE_TIDY_TRIM_WHITESPACE : /^\s*((?:[\S\s]*\S)?)\s*$/,
-		
-		// String constants
-		EMPTY_STRING : "",
-		SPACE_STRING : " ",
-		PLACEHOLDER_STRING : "$1",
+		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
+		    RE_IMPORT = /@import\s*url\(\s*(["'])?(.*?)\1\s*\)[\w\W]*?;/g,
+		    RE_SELECTOR_GROUP = /(^|})\s*([^\{]*?[\[:][^{]+)/g,
+			
+		    // Whitespace normalization regexp's
+		    RE_TIDY_TRAILING_WHITESPACE = /([(\[+~])\s+/g,
+		    RE_TIDY_LEADING_WHITESPACE = /\s+([)\]+~])/g,
+		    RE_TIDY_CONSECUTIVE_WHITESPACE = /\s+/g,
+		    RE_TIDY_TRIM_WHITESPACE = /^\s*((?:[\S\s]*\S)?)\s*$/,
+			
+		    // String constants
+		    EMPTY_STRING = "",
+		    SPACE_STRING = " ",
+		    PLACEHOLDER_STRING = "$1";
 
 		// --[ patchStyleSheet() ]----------------------------------------------
 		// Scans the passed cssText for selectors that require emulation and
 		// creates one or more patches for each matched selector.
-		patchStyleSheet : function(cssText) {
-			var _self = this;
-			
-			return cssText.replace(_self.RE_SELECTOR_GROUP, function(m, prefix, selectorText) {	
+		function patchStyleSheet(cssText) {
+			return cssText.replace(RE_SELECTOR_GROUP, function(m, prefix, selectorText) {	
 				var selectorGroups = selectorText.split(",");
 				for (var c = 0, cs = selectorGroups.length; c < cs; c++) {
-					var selector = _self.normalizeSelectorWhitespace(selectorGroups[c]) + _self.SPACE_STRING;
+					var selector = normalizeSelectorWhitespace(selectorGroups[c]) + SPACE_STRING;
 					var patches = [];
 				}
 				return prefix + selectorGroups.join(",");
 			});
-		},
+		}
 
 		// --[ trim() ]---------------------------------------------------------
 		// removes leading, trailing whitespace from a string
-		trim : function(text) {
-			return text.replace(this.RE_TIDY_TRIM_WHITESPACE, this.PLACEHOLDER_STRING);
-		},
+		function trim(text) {
+			return text.replace(RE_TIDY_TRIM_WHITESPACE, PLACEHOLDER_STRING);
+		}
 
 		// --[ normalizeWhitespace() ]------------------------------------------
 		// removes leading, trailing and consecutive whitespace from a string
-		normalizeWhitespace : function(text) {
-			return this.trim(text).replace(this.RE_TIDY_CONSECUTIVE_WHITESPACE, this.SPACE_STRING);
-		},
+		function normalizeWhitespace(text) {
+			return trim(text).replace(RE_TIDY_CONSECUTIVE_WHITESPACE, SPACE_STRING);
+		}
 
 		// --[ normalizeSelectorWhitespace() ]----------------------------------
 		// tidys whitespace around selector brackets and combinators
-		normalizeSelectorWhitespace : function(selectorText) {
-			return this.normalizeWhitespace(selectorText.replace(this.RE_TIDY_TRAILING_WHITESPACE, this.PLACEHOLDER_STRING).replace(this.RE_TIDY_LEADING_WHITESPACE, this.PLACEHOLDER_STRING));
-		},
+		function normalizeSelectorWhitespace(selectorText) {
+			return normalizeWhitespace(selectorText.replace(RE_TIDY_TRAILING_WHITESPACE, PLACEHOLDER_STRING).replace(RE_TIDY_LEADING_WHITESPACE, PLACEHOLDER_STRING));
+		}
 		
 		// --[ determineSelectorMethod() ]--------------------------------------
 		// walks through the selectorEngines object testing for an suitable
 		// selector engine.
-		determineSelectorMethod : function() {
+		function determineSelectorMethod() {
 			// compatiable selector engines in order of CSS3 support
 			var selectorEngines = {
 				"NW" : "*.Dom.select",
@@ -102,10 +111,10 @@ var Flexie = window.Flexie || (function() {
 				}
 			}
 			return false;
-		},
+		}
 		
 		// --[ getXHRObject() ]-------------------------------------------------
-		getXHRObject : function() {
+		function getXHRObject() {
 			if (window.XMLHttpRequest) {
 				return new XMLHttpRequest;
 			}
@@ -115,21 +124,21 @@ var Flexie = window.Flexie || (function() {
 			} catch(e) { 
 				return null;
 			}
-		},
+		}
 		
 		// --[ loadStyleSheet() ]-----------------------------------------------
-		loadStyleSheet : function(url) {
-			var xhr = this.getXHRObject();
+		function loadStyleSheet(url) {
+			var xhr = getXHRObject();
 			
 			xhr.open("GET", url, false);
 			xhr.send();
 			return (xhr.status === 200) ? xhr.responseText : "";	
-		},
+		}
 		
 		// --[ resolveUrl() ]---------------------------------------------------
 		// Converts a URL fragment to a fully qualified URL using the specified
 		// context URL. Returns null if same-origin policy is broken
-		resolveUrl : function(url, contextUrl) {
+		function resolveUrl(url, contextUrl) {
 			
 			// IE9 returns a false positive sometimes(?)
 			if (!url) {
@@ -157,50 +166,24 @@ var Flexie = window.Flexie || (function() {
 			}
 
 			return contextUrlPath + url;
-		},
+		}
 		
 		// --[ parseStyleSheet() ]----------------------------------------------
 		// Downloads the stylesheet specified by the URL, removes it's comments
 		// and recursivly replaces @import rules with their contents, ultimately
 		// returning the full cssText.
-		parseStyleSheet : function(url) {
-			var _self = this;
-			
+		function parseStyleSheet(url) {
 			if (url) {
-				var cssText = this.loadStyleSheet(url);
-				return cssText.replace(_self.RE_COMMENT, _self.EMPTY_STRING).replace(_self.RE_IMPORT, function( match, quoteChar, importUrl ) { 
-					return _self.parseStyleSheet(_self.resolveUrl(importUrl, url));
+				var cssText = loadStyleSheet(url);
+				return cssText.replace(RE_COMMENT, EMPTY_STRING).replace(RE_IMPORT, function( match, quoteChar, importUrl ) { 
+					return parseStyleSheet(resolveUrl(importUrl, url));
 				});
 			}
-			return _self.EMPTY_STRING;
-		},
+			return EMPTY_STRING;
+		}
 		
-		// --[ init() ]---------------------------------------------------------
-		init : function() {
-			// honour the <base> tag
-			var doc = document, url, stylesheet, c,
-			    baseTags = doc.getElementsByTagName("BASE"),
-			    baseUrl = (baseTags.length > 0) ? baseTags[0].href : doc.location.href;
-			
-			for (c = 0; c < doc.styleSheets.length; c++) {
-				stylesheet = doc.styleSheets[c];
-				
-				if (stylesheet.href != "") {
-					url = this.resolveUrl(stylesheet.href, baseUrl);
-					
-					if (url) {
-						var cssText = this.patchStyleSheet(this.parseStyleSheet(url)),
-						    tree = this.buildSelectorTree(cssText),
-						    flexers = this.findFlexBoxElements(tree);
-					}
-				}
-			}
-			
-			this.buildFlexieCall(flexers);
-		},
-		
-		buildSelectorTree : function(text) {
-			var rules = [], ruletext, i, j, k, l, rule,
+		function buildSelectorTree(text) {
+			var rules = [], ruletext, rule,
 			    match, selector, proptext, splitprop, properties;
 			
 			// Tabs, Returns
@@ -242,13 +225,10 @@ var Flexie = window.Flexie || (function() {
 			}
 			
 			return rules;
-		},
+		}
 		
-		findFlexBoxElements : function(rules) {
-			this.flexers = this.flexers || [];
-			
-			var flexers = this.flexers, i, j, k, l,
-			    rule, selector, properties, prop,
+		function findFlexBoxElements(rules) {
+			var rule, selector, properties, prop,
 			    property, value;
 			
 			for (i = 0, j = rules.length; i < j; i++) {
@@ -268,10 +248,10 @@ var Flexie = window.Flexie || (function() {
 			}
 			
 			return flexers;
-		},
+		}
 		
-		buildFlexieCall : function(flexers) {
-			var i, j, k, l, flex, selector, properties, prop,
+		function buildFlexieCall(flexers) {
+			var flex, selector, properties, prop,
 			    orient, align, direction, pack, lib, caller;
 			
 			for (i = 0, j = flexers.length; i < j; i++) {
@@ -305,7 +285,7 @@ var Flexie = window.Flexie || (function() {
 				}
 				
 				if (orient || align || direction || pack) {
-					lib = this.determineSelectorMethod();
+					lib = determineSelectorMethod();
 					caller = lib(flex.selector);
 					
 					new $self.box({
@@ -318,319 +298,328 @@ var Flexie = window.Flexie || (function() {
 				}
 			}
 		}
+		
+		// --[ init() ]---------------------------------------------------------
+		return function() {
+			// honour the <base> tag
+			var doc = document, url, stylesheet, c,
+			    baseTags = doc.getElementsByTagName("BASE"),
+			    baseUrl = (baseTags.length > 0) ? baseTags[0].href : doc.location.href;
+			
+			for (c = 0; c < doc.styleSheets.length; c++) {
+				stylesheet = doc.styleSheets[c];
+				
+				if (stylesheet.href != "") {
+					url = resolveUrl(stylesheet.href, baseUrl);
+					
+					if (url) {
+						var cssText = patchStyleSheet(parseStyleSheet(url)),
+						    tree = buildSelectorTree(cssText),
+						    flexers = findFlexBoxElements(tree);
+					}
+				}
+			}
+			
+			buildFlexieCall(flexers);
+		};
+	})();
+	
+	function calcPx(props, dir) {
+		var value;
+		dir = dir.replace(dir.charAt(0), dir.charAt(0).toUpperCase());
+
+		var globalProps = {
+			visibility : "hidden",
+			position : "absolute",
+			left : "-9999px",
+			top : "-9999px"
+		};
+
+		var dummy = element.cloneNode(true);
+
+		for (var i = 0, j = props.length; i < j; i++) {
+			dummy.style[props[i]] = "0";
+		}
+		for (var key in globalProps) {
+			dummy.style[key] = globalProps[key];
+		}
+
+		doc.body.appendChild(dummy);
+		value = dummy["offset" + dir];
+		doc.body.removeChild(dummy);
+
+		return value;
 	};
 	
-	$self.utils = {
-		getComputedStyle : function(element, property) {
-			var PIXEL = /^\d+(px)?$/i;
-			var SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/;
-			
-			var calcPx = function(props, dir) {
-				var value;
-				dir = dir.replace(dir.charAt(0), dir.charAt(0).toUpperCase());
+	function unAuto(prop) {
+		switch (prop) {
+			case "width" :
+			props = ["paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth"];
+			prop = calcPx(props, prop);
+			break;
 
-				var globalProps = {
-					visibility : "hidden",
-					position : "absolute",
-					left : "-9999px",
-					top : "-9999px"
-				};
+			case "height" :
+			props = ["paddingTop", "paddingBottom", "borderTopWidth", "borderBottomWidth"];
+			prop = calcPx(props, prop);
+			break;
 
-				var dummy = element.cloneNode(true);
-
-				for (var i = 0, j = props.length; i < j; i++) {
-					dummy.style[props[i]] = "0";
-				}
-				for (var key in globalProps) {
-					dummy.style[key] = globalProps[key];
-				}
-
-				document.body.appendChild(dummy);
-				value = dummy["offset" + dir];
-				document.body.removeChild(dummy);
-
-				return value;
-			};
-			
-			var unAuto = function(prop) {
-				switch (prop) {
-					case "width" :
-					props = ["paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth"];
-					prop = calcPx(props, prop);
-					break;
-
-					case "height" :
-					props = ["paddingTop", "paddingBottom", "borderTopWidth", "borderBottomWidth"];
-					prop = calcPx(props, prop);
-					break;
-
-					default :
-					prop = style[prop];
-					break;
-				}
-
-				return prop;
-			};
-			
-			var getPixelValue = function(element, prop, name) {
-				if (PIXEL.test(prop)) {
-					return prop;
-				}
-				
-				// if property is auto, do some messy appending
-				if (prop === "auto") {
-					prop = unAuto(name);
-				} else {
-					var style = element.style.left,
-					    runtimeStyle = element.runtimeStyle.left;
-
-					element.runtimeStyle.left = element.currentStyle.left;
-					element.style.left = prop || 0;
-					prop = element.style.pixelLeft;
-					element.style.left = style;
-					element.runtimeStyle.left = runtimeStyle;
-				}
-				
-				return prop + "px";
-			};
-
-			if ("getComputedStyle" in window) {
-				return document.defaultView.getComputedStyle(element, null)[property];
-			} else {
-				property = this.toCamelCase(property);
-				
-				if (SIZES.test(property)) {
-					property = getPixelValue(element, element.currentStyle[property], property);
-				} else {
-					property = element.currentStyle[property];
-				}
-
-				/**
-				 * @returns property (or empty string if none)
-				*/
-				return property || "";
-			}
-		},
-		
-		toCamelCase : function(cssProp) {
-			var hyphen = /(-[a-z])/ig;
-			while (hyphen.exec(cssProp)) {
-				cssProp = cssProp.replace(RegExp.$1, RegExp.$1.substr(1).toUpperCase());
-			}
-			return cssProp;
-		},
-		
-		getParams : function(params) {
-			var defaults = {
-				orient : "horizontal",
-				align : "stretch",
-				direction : "normal",
-				pack : "start"
-			};
-			
-			for (var key in params) {
-				params[key] = params[key] || defaults[key];
-			}
-			
-			return params;
-		},
-		
-		clientWidth : function(element) {
-			return element.innerWidth || element.clientWidth;
-		},
-		
-		clientHeight : function(element) {
-			return element.innerHeight || element.clientHeight;
-		},
-		
-		appendProperty : function(target, prop, value) {
-			var prefixes = $self.vars.prefixes,
-			    cssText = [];
-			
-			for (var i = 0, j = prefixes.length; i < j; i++) {
-				cssText.push(prop + ":" + prefixes[i] + value);
-			}
-			
-			target.style.cssText = cssText.join(";");
-			return target;
-		},
-		
-		applyBoxModel : function(target, children) {
-			target.style.overflow = "hidden";
-		},
-		
-		applyBoxOrient : function(target, children, params) {
-			for (var i = 0, j = children.length; i < j; i++) {
-				var kid = children[i];
-				kid.style.cssFloat = kid.style.styleFloat = "left";
-			}
-			
-			// switch (params.orient) {
-			// 	case "horizontal" :
-			// 	case "inline-axis" :
-			// 	break;
-			// 	
-			// 	case "vertical" :
-			// 	case "block-axis":
-			// 	break;
-			// }
-		},
-		
-		applyBoxAlign : function(target, children, params) {
-			var groupHeight = 0, i, j, kid,
-			    targetHeight = this.clientHeight(target),
-			    childHeight = this.clientHeight(children[0]);
-			
-			for (var i = 0, j = children.length; i < j; i++) {
-				groupHeight += this.clientHeight(children[i]);
-			}
-			
-			// target.style.lineHeight = target.offsetHeight + "px";
-			
-			switch (params.align) {
-				case "stretch" :
-				// target.style.verticalAlign = "top";
-				// target.style.lineHeight = 0;
-				
-				if (params.orient === "horizontal") {
-					for (i = 0, j = children.length; i < j; i++) {
-						kid = children[i];
-						kid.style.height = targetHeight + "px";
-					}
-				}
-				break;
-				
-				case "start" :
-				// target.style.lineHeight = 0;
-				// target.style.verticalAlign = "top";
-				if (params.orient === "vertical") {
-					for (i = 0, j = children.length; i < j; i++) {
-						kid = children[i];
-						kid.style.width = this.getComputedStyle(kid, "width");
-						kid.style.cssFloat = kid.style.styleFloat = "";
-					}
-				}
-				break;
-				
-				case "end" :
-				// target.style.verticalAlign = "bottom";
-				for (i = 0, j = children.length; i < j; i++) {
-					children[i].style.marginTop = (targetHeight - childHeight) + "px";
-				}
-				break;
-				
-				case "center":
-				// target.style.verticalAlign = "middle";
-				for (i = 0, j = children.length; i < j; i++) {
-					children[i].style.marginTop = (targetHeight / 2 - childHeight / 2) + "px";
-				}
-				break;
-				
-				case "baseline":
-				// target.style.verticalAlign = "baseline";
-				break;
-			}
-		},
-		
-		applyBoxDirection : function(target, children, params) {
-			switch (params.direction) {
-				case "normal" :
-				break;
-				
-				case "reverse" :
-				for (var i = children.length - 1; i >= 0; i--) {
-					// children[i].style.cssText = "float: right";
-					target.appendChild(children[i]);
-				}
-				break;
-			}
-		},
-		
-		applyBoxPack : function(target, children, params) {
-			var groupWidth = 0, i, j,
-			    totalWidth, fractionedWidth;
-			
-			for (i = 0, j = children.length; i < j; i++) {
-				groupWidth += this.clientWidth(children[i]);
-			}
-			
-			totalWidth = this.clientWidth(target) - groupWidth;
-		    fractionedWidth = Math.floor(totalWidth / (children.length - 1));
-			
-			// - start (default)
-			// - end
-			// - center
-			// - justify
-			switch (params.pack) {
-				case "start" :
-				// target.style.textAlign = "left";
-				break;
-				
-				case "end" :
-				// target.style.textAlign = "right";
-				children[0].style.marginLeft = (totalWidth) + "px";
-				break;
-				
-				case "center" :
-				// target.style.textAlign = "center";
-				children[0].style.marginLeft = (totalWidth / 2) + "px";
-				break;
-				
-				case "justify" :
-				// target.style.textAlign = "justify";
-				for (i = 1, j = children.length; i < j; i++) {
-					children[i].style.marginLeft = fractionedWidth + "px";
-				}
-				break;
-			}
-		},
-		
-		flexBoxSupported : function() {
-			var dummy = document.createElement("div");
-			this.appendProperty(dummy, "display", "box");
-			return ((dummy.style.display).indexOf("box") !== -1) ? true : false;
-		},
-		
-		boxModelRenderer : function(params) {
-			var target = params.target,
-			    nodes = target.childNodes,
-			    children = [];
-			
-			params = this.getParams(params);
-			
-			var node = nodes[0];
-			for (var i = 0, j = nodes.length; i < j; i++) {
-				if (nodes[i]) {
-					if (nodes[i].nodeType === 1) {
-						children.push(nodes[i]);
-					} else {
-						target.removeChild(nodes[i]);
-						i--;
-					}
-				}
-			}
-			
-			this.applyBoxModel(target, children);
-			this.applyBoxOrient(target, children, params);
-			this.applyBoxAlign(target, children, params);
-			this.applyBoxDirection(target, children, params);
-			this.applyBoxPack(target, children, params);
+			default :
+			prop = style[prop];
+			break;
 		}
+
+		return prop;
 	};
+	
+	function getPixelValue(element, prop, name) {
+		if (PIXEL.test(prop)) {
+			return prop;
+		}
+		
+		// if property is auto, do some messy appending
+		if (prop === "auto") {
+			prop = unAuto(name);
+		} else {
+			var style = element.style.left,
+			    runtimeStyle = element.runtimeStyle.left;
+
+			element.runtimeStyle.left = element.currentStyle.left;
+			element.style.left = prop || 0;
+			prop = element.style.pixelLeft;
+			element.style.left = style;
+			element.runtimeStyle.left = runtimeStyle;
+		}
+		
+		return prop + "px";
+	};
+	
+	function getComputedStyle(element, property) {
+		if ("getComputedStyle" in window) {
+			return doc.defaultView.getComputedStyle(element, null)[property];
+		} else {
+			property = toCamelCase(property);
+			
+			if (SIZES.test(property)) {
+				property = getPixelValue(element, element.currentStyle[property], property);
+			} else {
+				property = element.currentStyle[property];
+			}
+
+			/**
+			 * @returns property (or empty string if none)
+			*/
+			return property || "";
+		}
+	}
+	
+	function toCamelCase(cssProp) {
+		var hyphen = /(-[a-z])/ig;
+		while (hyphen.exec(cssProp)) {
+			cssProp = cssProp.replace(RegExp.$1, RegExp.$1.substr(1).toUpperCase());
+		}
+		return cssProp;
+	}
+	
+	function getParams(params) {
+		for (var key in params) {
+			params[key] = params[key] || defaults[key];
+		}
+		
+		return params;
+	}
+	
+	function clientWidth(element) {
+		return element.innerWidth || element.clientWidth;
+	}
+	
+	function clientHeight(element) {
+		return element.innerHeight || element.clientHeight;
+	}
+	
+	function appendProperty(target, prop, value) {
+		var cssText = [];
+
+		for (i = 0, j = prefixes.length; i < j; i++) {
+			cssText.push(prop + ":" + prefixes[i] + value);
+		}
+
+		target.style.cssText = cssText.join(";");
+		return target;
+	}
+	
+	function applyBoxModel(target, children) {
+		target.style.overflow = "hidden";
+	}
+	
+	function applyBoxOrient(target, children, params) {
+		for (var i = 0, j = children.length; i < j; i++) {
+			var kid = children[i];
+			kid.style.cssFloat = kid.style.styleFloat = "left";
+		}
+		
+		// switch (params.orient) {
+		// 	case "horizontal" :
+		// 	case "inline-axis" :
+		// 	break;
+		// 	
+		// 	case "vertical" :
+		// 	case "block-axis":
+		// 	break;
+		// }
+	}
+	
+	function applyBoxAlign(target, children, params) {
+		var groupHeight = 0, kid,
+		    targetHeight = clientHeight(target),
+		    childHeight = clientHeight(children[0]);
+		
+		for (i = 0, j = children.length; i < j; i++) {
+			groupHeight += clientHeight(children[i]);
+		}
+		
+		// target.style.lineHeight = target.offsetHeight + "px";
+		
+		switch (params.align) {
+			case "stretch" :
+			// target.style.verticalAlign = "top";
+			// target.style.lineHeight = 0;
+			
+			if (params.orient === "horizontal") {
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kid.style.height = targetHeight + "px";
+				}
+			}
+			break;
+			
+			case "start" :
+			// target.style.lineHeight = 0;
+			// target.style.verticalAlign = "top";
+			if (params.orient === "vertical") {
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kid.style.width = getComputedStyle(kid, "width");
+					kid.style.cssFloat = kid.style.styleFloat = "";
+				}
+			}
+			break;
+			
+			case "end" :
+			// target.style.verticalAlign = "bottom";
+			for (i = 0, j = children.length; i < j; i++) {
+				children[i].style.marginTop = (targetHeight - childHeight) + "px";
+			}
+			break;
+			
+			case "center":
+			// target.style.verticalAlign = "middle";
+			for (i = 0, j = children.length; i < j; i++) {
+				children[i].style.marginTop = (targetHeight / 2 - childHeight / 2) + "px";
+			}
+			break;
+			
+			case "baseline":
+			// target.style.verticalAlign = "baseline";
+			break;
+		}
+	}
+	
+	function applyBoxDirection(target, children, params) {
+		switch (params.direction) {
+			case "normal" :
+			break;
+			
+			case "reverse" :
+			for (var i = children.length - 1; i >= 0; i--) {
+				// children[i].style.cssText = "float: right";
+				target.appendChild(children[i]);
+			}
+			break;
+		}
+	}
+	
+	function applyBoxPack(target, children, params) {
+		var groupWidth = 0,
+		    totalWidth, fractionedWidth;
+		
+		for (i = 0, j = children.length; i < j; i++) {
+			groupWidth += clientWidth(children[i]);
+		}
+		
+		totalWidth = clientWidth(target) - groupWidth;
+	    fractionedWidth = Math.floor(totalWidth / (children.length - 1));
+		
+		// - start (default)
+		// - end
+		// - center
+		// - justify
+		switch (params.pack) {
+			case "start" :
+			// target.style.textAlign = "left";
+			break;
+			
+			case "end" :
+			// target.style.textAlign = "right";
+			children[0].style.marginLeft = (totalWidth) + "px";
+			break;
+			
+			case "center" :
+			// target.style.textAlign = "center";
+			children[0].style.marginLeft = (totalWidth / 2) + "px";
+			break;
+			
+			case "justify" :
+			// target.style.textAlign = "justify";
+			for (i = 1, j = children.length; i < j; i++) {
+				children[i].style.marginLeft = fractionedWidth + "px";
+			}
+			break;
+		}
+	}
+	
+	function flexBoxSupported() {
+		var dummy = doc.createElement("div");
+		appendProperty(dummy, "display", "box");
+		return ((dummy.style.display).indexOf("box") !== -1) ? true : false;
+	}
+	
+	function boxModelRenderer(params) {
+		var target = params.target,
+		    nodes = target.childNodes,
+		    children = [];
+		
+		params = getParams(params);
+		
+		var node = nodes[0];
+		for (var i = 0, j = nodes.length; i < j; i++) {
+			if (nodes[i]) {
+				if (nodes[i].nodeType === 1) {
+					children.push(nodes[i]);
+				} else {
+					target.removeChild(nodes[i]);
+					i--;
+				}
+			}
+		}
+		
+		applyBoxModel(target, children);
+		applyBoxOrient(target, children, params);
+		applyBoxAlign(target, children, params);
+		applyBoxDirection(target, children, params);
+		applyBoxPack(target, children, params);
+	}
 	
 	$self.box = function(params) {
-		var support = $self.utils.flexBoxSupported();
+		var support = flexBoxSupported();
 		
 		if (!support) {
-			$self.utils.boxModelRenderer(params);
+			boxModelRenderer(params);
 		}
 	};
 	
 	$self.init = function() {
-		$self.selectivizr.init();
-	};
+		selectivizr();
+	}();
 	
 	return $self;
-})();
-
-Flexie.init();
+})(this, document);
