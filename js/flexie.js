@@ -415,7 +415,7 @@ var Flexie = (function(window, doc, undefined) {
 			break;
 
 			default :
-			prop = style[prop];
+			prop = element.style[prop];
 			break;
 		}
 
@@ -517,14 +517,18 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function applyBoxOrient(target, children, params) {
+		var i, j;
+		
 		var wide = {
 			pos : "marginLeft",
+			add : ["marginRight", "borderLeftWidth", "borderRightWidth"],
 			dim : "width",
 			func : clientWidth
 		};
 		
 		var high = {
 			pos : "marginTop",
+			add : ["marginBottom", "borderTopWidth", "borderBottomWidth"],
 			dim : "height",
 			func : clientHeight
 		};
@@ -570,7 +574,13 @@ var Flexie = (function(window, doc, undefined) {
 			case "end" :
 			for (i = 0, j = children.length; i < j; i++) {
 				kid = children[i];
-				kid.style[anti.pos] = (targetDimension - anti.func(kid)) + "px";
+				kidDimension = anti.func(kid);
+				
+				for (k = 0, l = anti.add.length; k < l; k++) {
+					kidDimension += getComputedStyle(kid, anti.add[k], true);
+				}
+				
+				kid.style[anti.pos] = (targetDimension - kidDimension) + "px";
 			}
 			break;
 			
