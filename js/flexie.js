@@ -326,7 +326,7 @@ var Flexie = (function(window, doc, undefined) {
 		// --[ init() ]---------------------------------------------------------
 		return function() {
 			// honour the <base> tag
-			var doc = document, url, stylesheet, c,
+			var url, stylesheet, c,
 			    baseTags = doc.getElementsByTagName("BASE"),
 			    baseUrl = (baseTags.length > 0) ? baseTags[0].href : doc.location.href;
 			
