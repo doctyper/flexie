@@ -19,6 +19,12 @@ var Flexie = (function(window, doc, undefined) {
 	var $self = {},
 	    i, j, k, l;
 	
+	// Store support for flexbox
+	var SUPPORT;
+	
+	// Store reference to library
+	var LIBRARY;
+	
 	var PIXEL = /^\d+(px)?$/i;
 	var SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/;
 	
@@ -88,32 +94,6 @@ var Flexie = (function(window, doc, undefined) {
 		// tidys whitespace around selector brackets and combinators
 		function normalizeSelectorWhitespace(selectorText) {
 			return normalizeWhitespace(selectorText.replace(RE_TIDY_TRAILING_WHITESPACE, PLACEHOLDER_STRING).replace(RE_TIDY_LEADING_WHITESPACE, PLACEHOLDER_STRING));
-		}
-		
-		// --[ determineSelectorMethod() ]--------------------------------------
-		// walks through the selectorEngines object testing for an suitable
-		// selector engine.
-		function determineSelectorMethod() {
-			// compatiable selector engines in order of CSS3 support
-			var selectorEngines = {
-				"NW" : "*.Dom.select",
-				"DOMAssistant" : "*.$", 
-				"Prototype" : "$$",
-				"YAHOO" : "*.util.Selector.query",
-				"MooTools" : "$$",
-				"Sizzle" : "*", 
-				"jQuery" : "*",
-				"dojo" : "*.query"
-			};
-			
-			var win = window, method;
-			
-			for (var engine in selectorEngines) {
-				if (win[engine] && (method = eval(selectorEngines[engine].replace("*",engine)))) {
-					return method;
-				}
-			}
-			return false;
 		}
 		
 		// --[ getXHRObject() ]-------------------------------------------------
@@ -320,7 +300,7 @@ var Flexie = (function(window, doc, undefined) {
 				if (orient || align || direction || pack) {
 					
 					// Determine library
-					lib = determineSelectorMethod();
+					lib = LIBRARY;
 					
 					// Call it.
 					caller = lib(flex.selector);
@@ -367,6 +347,32 @@ var Flexie = (function(window, doc, undefined) {
 			buildFlexieCall(flexers);
 		};
 	})();
+	
+	// --[ determineSelectorMethod() ]--------------------------------------
+	// walks through the selectorEngines object testing for an suitable
+	// selector engine.
+	function determineSelectorMethod() {
+		// compatiable selector engines in order of CSS3 support
+		var selectorEngines = {
+			"NW" : "*.Dom.select",
+			"DOMAssistant" : "*.$", 
+			"Prototype" : "$$",
+			"YAHOO" : "*.util.Selector.query",
+			"MooTools" : "$$",
+			"Sizzle" : "*", 
+			"jQuery" : "*",
+			"dojo" : "*.query"
+		};
+		
+		var win = window, method;
+		
+		for (var engine in selectorEngines) {
+			if (win[engine] && (method = eval(selectorEngines[engine].replace("*",engine)))) {
+				return method;
+			}
+		}
+		return false;
+	}
 	
 	function calcPx(element, props, dir) {
 		var value;
@@ -782,15 +788,16 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	$self.box = function(params) {
-		var support = flexBoxSupported();
-		
-		if (!support) {
-			boxModelRenderer(params);
-		}
+		boxModelRenderer(params);
 	};
 	
 	$self.init = function() {
-		selectivizr();
+ 		SUPPORT = flexBoxSupported();
+		LIBRARY = determineSelectorMethod();
+		
+		if (!SUPPORT && LIBRARY) {
+			selectivizr();
+		}
 	}();
 	
 	return $self;
