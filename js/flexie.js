@@ -616,21 +616,133 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function applyBoxFlex(target, children, params) {
-		var matches = params.children, kid,
-		    x, child, flex;
+		var matches = params.children, kid, totalRatio = 0,
+		    x, child, flex, flexers = {}, flexerKeys = [];
 		
 		for (i = 0, j = children.length; i < j; i++) {
 			kid = children[i];
+			child = null;
 			
 			for (k = 0, l = matches.length; k < l; k++) {
 				x = matches[k];
 				
 				if (x.match === kid) {
 					child = x.match;
-					flex = x.flex;
+					totalRatio += window.parseInt(x.flex);
+					
+					// flexers.push(x);
+					flexers[x.flex] = flexers[x.flex] || [];
+					flexers[x.flex].push(x);
 				}
 			}
+			
+			if (!child) {
+				flexers["0"] = flexers["0"] || [];
+				flexers["0"].push(kid);
+				// nonFlexers.push(kid);
+			}
 		}
+		
+		console.log(totalRatio);
+		
+		for (var key in flexers) {
+			// console.log(key, flexers[key].length);
+			flexerKeys.push(key);
+		}
+		
+		flexerKeys.sort(function(a, b) {
+			return b - a;
+		});
+		
+		// for (var i = 0, j = flexerKeys.length; i < j; i++) {
+		// 	console.log(flexerKeys[i] + ", " + flexers[flexerKeys[i]]);
+		// }
+		
+		// Zero out any defined positioning
+		appendPixelValue(children, props.pos);
+		
+		// Get total amount of whitespace
+		var whitespace, groupDimension = 0, flexWidths = {};
+
+		for (k = 0, l = children.length; k < l; k++) {
+			groupDimension += props.func(children[k]);
+		}
+
+		whitespace = props.func(target) - groupDimension;
+		console.log("Pixels to divvy up: " + whitespace);
+		
+		// if (flexerKeys.length === 2 && flexers["0"]) {
+		// 	var key = flexerKeys[0];
+		// 	
+		// 	flexWidths[key] = whitespace / flexers[key].length;
+		// 	
+		// 	for (var i = 0, j = flexers[key].length; i < j; i++) {
+		// 		var x = flexers[key][i];
+		// 		var w = flexWidths[key];
+		// 		
+		// 		var trueDim = getComputedStyle(x.match, props.dim, true);
+		// 		
+		// 		x.match.style[props.dim] = (trueDim + w) + "px";
+		// 		
+		// 	}
+		// } else {
+			var ration = whitespace / totalRatio;
+			
+			for (var i = 0, j = flexerKeys.length; i < j; i++) {
+				var key = flexerKeys[i],
+				    widthRation = (ration * key);
+				// console.log(totalRatio / key);
+				// console.log(ration * key);
+				
+				flexWidths[key] = widthRation/* / flexers[key].length*/;
+				
+				for (k = 0, l = flexers[key].length; k < l; k++) {
+					var x = flexers[key][k];
+					var w = flexWidths[key];
+					
+					if (x.match) {
+						var trueDim = getComputedStyle(x.match, props.dim, true);
+						x.match.style[props.dim] = (trueDim + w) + "px";
+					}
+				
+				}
+			}
+		// }
+		
+		
+		// If only one flexer, this is fairly easy
+		// var flexer, whitespace, groupDimension, trueDim;
+		// 
+		// if (flexers.length) {
+		// 	appendPixelValue(children, props.pos);
+		// }
+		// 
+		// for (i = 0, j = flexers.length; i < j; i++) {
+		// 	flexer = flexers[i];
+		// 	flex = window.parseInt(flexer.flex);
+		// 	
+		// 	if (flex && !window.isNaN(flex)) {
+		// 		console.log(flexers.length);
+		// 		
+		// 		if (!whitespace) {
+		// 			groupDimension = 0;
+		// 
+		// 			for (k = 0, l = children.length; k < l; k++) {
+		// 				groupDimension += props.func(children[k]);
+		// 			}
+		// 
+		// 			whitespace = props.func(target) - groupDimension;
+		// 			console.log("Pixels to divvy up: " + whitespace);
+		// 		}
+		// 		
+		// 		console.log("Flex amount: " + flex);
+		// 		
+		// 		trueDim = getComputedStyle(flexer.match, props.dim, true);
+		// 		flexer.match.style[props.dim] = (trueDim + whitespace) + "px";
+		// 		// appendPixelValue(flexer.match, props.dim, trueDim + whitespace);
+		// 	}
+		// }
+		// console.log(nonFlexers);
 	}
 	
 	function flexBoxSupported() {
