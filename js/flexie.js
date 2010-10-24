@@ -446,7 +446,7 @@ var Flexie = (function(window, doc, undefined) {
 	};
 	
 	function getComputedStyle(element, property, returnAsInt) {
-		if ("getComputedStyle" in window) {
+		if (doc.defaultView && doc.defaultView.getComputedStyle) {
 			return doc.defaultView.getComputedStyle(element, null)[property];
 		} else {
 			property = toCamelCase(property);
