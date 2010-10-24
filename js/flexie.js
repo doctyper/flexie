@@ -434,12 +434,17 @@ var Flexie = (function(window, doc, undefined) {
 		} else {
 			var style = element.style.left,
 			    runtimeStyle = element.runtimeStyle.left;
+			
+			try {
+				element.runtimeStyle.left = element.currentStyle.left;
 
-			element.runtimeStyle.left = element.currentStyle.left;
-			element.style.left = prop || 0;
-			prop = element.style.pixelLeft;
-			element.style.left = style;
-			element.runtimeStyle.left = runtimeStyle;
+				element.style.left = prop || 0;
+				prop = element.style.pixelLeft;
+				element.style.left = style;
+				element.runtimeStyle.left = runtimeStyle;
+			} catch(e) {
+				prop = 0;
+			}
 		}
 		
 		return prop + "px";
