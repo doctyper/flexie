@@ -402,6 +402,8 @@ var Flexie = (function(window, doc, undefined) {
 	};
 	
 	function unAuto(element, prop) {
+		var props;
+		
 		switch (prop) {
 			case "width" :
 			props = ["paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth"];
