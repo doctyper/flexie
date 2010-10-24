@@ -744,6 +744,17 @@ var Flexie = (function(window, doc, undefined) {
 			}
 		}
 		
+		// Setup properties
+		setupProperties(target, children, params);
+		
+		// Poll the DOM for changes
+		pollDOM(params);
+		
+		// Update the box model on resize
+		resizeEvent(params);
+	}
+	
+	function setupProperties(target, children, params) {
 		// Set up parent
 		applyBoxModel(target, children);
 		applyBoxOrient(target, children, params);
@@ -753,6 +764,43 @@ var Flexie = (function(window, doc, undefined) {
 		
 		// Children properties
 		applyBoxFlex(target, children, params);
+	}
+	
+	// Shoud I?
+	// Polling innerHTML is a huge tax. Not sure if it's worth it.
+	function pollDOM(params) {
+		var innerHTML = params.target.innerHTML;
+		
+		window.setInterval(function() {
+			if (params.target.innerHTML != innerHTML) {
+				updateBoxModel(params);
+				innerHTML = params.target.innerHTML;
+			}
+		}, 250);
+	}
+	
+	function resizeEvent(params) {
+		var currheight;
+		
+		window.onresize = function(){
+			if (currheight != doc.documentElement.clientHeight) {
+				updateBoxModel(params);
+			}
+			
+			currheight = doc.documentElement.clientHeight;
+		};
+	}
+	
+	function updateBoxModel(params) {
+		var target = params.target,
+		    children = target.childNodes;
+		
+		// Null properties
+		for (i = 0, j = children.length; i < j; i++) {
+			children[i].style.cssText = "";
+		}
+		
+		setupProperties(target, children, params);
 	}
 	
 	$self.box = function(params) {
