@@ -785,14 +785,8 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function resizeEvent(params) {
-		var currheight;
-		
 		window.onresize = function(){
-			if (currheight != doc.documentElement.clientHeight) {
-				updateBoxModel(params);
-			}
-			
-			currheight = doc.documentElement.clientHeight;
+			updateBoxModel(params);
 		};
 	}
 	
