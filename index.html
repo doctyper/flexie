@@ -14,7 +14,56 @@
 			<div id="box-3">3</div>
 		</div>
 		
+		<!-- DOMAssistant -->
+		<!-- <script src="http://domassistant.googlecode.com/svn/branches/2.8/DOMAssistantCompressed.js" type="text/javascript"></script> -->
+		
+		<!-- NWMatcher -->
+		<!-- <script src="http://nwevents.googlecode.com/svn/trunk/nwmatcher.js" type="text/javascript"></script> -->
+		
+		<!-- jQuery -->
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
+		
+		<!-- Sizzle -->
+		<!-- <script src="http://github.com/jeresig/sizzle/raw/master/sizzle.js" type="text/javascript"></script> -->
+		
+		<!-- MooTools -->
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/mootools/1.3.0/mootools-yui-compressed.js" type="text/javascript"></script> -->
+		
+		<!-- YUI -->
+		<!-- <script src="http://yui.yahooapis.com/2.8.1/build/yahoo/yahoo-min.js"></script> -->
+		<!-- <script src="http://yui.yahooapis.com/2.8.1/build/selector/selector-min.js"></script> -->
+		
+		<!-- Prototype -->
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js" type="text/javascript"></script> -->
+		
+		<!-- Dojo -->
+		<!-- <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.5/dojo/dojo.xd.js" type="text/javascript"></script> -->
+		
 		<script src="js/flexie.js" type="text/javascript"></script>
+		
+		<script type="text/javascript">
+			// Why twice?
+			// The width value changes the first time.
+			// Need consistent results.
+			(function() {
+				var get = function(id) {
+					return document.getElementById(id);
+				};
+
+				var nodes = [get("box-1"), get("box-2"), get("box-3")];
+
+				var i, j, node;
+				
+				for (i = 0, j = nodes.length; i < j; i++) {
+					node = nodes[i];
+					node.firstChild.nodeValue = node.offsetWidth;
+				}
+
+				for (i = 0, j = nodes.length; i < j; i++) {
+					node = nodes[i];
+					node.firstChild.nodeValue = node.offsetWidth;
+				}
+			})();
+		</script>
 	</body>
 </html>
