@@ -437,7 +437,7 @@ var Flexie = (function(window, doc, undefined) {
 		return prop + "px";
 	};
 	
-	function getComputedStyle(element, property) {
+	function getComputedStyle(element, property, returnAsInt) {
 		if ("getComputedStyle" in window) {
 			return doc.defaultView.getComputedStyle(element, null)[property];
 		} else {
@@ -452,7 +452,7 @@ var Flexie = (function(window, doc, undefined) {
 			/**
 			 * @returns property (or empty string if none)
 			*/
-			return property || "";
+			return returnAsInt ? window.parseInt(property) : (property || "");
 		}
 	}
 	
