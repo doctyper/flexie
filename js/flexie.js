@@ -37,7 +37,7 @@ var Flexie = (function(window, doc, undefined) {
 		pack : "start"
 	};
 	
-	var params = {}, props = {}, anti = {};
+	var params = props = anti = {};
 	
 	/*
 	selectivizr v1.0.0 - (c) Keith Clark, freely distributable under the terms 
