@@ -16,8 +16,7 @@ Class: Flexie
 	Scoped to the Flexie Global Namespace
 */
 var Flexie = (function(window, doc, undefined) {
-	var $self = {},
-	    i, j, k, l;
+	var $self = {};
 	
 	// Store support for flexbox
 	var SUPPORT;
@@ -166,7 +165,7 @@ var Flexie = (function(window, doc, undefined) {
 		}
 		
 		function buildSelectorTree(text) {
-			var rules = [], ruletext, rule,
+			var rules = [], ruletext, rule, i, j, k, l,
 			    match, selector, proptext, splitprop, properties;
 			
 			// Tabs, Returns
@@ -212,7 +211,7 @@ var Flexie = (function(window, doc, undefined) {
 		
 		function findFlexBoxElements(rules) {
 			var rule, selector, properties, prop,
-			    property, value;
+			    property, value, i, j, k, l;
 			
 			for (i = 0, j = rules.length; i < j; i++) {
 				rule = rules[i];
@@ -243,14 +242,14 @@ var Flexie = (function(window, doc, undefined) {
 		}
 		
 		function matchFlexChildren(parent, lib, possibleChildren) {
-			var child, caller, matches = [];
+			var child, caller, matches = [], i, j, k, l;
 			
 			for (i = 0, j = possibleChildren.length; i < j; i++) {
 				child = possibleChildren[i];
 				caller = lib(child.selector);
 				
 				if (caller[0]) {
-					for (var k = 0, l = caller.length; k < l; k++) {
+					for (k = 0, l = caller.length; k < l; k++) {
 						if (caller[k].parentNode === parent) {
 							child.match = caller[k];
 							matches.push(child);
@@ -265,7 +264,7 @@ var Flexie = (function(window, doc, undefined) {
 		function buildFlexieCall(flexers) {
 			var flex, selector, properties, prop,
 			    orient, align, direction, pack,
-			    lib, caller, children;
+			    lib, caller, children, i, j, k, l;
 			
 			for (i = 0, j = flexers.boxes.length; i < j; i++) {
 				flex = flexers.boxes[i];
@@ -375,7 +374,7 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function calcPx(element, props, dir) {
-		var value;
+		var value, i, j, key;
 		dir = dir.replace(dir.charAt(0), dir.charAt(0).toUpperCase());
 
 		var globalProps = {
@@ -387,10 +386,10 @@ var Flexie = (function(window, doc, undefined) {
 
 		var dummy = element.cloneNode(true);
 
-		for (var i = 0, j = props.length; i < j; i++) {
+		for (i = 0, j = props.length; i < j; i++) {
 			dummy.style[props[i]] = "0";
 		}
-		for (var key in globalProps) {
+		for (key in globalProps) {
 			dummy.style[key] = globalProps[key];
 		}
 
@@ -494,7 +493,7 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function appendProperty(target, prop, value) {
-		var cssText = [];
+		var cssText = [], i, j;
 
 		for (i = 0, j = prefixes.length; i < j; i++) {
 			cssText.push(prop + ":" + prefixes[i] + value);
@@ -505,7 +504,8 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function appendPixelValue(target, prop, value) {
-		var targets = target[0] ? target : [target];
+		var targets = target[0] ? target : [target],
+		    i, j;
 		
 		for (i = 0, j = targets.length; i < j; i++) {
 			targets[i].style[prop] = (value ? (value + "px") : "");
@@ -556,7 +556,8 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function applyBoxAlign(target, children, params) {
-		var kid, targetDimension = anti.func(target);
+		var kid, targetDimension = anti.func(target),
+		    kidDimension, i, j, k, l;
 		
 		switch (params.align) {
 			case "stretch" :
@@ -586,6 +587,8 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function applyBoxDirection(target, children, params) {
+		var i, j;
+		
 		switch (params.direction) {
 			case "normal" :
 			break;
@@ -599,7 +602,7 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function applyBoxPack(target, children, params) {
-		var groupDimension = 0,
+		var groupDimension = 0, i, j,
 		    totalDimension, fractionedDimension;
 		
 		for (i = 0, j = children.length; i < j; i++) {
@@ -631,7 +634,7 @@ var Flexie = (function(window, doc, undefined) {
 	function applyBoxFlex(target, children, params) {
 		
 		var createMatchMatrix = function(matches) {
-			var kid, child, totalRatio = 0, x,
+			var kid, child, totalRatio = 0, i, j, k, l, x,
 			    key, flexers = {}, keys = [];
 			
 			for (i = 0, j = children.length; i < j; i++) {
@@ -672,15 +675,21 @@ var Flexie = (function(window, doc, undefined) {
 		};
 		
 		var findTotalWhitespace = function(matrix) {
-			var groupDimension = 0,
+			var groupDimension = 0, kid, i, j, k, l,
 			    whitespace, ration;
 			
-			for (k = 0, l = children.length; k < l; k++) {
-				groupDimension += props.func(children[k]);
+			for (i = 0, j = children.length; i < j; i++) {
+				kid = children[i];
+				groupDimension += props.func(kid);
+				
+				for (k = 0, l = anti.add.length; k < l; k++) {
+					groupDimension += getComputedStyle(kid, props.add[k], true);
+					groupDimension += getComputedStyle(kid, anti.add[k], true);
+				}
 			}
 
 			whitespace = props.func(target) - groupDimension;
-			ration = whitespace / matrix.total;
+			ration = (whitespace / matrix.total);
 			
 			return {
 				whitespace : whitespace,
@@ -689,8 +698,8 @@ var Flexie = (function(window, doc, undefined) {
 		};
 		
 		var distributeRatio = function(matrix, whitespace) {
-			var flexers = matrix.flexers,
-			    keys = matrix.keys,
+			var flexers = matrix.flexers, i, j,
+			    keys = matrix.keys, k, l,
 			    ration = whitespace.ration,
 			    x, w, key, groupDimension = 0,
 			    flexWidths = {}, widthRation, trueDim;
@@ -698,7 +707,7 @@ var Flexie = (function(window, doc, undefined) {
 			for (i = 0, j = keys.length; i < j; i++) {
 				key = keys[i];
 				widthRation = (ration * key);
-
+				
 				flexWidths[key] = widthRation/* / flexers[key].length*/;
 
 				for (k = 0, l = flexers[key].length; k < l; k++) {
@@ -731,14 +740,14 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function boxModelRenderer(params) {
-		var target = params.target,
-		    nodes = target.childNodes,
+		var target = params.target, i, j,
+		    nodes = target.childNodes, node,
 		    children = [];
 		
 		params = getParams(params);
 		
-		var node = nodes[0];
-		for (var i = 0, j = nodes.length; i < j; i++) {
+		node = nodes[0];
+		for (i = 0, j = nodes.length; i < j; i++) {
 			if (nodes[i]) {
 				if (nodes[i].nodeType === 1) {
 					children.push(nodes[i]);
@@ -791,7 +800,7 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	function updateBoxModel(params) {
-		var target = params.target,
+		var target = params.target, i, j,
 		    children = target.childNodes;
 		
 		// Null properties
