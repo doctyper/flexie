@@ -1,7 +1,7 @@
 Flexie
 ===============
 
-Legacy support for the (CSS3 Flexible Box Model)[http://www.w3.org/TR/css3-flexbox/].
+Legacy support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/).
 
 
 Browser Support
@@ -11,7 +11,7 @@ Browser Support
 * IE 7
 * IE 6
 
-The Flexible Box Model is (supported natively)[http://www.caniuse.com/#feat=flexbox] by these browsers:
+The Flexible Box Model is [supported natively](http://www.caniuse.com/#feat=flexbox) by these browsers:
 
 * Firefox 3.0+
 * Safari 3.2+
