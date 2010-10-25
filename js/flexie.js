@@ -36,8 +36,6 @@ var Flexie = (function(window, doc, undefined) {
 		pack : "start"
 	};
 	
-	var params = {}, props = {}, anti = {};
-	
 	/*
 	selectivizr v1.0.0 - (c) Keith Clark, freely distributable under the terms 
 	of the MIT license.
@@ -511,318 +509,331 @@ var Flexie = (function(window, doc, undefined) {
 			targets[i].style[prop] = (value ? (value + "px") : "");
 		}
 	}
-	
-	function applyBoxModel(target, children) {
-		target.style.overflow = "hidden";
-	}
-	
-	function applyBoxOrient(target, children, params) {
-		var i, j;
-		
-		var wide = {
-			pos : "marginLeft",
-			add : ["marginRight", "borderLeftWidth", "borderRightWidth"],
-			dim : "width",
-			func : clientWidth
-		};
-		
-		var high = {
-			pos : "marginTop",
-			add : ["marginBottom", "borderTopWidth", "borderBottomWidth"],
-			dim : "height",
-			func : clientHeight
-		};
-		
-		for (i = 0, j = children.length; i < j; i++) {
-			kid = children[i];
-			
-			kid.style.cssFloat = kid.style.styleFloat = "left";
-			kid.style[wide.dim] = getComputedStyle(kid, wide.dim);
-			
-			if (params.orient === "vertical") {
-				kid.style.cssFloat = kid.style.styleFloat = "";
-			}
-		}
-		
-		switch (params.orient) {
-			case "horizontal" :
-			case "inline-axis" :
-			props = wide;
-			anti = high;
-			break;
-			
-			case "vertical" :
-			case "block-axis":
-			props = high;
-			anti = wide;
-			break;
-		}
-	}
-	
-	function applyBoxAlign(target, children, params) {
-		var kid, targetDimension = anti.func(target),
-		    kidDimension, i, j, k, l;
-		
-		switch (params.align) {
-			case "stretch" :
-			appendPixelValue(children, anti.dim, anti.func(target));
-			break;
-			
-			case "start" :
-			break;
-			
-			case "end" :
-			for (i = 0, j = children.length; i < j; i++) {
-				kid = children[i];
-				kidDimension = anti.func(kid);
-				
-				for (k = 0, l = anti.add.length; k < l; k++) {
-					kidDimension += getComputedStyle(kid, anti.add[k], true);
-				}
-				
-				kid.style[anti.pos] = (targetDimension - kidDimension) + "px";
-			}
-			break;
-			
-			case "center":
-			for (i = 0, j = children.length; i < j; i++) {
-				kid = children[i];
-				kid.style[anti.pos] = (targetDimension / 2 - anti.func(kid) / 2) + "px";
-			}
-			break;
-			
-			case "baseline":
-			break;
-		}
-	}
-	
-	function applyBoxDirection(target, children, params) {
-		var i, j;
-		
-		switch (params.direction) {
-			case "normal" :
-			break;
-			
-			case "reverse" :
-			for (i = children.length - 1; i >= 0; i--) {
-				target.appendChild(children[i]);
-			}
-			break;
-		}
-	}
-	
-	function applyBoxPack(target, children, params) {
-		var groupDimension = 0, i, j,
-		    totalDimension, fractionedDimension;
-		
-		for (i = 0, j = children.length; i < j; i++) {
-			groupDimension += props.func(children[i]);
-		}
-		
-		totalDimension = props.func(target) - groupDimension;
-		fractionedDimension = Math.floor(totalDimension / (children.length - 1));
-		
-		switch (params.pack) {
-			case "start" :
-			break;
-			
-			case "end" :
-			appendPixelValue(children[0], props.pos, totalDimension);
-			break;
-			
-			case "center" :
-			appendPixelValue(children[0], props.pos, totalDimension / 2);
-			break;
-			
-			case "justify" :
-			appendPixelValue(children, props.pos, fractionedDimension);
-			appendPixelValue(children[0], props.pos);
-			break;
-		}
-	}
-	
-	function applyBoxFlex(target, children, params) {
-		
-		var createMatchMatrix = function(matches) {
-			var kid, child, totalRatio = 0, i, j, k, l, x,
-			    key, flexers = {}, keys = [];
-			
-			for (i = 0, j = children.length; i < j; i++) {
-				kid = children[i];
-				child = null;
 
-				for (k = 0, l = matches.length; k < l; k++) {
-					x = matches[k];
-
-					if (x.match === kid) {
-						child = x.match;
-						totalRatio += window.parseInt(x.flex);
-
-						flexers[x.flex] = flexers[x.flex] || [];
-						flexers[x.flex].push(x);
-					}
-				}
-
-				if (!child) {
-					flexers["0"] = flexers["0"] || [];
-					flexers["0"].push(kid);
-				}
-			}
-
-			for (key in flexers) {
-				keys.push(key);
-			}
-
-			keys.sort(function(a, b) {
-				return b - a;
-			});
-			
-			return {
-				keys : keys,
-				flexers : flexers,
-				total : totalRatio
-			};
-		};
-		
-		var findTotalWhitespace = function(matrix) {
-			var groupDimension = 0, kid, i, j, k, l,
-			    whitespace, ration;
-			
-			for (i = 0, j = children.length; i < j; i++) {
-				kid = children[i];
-				groupDimension += props.func(kid);
-				
-				for (k = 0, l = anti.add.length; k < l; k++) {
-					groupDimension += getComputedStyle(kid, props.add[k], true);
-					groupDimension += getComputedStyle(kid, anti.add[k], true);
-				}
-			}
-
-			whitespace = props.func(target) - groupDimension;
-			ration = (whitespace / matrix.total);
-			
-			return {
-				whitespace : whitespace,
-				ration : ration
-			};
-		};
-		
-		var distributeRatio = function(matrix, whitespace) {
-			var flexers = matrix.flexers, i, j,
-			    keys = matrix.keys, k, l,
-			    ration = whitespace.ration,
-			    x, w, key, groupDimension = 0,
-			    flexWidths = {}, widthRation, trueDim;
-
-			for (i = 0, j = keys.length; i < j; i++) {
-				key = keys[i];
-				widthRation = (ration * key);
-				
-				flexWidths[key] = widthRation/* / flexers[key].length*/;
-
-				for (k = 0, l = flexers[key].length; k < l; k++) {
-					x = flexers[key][k];
-					w = flexWidths[key];
-
-					if (x.match) {
-						trueDim = getComputedStyle(x.match, props.dim, true);
-						x.match.style[props.dim] = (trueDim + w) + "px";
-					}
-
-				}
-			}
-		};
-		
-		// Zero out any defined positioning
-		appendPixelValue(children, props.pos);
-		
-		var matrix = createMatchMatrix(params.children),
-		    whitespace = findTotalWhitespace(matrix),
-		
-		    // Distribute the calculated ratios among the children
-		    distro = distributeRatio(matrix, whitespace);
-	}
-	
 	function flexBoxSupported() {
 		var dummy = doc.createElement("div");
 		appendProperty(dummy, "display", "box");
 		return ((dummy.style.display).indexOf("box") !== -1) ? true : false;
 	}
 	
-	function boxModelRenderer(params) {
-		var target = params.target, i, j,
-		    nodes = target.childNodes, node,
-		    children = [];
-		
-		params = getParams(params);
-		
-		node = nodes[0];
-		for (i = 0, j = nodes.length; i < j; i++) {
-			if (nodes[i]) {
-				if (nodes[i].nodeType === 1) {
-					children.push(nodes[i]);
-				} else {
-					target.removeChild(nodes[i]);
-					i--;
+	$self.box = function(params) {
+		this.boxModelRenderer(params);
+	};
+	
+	$self.box.prototype = {
+		applyBoxModel : function(target, children) {
+			target.style.overflow = "hidden";
+		},
+
+		applyBoxOrient : function(target, children, params) {
+			var _self = this,
+			    i, j, kid;
+
+			var wide = {
+				pos : "marginLeft",
+				add : ["marginRight", "borderLeftWidth", "borderRightWidth"],
+				dim : "width",
+				func : clientWidth
+			};
+
+			var high = {
+				pos : "marginTop",
+				add : ["marginBottom", "borderTopWidth", "borderBottomWidth"],
+				dim : "height",
+				func : clientHeight
+			};
+
+			for (i = 0, j = children.length; i < j; i++) {
+				kid = children[i];
+
+				kid.style.cssFloat = kid.style.styleFloat = "left";
+				kid.style[wide.dim] = getComputedStyle(kid, wide.dim);
+
+				if (params.orient === "vertical") {
+					kid.style.cssFloat = kid.style.styleFloat = "";
 				}
 			}
-		}
-		
-		// Setup properties
-		setupProperties(target, children, params);
-		
-		// Poll the DOM for changes
-		pollDOM(params);
-		
-		// Update the box model on resize
-		resizeEvent(params);
-	}
-	
-	function setupProperties(target, children, params) {
-		// Set up parent
-		applyBoxModel(target, children);
-		applyBoxOrient(target, children, params);
-		applyBoxAlign(target, children, params);
-		applyBoxDirection(target, children, params);
-		applyBoxPack(target, children, params);
-		
-		// Children properties
-		applyBoxFlex(target, children, params);
-	}
-	
-	// Shoud I?
-	// Polling innerHTML is a huge tax. Not sure if it's worth it.
-	function pollDOM(params) {
-		var innerHTML = params.target.innerHTML;
-		
-		window.setInterval(function() {
-			if (params.target.innerHTML != innerHTML) {
-				updateBoxModel(params);
-				innerHTML = params.target.innerHTML;
+
+			switch (params.orient) {
+				case "horizontal" :
+				case "inline-axis" :
+				_self.props = wide;
+				_self.anti = high;
+				break;
+
+				case "vertical" :
+				case "block-axis":
+				_self.props = high;
+				_self.anti = wide;
+				break;
 			}
-		}, 250);
-	}
-	
-	function resizeEvent(params) {
-		window.onresize = function(){
-			updateBoxModel(params);
-		};
-	}
-	
-	function updateBoxModel(params) {
-		var target = params.target, i, j,
-		    children = target.childNodes;
-		
-		// Null properties
-		for (i = 0, j = children.length; i < j; i++) {
-			children[i].style.cssText = "";
+		},
+
+		applyBoxAlign : function(target, children, params) {
+			var _self = this,
+			    kid, targetDimension = _self.anti.func(target),
+			    kidDimension, i, j, k, l;
+
+			switch (params.align) {
+				case "stretch" :
+				appendPixelValue(children, _self.anti.dim, _self.anti.func(target));
+				break;
+
+				case "start" :
+				break;
+
+				case "end" :
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kidDimension = _self.anti.func(kid);
+
+					for (k = 0, l = _self.anti.add.length; k < l; k++) {
+						kidDimension += getComputedStyle(kid, _self.anti.add[k], true);
+					}
+
+					kid.style[_self.anti.pos] = (targetDimension - kidDimension) + "px";
+				}
+				break;
+
+				case "center":
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					kid.style[_self.anti.pos] = (targetDimension / 2 - _self.anti.func(kid) / 2) + "px";
+				}
+				break;
+
+				case "baseline":
+				break;
+			}
+		},
+
+		applyBoxDirection : function(target, children, params) {
+			var i, j;
+
+			switch (params.direction) {
+				case "normal" :
+				break;
+
+				case "reverse" :
+				for (i = children.length - 1; i >= 0; i--) {
+					target.appendChild(children[i]);
+				}
+				break;
+			}
+		},
+
+		applyBoxPack : function(target, children, params) {
+			var _self = this,
+			    groupDimension = 0, i, j,
+			    totalDimension, fractionedDimension;
+
+			for (i = 0, j = children.length; i < j; i++) {
+				groupDimension += _self.props.func(children[i]);
+			}
+
+			totalDimension = _self.props.func(target) - groupDimension;
+			fractionedDimension = Math.floor(totalDimension / (children.length - 1));
+
+			switch (params.pack) {
+				case "start" :
+				break;
+
+				case "end" :
+				appendPixelValue(children[0], _self.props.pos, totalDimension);
+				break;
+
+				case "center" :
+				appendPixelValue(children[0], _self.props.pos, totalDimension / 2);
+				break;
+
+				case "justify" :
+				appendPixelValue(children, _self.props.pos, fractionedDimension);
+				appendPixelValue(children[0], _self.props.pos);
+				break;
+			}
+		},
+
+		applyBoxFlex : function(target, children, params) {
+			var _self = this;
+			
+			var createMatchMatrix = function(matches) {
+				var kid, child, totalRatio = 0, i, j, k, l, x,
+				    key, flexers = {}, keys = [];
+
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					child = null;
+
+					for (k = 0, l = matches.length; k < l; k++) {
+						x = matches[k];
+
+						if (x.match === kid) {
+							child = x.match;
+							totalRatio += window.parseInt(x.flex);
+
+							flexers[x.flex] = flexers[x.flex] || [];
+							flexers[x.flex].push(x);
+						}
+					}
+
+					if (!child) {
+						flexers["0"] = flexers["0"] || [];
+						flexers["0"].push(kid);
+					}
+				}
+
+				for (key in flexers) {
+					keys.push(key);
+				}
+
+				keys.sort(function(a, b) {
+					return b - a;
+				});
+
+				return {
+					keys : keys,
+					flexers : flexers,
+					total : totalRatio
+				};
+			};
+
+			var findTotalWhitespace = function(matrix) {
+				var groupDimension = 0, kid, i, j, k, l,
+				    whitespace, ration;
+
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					
+					groupDimension += _self.props.func(kid);
+
+					for (k = 0, l = _self.anti.add.length; k < l; k++) {
+						groupDimension += getComputedStyle(kid, _self.props.add[k], true);
+						groupDimension += getComputedStyle(kid, _self.anti.add[k], true);
+					}
+				}
+
+				whitespace = _self.props.func(target) - groupDimension;
+				ration = (whitespace / matrix.total);
+
+				return {
+					whitespace : whitespace,
+					ration : ration
+				};
+			};
+
+			var distributeRatio = function(matrix, whitespace) {
+				var flexers = matrix.flexers, i, j,
+				    keys = matrix.keys, k, l,
+				    ration = whitespace.ration,
+				    x, w, key, groupDimension = 0,
+				    flexWidths = {}, widthRation, trueDim;
+
+				for (i = 0, j = keys.length; i < j; i++) {
+					key = keys[i];
+					widthRation = (ration * key);
+
+					flexWidths[key] = widthRation/* / flexers[key].length*/;
+
+					for (k = 0, l = flexers[key].length; k < l; k++) {
+						x = flexers[key][k];
+						w = flexWidths[key];
+
+						if (x.match) {
+							trueDim = getComputedStyle(x.match, _self.props.dim, true);
+							x.match.style[_self.props.dim] = (trueDim + w) + "px";
+						}
+
+					}
+				}
+			};
+
+			// Zero out any defined positioning
+			appendPixelValue(children, _self.props.pos);
+
+			var matrix = createMatchMatrix(params.children),
+			    whitespace = findTotalWhitespace(matrix),
+
+			    // Distribute the calculated ratios among the children
+			    distro = distributeRatio(matrix, whitespace);
+		},
+
+		setupProperties : function(target, children, params) {
+			var _self = this;
+			
+			// Set up parent
+			_self.applyBoxModel(target, children);
+			_self.applyBoxOrient(target, children, params);
+			_self.applyBoxAlign(target, children, params);
+			_self.applyBoxDirection(target, children, params);
+			_self.applyBoxPack(target, children, params);
+
+			// Children properties
+			_self.applyBoxFlex(target, children, params);
+		},
+
+		// Shoud I?
+		// Polling innerHTML is a huge tax. Not sure if it's worth it.
+		pollDOM : function(params) {
+			var _self = this,
+			    innerHTML = params.target.innerHTML;
+
+			window.setInterval(function() {
+				if (params.target.innerHTML != innerHTML) {
+					_self.updateBoxModel(params);
+					innerHTML = params.target.innerHTML;
+				}
+			}, 250);
+		},
+
+		resizeEvent : function(params) {
+			var _self = this;
+			
+			window.onresize = function() {
+				_self.updateBoxModel(params);
+			};
+		},
+
+		updateBoxModel : function(params) {
+			var target = params.target, i, j,
+			    children = target.childNodes;
+
+			// Null properties
+			for (i = 0, j = children.length; i < j; i++) {
+				children[i].style.cssText = "";
+			}
+
+			this.setupProperties(target, children, params);
+		},
+
+		boxModelRenderer : function(params) {
+			var _self = this,
+			    target = params.target, i, j,
+			    nodes = target.childNodes, node,
+			    children = [];
+
+			params = getParams(params);
+
+			node = nodes[0];
+			for (i = 0, j = nodes.length; i < j; i++) {
+				if (nodes[i]) {
+					if (nodes[i].nodeType === 1) {
+						children.push(nodes[i]);
+					} else {
+						target.removeChild(nodes[i]);
+						i--;
+					}
+				}
+			}
+
+			// Setup properties
+			_self.setupProperties(target, children, params);
+
+			// Poll the DOM for changes
+			_self.pollDOM(params);
+
+			// Update the box model on resize
+			_self.resizeEvent(params);
 		}
-		
-		setupProperties(target, children, params);
-	}
-	
-	$self.box = function(params) {
-		boxModelRenderer(params);
 	};
 	
 	$self.init = function() {
