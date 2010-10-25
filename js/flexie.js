@@ -829,7 +829,7 @@ var Flexie = (function(window, doc, undefined) {
 					}
 				}
 			}
-
+			
 			// Setup properties
 			_self.setupProperties(target, children, params);
 
