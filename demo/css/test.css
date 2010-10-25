@@ -71,6 +71,9 @@ box-lines
 
 */
 
+/* Demo Styling */
+@import url("demo.css");
+
 #doc {
 	/* Display Box */
 	display: -moz-box;
