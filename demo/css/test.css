@@ -92,6 +92,8 @@ box-lines
 	box-flex: 1;
 }
 
+/* Since #container is the second child element of a vertically oriented box,
+* we could give it flex, which would fill up the viewport vertically. Try it! */
 #products {
 	display: -webkit-box;
 	display: -moz-box;
@@ -103,22 +105,25 @@ box-lines
 	-ms-box-orient: horizontal;
 	box-orient: horizontal;
 	
-	/* -webkit-box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
-	/* -moz-box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
-	/* -ms-box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
-	/* box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
+	/* Uncomment these rules and see what happens */
+/*	-webkit-box-flex: 1; */
+/*	-moz-box-flex: 1; */
+/*	-ms-box-flex: 1; */
+/*	box-flex: 1;*/
 }
 
 #computers {
-	-webkit-box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
-	-moz-box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
-	-ms-box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
-	box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
+	/* Activating these rules and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	-ms-box-flex: 1;
+	box-flex: 1;
 }
 
 #fast-cars {
-	-webkit-box-flex: 1; /* Change this value to 3 and see what happens */
-	-moz-box-flex: 1; /* Change this value to 3 and see what happens */
-	-ms-box-flex: 1; /* Change this value to 3 and see what happens */
-	box-flex: 1; /* Change this value to 3 and see what happens */
+	/* Change these values to 3 and see what happens */
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	-ms-box-flex: 1;
+	box-flex: 1;
 }

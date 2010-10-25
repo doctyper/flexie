@@ -25,8 +25,6 @@ p {
 	width: 200px;
 }
 
-/* Since #container is the second child element of a vertically oriented box,
-* we could give it flex, which would fill up the viewport vertically. Try it! */
 #products {
 	background-color: silver;
 	width: 100%;
