@@ -209,7 +209,8 @@ var Flexie = (function(window, doc, undefined) {
 		
 		function findFlexBoxElements(rules) {
 			var rule, selector, properties, prop,
-			    property, value, i, j, k, l;
+			    property, value, i, j, k, l,
+			    trim = /^\s+|\s+$/;
 			
 			for (i = 0, j = rules.length; i < j; i++) {
 				rule = rules[i];
@@ -218,6 +219,11 @@ var Flexie = (function(window, doc, undefined) {
 				
 				for (k = 0, l = properties.length; k < l; k++) {
 					prop = properties[k];
+					
+					// Trim any residue whitespace (it happens)
+					prop.property = prop.property.replace(trim, "");
+					prop.value = prop.value.replace(trim, "");
+					
 					property = prop.property;
 					value = prop.value;
 					
@@ -227,7 +233,6 @@ var Flexie = (function(window, doc, undefined) {
 						
 						// Easy access for later
 						rule.flex = value;
-						
 						POSSIBLE_FLEX_CHILDREN.push(rule);
 					}
 				}
