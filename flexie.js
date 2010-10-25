@@ -801,7 +801,9 @@ var Flexie = (function(window, doc, undefined) {
 			_self.boxPack(target, children, params);
 
 			// Children properties
-			_self.boxFlex(target, children, params);
+			if (children.length) {
+				_self.boxFlex(target, children, params);
+			}
 		},
 
 		// Shoud I?
