@@ -49,6 +49,11 @@ var Flexie = (function(window, doc, undefined) {
 	var PIXEL = /^\d+(px)?$/i;
 	var SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/;
 	
+	var BORDER_RIGHT = "borderLeftWidth",
+	    BORDER_BOTTOM = "borderBottomWidth",
+	    BORDER_LEFT = "borderLeftWidth",
+	    BORDER_TOP = "borderTopWidth";
+	
 	var prefixes = " -o- -moz- -ms- -webkit- -khtml- ".split(" ");
 	
 	var defaults = {
@@ -431,12 +436,12 @@ var Flexie = (function(window, doc, undefined) {
 		
 		switch (prop) {
 			case "width" :
-			props = ["paddingLeft", "paddingRight", "borderLeftWidth", "borderRightWidth"];
+			props = ["paddingLeft", "paddingRight", BORDER_LEFT, BORDER_RIGHT];
 			prop = calcPx(element, props, prop);
 			break;
 
 			case "height" :
-			props = ["paddingTop", "paddingBottom", "borderTopWidth", "borderBottomWidth"];
+			props = ["paddingTop", "paddingBottom", BORDER_TOP, BORDER_BOTTOM];
 			prop = calcPx(element, props, prop);
 			break;
 
@@ -490,7 +495,7 @@ var Flexie = (function(window, doc, undefined) {
 			/**
 			 * @returns property (or empty string if none)
 			*/
-			return returnAsInt ? window.parseInt(property) : (property || "");
+			return returnAsInt ? parseInt(property) : (property || "");
 		}
 	}
 	
@@ -545,28 +550,28 @@ var Flexie = (function(window, doc, undefined) {
 	}
 	
 	$self.box = function(params) {
-		this.boxModelRenderer(params);
+		this.renderModel(params);
 	};
 	
 	$self.box.prototype = {
-		applyBoxModel : function(target, children) {
+		boxModel : function(target, children) {
 			target.style.overflow = "hidden";
 		},
 
-		applyBoxOrient : function(target, children, params) {
+		boxOrient : function(target, children, params) {
 			var _self = this,
 			    i, j, kid;
 
 			var wide = {
 				pos : "marginLeft",
-				add : ["marginRight", "borderLeftWidth", "borderRightWidth"],
+				add : ["marginRight", BORDER_LEFT, BORDER_RIGHT],
 				dim : "width",
 				func : clientWidth
 			};
 
 			var high = {
 				pos : "marginTop",
-				add : ["marginBottom", "borderTopWidth", "borderBottomWidth"],
+				add : ["marginBottom", BORDER_TOP, BORDER_BOTTOM],
 				dim : "height",
 				func : clientHeight
 			};
@@ -597,7 +602,7 @@ var Flexie = (function(window, doc, undefined) {
 			}
 		},
 
-		applyBoxAlign : function(target, children, params) {
+		boxAlign : function(target, children, params) {
 			var _self = this,
 			    kid, targetDimension = _self.anti.func(target),
 			    kidDimension, i, j, k, l;
@@ -635,7 +640,7 @@ var Flexie = (function(window, doc, undefined) {
 			}
 		},
 
-		applyBoxDirection : function(target, children, params) {
+		boxDirection : function(target, children, params) {
 			var i, j;
 
 			switch (params.direction) {
@@ -650,7 +655,7 @@ var Flexie = (function(window, doc, undefined) {
 			}
 		},
 
-		applyBoxPack : function(target, children, params) {
+		boxPack : function(target, children, params) {
 			var _self = this,
 			    groupDimension = 0, i, j,
 			    totalDimension, fractionedDimension;
@@ -681,7 +686,7 @@ var Flexie = (function(window, doc, undefined) {
 			}
 		},
 
-		applyBoxFlex : function(target, children, params) {
+		boxFlex : function(target, children, params) {
 			var _self = this;
 			
 			var createMatchMatrix = function(matches) {
@@ -697,7 +702,7 @@ var Flexie = (function(window, doc, undefined) {
 
 						if (x.match === kid) {
 							child = x.match;
-							totalRatio += window.parseInt(x.flex);
+							totalRatio += parseInt(x.flex);
 
 							flexers[x.flex] = flexers[x.flex] || [];
 							flexers[x.flex].push(x);
@@ -785,18 +790,18 @@ var Flexie = (function(window, doc, undefined) {
 			    distro = distributeRatio(matrix, whitespace);
 		},
 
-		setupProperties : function(target, children, params) {
+		setup : function(target, children, params) {
 			var _self = this;
 			
 			// Set up parent
-			_self.applyBoxModel(target, children);
-			_self.applyBoxOrient(target, children, params);
-			_self.applyBoxAlign(target, children, params);
-			_self.applyBoxDirection(target, children, params);
-			_self.applyBoxPack(target, children, params);
+			_self.boxModel(target, children);
+			_self.boxOrient(target, children, params);
+			_self.boxAlign(target, children, params);
+			_self.boxDirection(target, children, params);
+			_self.boxPack(target, children, params);
 
 			// Children properties
-			_self.applyBoxFlex(target, children, params);
+			_self.boxFlex(target, children, params);
 		},
 
 		// Shoud I?
@@ -807,7 +812,7 @@ var Flexie = (function(window, doc, undefined) {
 
 			window.setInterval(function() {
 				if (params.target.innerHTML != innerHTML) {
-					_self.updateBoxModel(params);
+					_self.updateModel(params);
 					innerHTML = params.target.innerHTML;
 				}
 			}, 250);
@@ -817,11 +822,11 @@ var Flexie = (function(window, doc, undefined) {
 			var _self = this;
 			
 			window.onresize = function() {
-				_self.updateBoxModel(params);
+				_self.updateModel(params);
 			};
 		},
 
-		updateBoxModel : function(params) {
+		updateModel : function(params) {
 			var target = params.target, i, j,
 			    children = target.childNodes;
 
@@ -830,10 +835,10 @@ var Flexie = (function(window, doc, undefined) {
 				children[i].style.cssText = "";
 			}
 
-			this.setupProperties(target, children, params);
+			this.setup(target, children, params);
 		},
 
-		boxModelRenderer : function(params) {
+		renderModel : function(params) {
 			var _self = this,
 			    target = params.target, i, j,
 			    nodes = target.childNodes, node,
@@ -854,7 +859,7 @@ var Flexie = (function(window, doc, undefined) {
 			}
 			
 			// Setup properties
-			_self.setupProperties(target, children, params);
+			_self.setup(target, children, params);
 
 			// Poll the DOM for changes
 			_self.pollDOM(params);
