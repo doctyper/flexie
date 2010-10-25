@@ -539,7 +539,9 @@ var Flexie = (function(window, doc, undefined) {
 		    i, j;
 		
 		for (i = 0, j = targets.length; i < j; i++) {
-			targets[i].style[prop] = (value ? (value + "px") : "");
+			if (targets[i] && targets[i].style) {
+				targets[i].style[prop] = (value ? (value + "px") : "");
+			}
 		}
 	}
 
