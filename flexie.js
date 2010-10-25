@@ -38,7 +38,7 @@ Class: Flexie
 	Scoped to the Flexie Global Namespace
 */
 var Flexie = (function(window, doc, undefined) {
-	var $self = {};
+	var FLX = {};
 	
 	// Store support for flexbox
 	var SUPPORT;
@@ -54,9 +54,9 @@ var Flexie = (function(window, doc, undefined) {
 	    BORDER_LEFT = "borderLeftWidth",
 	    BORDER_TOP = "borderTopWidth";
 	
-	var prefixes = " -o- -moz- -ms- -webkit- -khtml- ".split(" ");
+	var PREFIXES = " -o- -moz- -ms- -webkit- -khtml- ".split(" ");
 	
-	var defaults = {
+	var DEFAULTS = {
 		orient : "horizontal",
 		align : "stretch",
 		direction : "normal",
@@ -341,7 +341,7 @@ var Flexie = (function(window, doc, undefined) {
 					// Find possible child node matches
 					children = matchFlexChildren(caller, lib, flexers.children);
 					
-					new $self.box({
+					new FLX.box({
 						target : caller,
 						children : children,
 						orient : orient,
@@ -509,7 +509,7 @@ var Flexie = (function(window, doc, undefined) {
 	
 	function getParams(params) {
 		for (var key in params) {
-			params[key] = params[key] || defaults[key];
+			params[key] = params[key] || DEFAULTS[key];
 		}
 		
 		return params;
@@ -526,8 +526,8 @@ var Flexie = (function(window, doc, undefined) {
 	function appendProperty(target, prop, value) {
 		var cssText = [], i, j;
 
-		for (i = 0, j = prefixes.length; i < j; i++) {
-			cssText.push(prop + ":" + prefixes[i] + value);
+		for (i = 0, j = PREFIXES.length; i < j; i++) {
+			cssText.push(prop + ":" + PREFIXES[i] + value);
 		}
 
 		target.style.cssText = cssText.join(";");
@@ -551,11 +551,11 @@ var Flexie = (function(window, doc, undefined) {
 		return ((dummy.style.display).indexOf("box") !== -1) ? true : false;
 	}
 	
-	$self.box = function(params) {
+	FLX.box = function(params) {
 		this.renderModel(params);
 	};
 	
-	$self.box.prototype = {
+	FLX.box.prototype = {
 		boxModel : function(target, children) {
 			target.style.overflow = "hidden";
 		},
@@ -873,7 +873,7 @@ var Flexie = (function(window, doc, undefined) {
 		}
 	};
 	
-	$self.init = function() {
+	FLX.init = function() {
  		SUPPORT = flexBoxSupported();
 		LIBRARY = determineSelectorMethod();
 		
@@ -882,5 +882,5 @@ var Flexie = (function(window, doc, undefined) {
 		}
 	}();
 	
-	return $self;
+	return FLX;
 })(this, document);
