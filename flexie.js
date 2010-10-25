@@ -63,6 +63,9 @@ var Flexie = (function(window, doc, undefined) {
 		pack : "start"
 	};
 	
+	var FLEX_BOXES = [],
+	    POSSIBLE_FLEX_CHILDREN = [];
+	
 	/*
 	selectivizr v1.0.0 - (c) Keith Clark, freely distributable under the terms 
 	of the MIT license.
@@ -70,9 +73,6 @@ var Flexie = (function(window, doc, undefined) {
 	selectivizr.com
 	*/
 	var selectivizr = (function() {
-		var FLEX_BOXES = [],
-		    POSSIBLE_FLEX_CHILDREN = [];
-		
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
 		    RE_IMPORT = /@import\s*url\(\s*(["'])?(.*?)\1\s*\)[\w\W]*?;/g,
 		    RE_SELECTOR_GROUP = /(^|})\s*([^\{]*?[\[:][^{]+)/g,
@@ -189,170 +189,6 @@ var Flexie = (function(window, doc, undefined) {
 			return EMPTY_STRING;
 		}
 		
-		function buildSelectorTree(text) {
-			var rules = [], ruletext, rule, i, j, k, l,
-			    match, selector, proptext, splitprop, properties;
-			
-			// Tabs, Returns
-			text = text.replace(/\t/g, "").replace(/\n/g, "").replace(/\r/g, "");
-			
-			// Leading / Trailing Whitespace
-			text = text.replace(/\s?(\{|\:|\})\s?/g, "$1");
-			
-			ruletext = text.split("}");
-			
-			for (i = 0, j = ruletext.length; i < j; i++) {
-				if (ruletext[i]) {
-					rule = [ruletext[i], "}"].join("");
-					
-					match = (/(.*)\{(.*)\}/).exec(rule);
-					
-					if (match.length && match[2]) {
-						selector = match[1];
-						proptext = match[2].split(";");
-						properties = [];
-						
-						for (k = 0, l = proptext.length; k < l; k++) {
-							splitprop = proptext[k].split(":");
-							
-							if (splitprop.length && splitprop[1]) {
-								properties.push({
-									property : splitprop[0],
-									value : splitprop[1]
-								});
-							}
-						}
-						
-						rules.push({
-							selector : selector,
-							properties : properties
-						});
-					}
-				}
-			}
-			
-			return rules;
-		}
-		
-		function findFlexBoxElements(rules) {
-			var rule, selector, properties, prop,
-			    property, value, i, j, k, l,
-			    leadingTrim = /^\s\s*/,
-			    trailingTrim = /\s\s*$/;
-			
-			for (i = 0, j = rules.length; i < j; i++) {
-				rule = rules[i];
-				selector = rule.selector;
-				properties = rule.properties;
-				
-				for (k = 0, l = properties.length; k < l; k++) {
-					prop = properties[k];
-					
-					// Trim any residue whitespace (it happens)
-					prop.property = prop.property.replace(leadingTrim, "").replace(trailingTrim, "");
-					prop.value = prop.value.replace(leadingTrim, "").replace(trailingTrim, "");
-					
-					property = prop.property;
-					value = prop.value;
-					
-					if (property == "display" && value == "box") {
-						FLEX_BOXES.push(rule);
-					} else if (property == "box-flex" && value) {
-						
-						// Easy access for later
-						rule.flex = value;
-						POSSIBLE_FLEX_CHILDREN.push(rule);
-					}
-				}
-			}
-			
-			return {
-				boxes : FLEX_BOXES,
-				children : POSSIBLE_FLEX_CHILDREN
-			};
-		}
-		
-		function matchFlexChildren(parent, lib, possibleChildren) {
-			var child, caller, matches = [], i, j, k, l;
-			
-			for (i = 0, j = possibleChildren.length; i < j; i++) {
-				child = possibleChildren[i];
-				caller = lib(child.selector);
-				
-				if (caller[0]) {
-					for (k = 0, l = caller.length; k < l; k++) {
-						if (caller[k].parentNode === parent) {
-							child.match = caller[k];
-							matches.push(child);
-						}
-					}
-				}
-			}
-			
-			return matches;
-		}
-		
-		function buildFlexieCall(flexers) {
-			var flex, selector, properties, prop,
-			    orient, align, direction, pack,
-			    lib, caller, children, i, j, k, l;
-			
-			for (i = 0, j = flexers.boxes.length; i < j; i++) {
-				flex = flexers.boxes[i];
-				
-				selector = flex.selector;
-				properties = flex.properties;
-				
-				orient = align = direction = pack = null;
-				
-				for (k = 0, l = properties.length; k < l; k++) {
-					prop = properties[k];
-					
-					switch (prop.property) {
-						case "box-orient" :
-						orient = prop.value;
-						break;
-						
-						case "box-align" :
-						align = prop.value;
-						break;
-						
-						case "box-direction" :
-						direction = prop.value;
-						break;
-						
-						case "box-pack" :
-						pack = prop.value;
-						break;
-					}
-				}
-				
-				if (orient || align || direction || pack) {
-					
-					// Determine library
-					lib = LIBRARY;
-					
-					// Call it.
-					caller = lib(flex.selector);
-					
-					// In an array?
-					caller = caller[0] || caller;
-					
-					// Find possible child node matches
-					children = matchFlexChildren(caller, lib, flexers.children);
-					
-					new FLX.box({
-						target : caller,
-						children : children,
-						orient : orient,
-						align : align,
-						direction: direction,
-						pack : pack
-					});
-				}
-			}
-		}
-		
 		// --[ init() ]---------------------------------------------------------
 		return function() {
 			// honour the <base> tag
@@ -402,6 +238,170 @@ var Flexie = (function(window, doc, undefined) {
 			}
 		}
 		return false;
+	}
+	
+	function buildSelectorTree(text) {
+		var rules = [], ruletext, rule, i, j, k, l,
+		    match, selector, proptext, splitprop, properties;
+		
+		// Tabs, Returns
+		text = text.replace(/\t/g, "").replace(/\n/g, "").replace(/\r/g, "");
+		
+		// Leading / Trailing Whitespace
+		text = text.replace(/\s?(\{|\:|\})\s?/g, "$1");
+		
+		ruletext = text.split("}");
+		
+		for (i = 0, j = ruletext.length; i < j; i++) {
+			if (ruletext[i]) {
+				rule = [ruletext[i], "}"].join("");
+				
+				match = (/(.*)\{(.*)\}/).exec(rule);
+				
+				if (match.length && match[2]) {
+					selector = match[1];
+					proptext = match[2].split(";");
+					properties = [];
+					
+					for (k = 0, l = proptext.length; k < l; k++) {
+						splitprop = proptext[k].split(":");
+						
+						if (splitprop.length && splitprop[1]) {
+							properties.push({
+								property : splitprop[0],
+								value : splitprop[1]
+							});
+						}
+					}
+					
+					rules.push({
+						selector : selector,
+						properties : properties
+					});
+				}
+			}
+		}
+		
+		return rules;
+	}
+	
+	function findFlexBoxElements(rules) {
+		var rule, selector, properties, prop,
+		    property, value, i, j, k, l,
+		    leadingTrim = /^\s\s*/,
+		    trailingTrim = /\s\s*$/;
+		
+		for (i = 0, j = rules.length; i < j; i++) {
+			rule = rules[i];
+			selector = rule.selector;
+			properties = rule.properties;
+			
+			for (k = 0, l = properties.length; k < l; k++) {
+				prop = properties[k];
+				
+				// Trim any residue whitespace (it happens)
+				prop.property = prop.property.replace(leadingTrim, "").replace(trailingTrim, "");
+				prop.value = prop.value.replace(leadingTrim, "").replace(trailingTrim, "");
+				
+				property = prop.property;
+				value = prop.value;
+				
+				if (property == "display" && value == "box") {
+					FLEX_BOXES.push(rule);
+				} else if (property == "box-flex" && value) {
+					
+					// Easy access for later
+					rule.flex = value;
+					POSSIBLE_FLEX_CHILDREN.push(rule);
+				}
+			}
+		}
+		
+		return {
+			boxes : FLEX_BOXES,
+			children : POSSIBLE_FLEX_CHILDREN
+		};
+	}
+	
+	function matchFlexChildren(parent, lib, possibleChildren) {
+		var child, caller, matches = [], i, j, k, l;
+		
+		for (i = 0, j = possibleChildren.length; i < j; i++) {
+			child = possibleChildren[i];
+			caller = lib(child.selector);
+			
+			if (caller[0]) {
+				for (k = 0, l = caller.length; k < l; k++) {
+					if (caller[k].parentNode === parent) {
+						child.match = caller[k];
+						matches.push(child);
+					}
+				}
+			}
+		}
+		
+		return matches;
+	}
+	
+	function buildFlexieCall(flexers) {
+		var flex, selector, properties, prop,
+		    orient, align, direction, pack,
+		    lib, caller, children, i, j, k, l;
+		
+		for (i = 0, j = flexers.boxes.length; i < j; i++) {
+			flex = flexers.boxes[i];
+			
+			selector = flex.selector;
+			properties = flex.properties;
+			
+			orient = align = direction = pack = null;
+			
+			for (k = 0, l = properties.length; k < l; k++) {
+				prop = properties[k];
+				
+				switch (prop.property) {
+					case "box-orient" :
+					orient = prop.value;
+					break;
+					
+					case "box-align" :
+					align = prop.value;
+					break;
+					
+					case "box-direction" :
+					direction = prop.value;
+					break;
+					
+					case "box-pack" :
+					pack = prop.value;
+					break;
+				}
+			}
+			
+			if (orient || align || direction || pack) {
+				
+				// Determine library
+				lib = LIBRARY;
+				
+				// Call it.
+				caller = lib(flex.selector);
+				
+				// In an array?
+				caller = caller[0] || caller;
+				
+				// Find possible child node matches
+				children = matchFlexChildren(caller, lib, flexers.children);
+				
+				new FLX.box({
+					target : caller,
+					children : children,
+					orient : orient,
+					align : align,
+					direction: direction,
+					pack : pack
+				});
+			}
+		}
 	}
 	
 	function calcPx(element, props, dir) {
