@@ -614,9 +614,6 @@ var Flexie = (function(window, doc, undefined) {
 				appendPixelValue(children, _self.anti.dim, _self.anti.func(target));
 				break;
 
-				case "start" :
-				break;
-
 				case "end" :
 				for (i = 0, j = children.length; i < j; i++) {
 					kid = children[i];
@@ -636,9 +633,6 @@ var Flexie = (function(window, doc, undefined) {
 					kid.style[_self.anti.pos] = (targetDimension / 2 - _self.anti.func(kid) / 2) + "px";
 				}
 				break;
-
-				case "baseline":
-				break;
 			}
 		},
 
@@ -646,9 +640,6 @@ var Flexie = (function(window, doc, undefined) {
 			var i, j;
 
 			switch (params.direction) {
-				case "normal" :
-				break;
-
 				case "reverse" :
 				for (i = children.length - 1; i >= 0; i--) {
 					target.appendChild(children[i]);
@@ -670,9 +661,6 @@ var Flexie = (function(window, doc, undefined) {
 			fractionedDimension = Math.floor(totalDimension / (children.length - 1));
 
 			switch (params.pack) {
-				case "start" :
-				break;
-
 				case "end" :
 				appendPixelValue(children[0], _self.props.pos, totalDimension);
 				break;
