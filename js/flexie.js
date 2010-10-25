@@ -210,7 +210,8 @@ var Flexie = (function(window, doc, undefined) {
 		function findFlexBoxElements(rules) {
 			var rule, selector, properties, prop,
 			    property, value, i, j, k, l,
-			    trim = /^\s+|\s+$/;
+			    leadingTrim = /^\s\s*/,
+			    trailingTrim = /\s\s*$/;
 			
 			for (i = 0, j = rules.length; i < j; i++) {
 				rule = rules[i];
@@ -221,8 +222,8 @@ var Flexie = (function(window, doc, undefined) {
 					prop = properties[k];
 					
 					// Trim any residue whitespace (it happens)
-					prop.property = prop.property.replace(trim, "");
-					prop.value = prop.value.replace(trim, "");
+					prop.property = prop.property.replace(leadingTrim, "").replace(trailingTrim, "");
+					prop.value = prop.value.replace(leadingTrim, "").replace(trailingTrim, "");
 					
 					property = prop.property;
 					value = prop.value;
