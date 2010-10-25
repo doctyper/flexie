@@ -71,7 +71,7 @@ box-lines
 
 */
 
-#box-wrap {
+#doc {
 	/* Display Box */
 	display: -moz-box;
 	display: -webkit-box;
@@ -79,33 +79,46 @@ box-lines
 	display: box;
 	
 	/* Box Orient */
+	-webkit-box-orient: vertical;
+	-moz-box-orient: vertical;
+	-ms-box-orient: vertical;
+	box-orient: vertical;
+}
+
+#header, #footer {
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	-ms-box-flex: 1;
+	box-flex: 1;
+}
+
+#products {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-box;
+	display: box;
+	
 	-webkit-box-orient: horizontal;
 	-moz-box-orient: horizontal;
 	-ms-box-orient: horizontal;
 	box-orient: horizontal;
 	
-	/* Box Align */
-	-webkit-box-align: center;
-	-moz-box-align: center;
-	-ms-box-align: center;
-	box-align: center;
-	
-	/* Box Pack */
-	-webkit-box-pack: center;
-	-moz-box-pack: center;
-	-ms-box-pack: center;
-	box-pack: center;
-	
-	/* Box Direction */
-	-webkit-box-direction: normal;
-	-moz-box-direction: normal;
-	-ms-box-direction: normal;
-	box-direction: normal;
+	/* -webkit-box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
+	/* -moz-box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
+	/* -ms-box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
+	/* box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
 }
 
-#box-1, #box-2 {
-	-moz-box-flex: 1;
-	-webkit-box-flex: 1;
-	-ms-box-flex: 1;
-	box-flex: 1;
+#computers {
+	-webkit-box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
+	-moz-box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
+	-ms-box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
+	box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
+}
+
+#fast-cars {
+	-webkit-box-flex: 1; /* Change this value to 3 and see what happens */
+	-moz-box-flex: 1; /* Change this value to 3 and see what happens */
+	-ms-box-flex: 1; /* Change this value to 3 and see what happens */
+	box-flex: 1; /* Change this value to 3 and see what happens */
 }
