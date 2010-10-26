@@ -227,7 +227,8 @@ var Flexie = (function (window, doc) {
 	function buildFlexieCall(flexers) {
 		var flex, selector, properties, prop,
 		    orient, align, direction, pack,
-		    lib, caller, children, i, j, k, l;
+		    lib, caller, children, i, j, k, l,
+		    box;
 		
 		for (i = 0, j = flexers.boxes.length; i < j; i++) {
 			flex = flexers.boxes[i];
@@ -273,7 +274,7 @@ var Flexie = (function (window, doc) {
 				// Find possible child node matches
 				children = matchFlexChildren(caller, lib, flexers.children);
 				
-				new FLX.box({
+				box = new FLX.box({
 					target : caller,
 					children : children,
 					orient : orient,
