@@ -822,7 +822,7 @@ var Flexie = (function (window, doc) {
 				    keys = matrix.keys, k, l,
 				    ration = whitespace.ration,
 				    x, w, key, flexWidths = {},
-				    widthRation, trueDim;
+				    widthRation, trueDim, newWidth;
 
 				for (i = 0, j = keys.length; i < j; i++) {
 					key = keys[i];
@@ -837,7 +837,8 @@ var Flexie = (function (window, doc) {
 						if (x.match) {
 							trueDim = getComputedStyle(x.match, self.props.dim, true);
 							
-							x.match.style[self.props.dim] = (trueDim + w) + "px";
+							newWidth = Math.max(0, (trueDim + w));
+							x.match.style[self.props.dim] = newWidth + "px";
 						}
 
 					}
