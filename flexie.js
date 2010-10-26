@@ -289,7 +289,9 @@ var Flexie = (function(window, doc, undefined) {
 		var rule, selector, properties, prop,
 		    property, value, i, j, k, l,
 		    leadingTrim = /^\s\s*/,
-		    trailingTrim = /\s\s*$/;
+		    trailingTrim = /\s\s*$/,
+		    selectorSplit = /(\s)?,(\s)?/,
+		    multiSelectors, m, n;
 		
 		for (i = 0, j = rules.length; i < j; i++) {
 			rule = rules[i];
@@ -310,9 +312,23 @@ var Flexie = (function(window, doc, undefined) {
 					FLEX_BOXES.push(rule);
 				} else if (property == "box-flex" && value) {
 					
-					// Easy access for later
-					rule.flex = value;
-					POSSIBLE_FLEX_CHILDREN.push(rule);
+					// Multiple selectors?
+					multiSelectors = selector.split(selectorSplit);
+					
+					for (m = 0, n = multiSelectors.length; m < n; m++) {
+						updatedRule = {};
+						
+						// Each selector gets its own call
+						for (var key in rule) {
+							updatedRule[key] = rule[key];
+						}
+						
+						updatedRule.selector = multiSelectors[m];
+						
+						// Easy access for later
+						updatedRule.flex = value;
+						POSSIBLE_FLEX_CHILDREN.push(updatedRule);
+					}
 				}
 			}
 		}
@@ -328,6 +344,7 @@ var Flexie = (function(window, doc, undefined) {
 		
 		for (i = 0, j = possibleChildren.length; i < j; i++) {
 			child = possibleChildren[i];
+			
 			caller = lib(child.selector);
 			
 			if (caller[0]) {
@@ -763,6 +780,7 @@ var Flexie = (function(window, doc, undefined) {
 
 						if (x.match) {
 							trueDim = getComputedStyle(x.match, _self.props.dim, true);
+							
 							x.match.style[_self.props.dim] = (trueDim + w) + "px";
 						}
 
