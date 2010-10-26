@@ -3,6 +3,10 @@ Flexie
 
 Legacy support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/).
 
+Ready For Prime Time Status
+===========================
+
+Nope.
 
 Browser Support
 ===============
