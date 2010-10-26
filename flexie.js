@@ -291,7 +291,7 @@ var Flexie = (function(window, doc, undefined) {
 		    leadingTrim = /^\s\s*/,
 		    trailingTrim = /\s\s*$/,
 		    selectorSplit = /(\s)?,(\s)?/,
-		    multiSelectors, m, n;
+		    multiSelectors, m, n, key;
 		
 		for (i = 0, j = rules.length; i < j; i++) {
 			rule = rules[i];
@@ -319,7 +319,7 @@ var Flexie = (function(window, doc, undefined) {
 						updatedRule = {};
 						
 						// Each selector gets its own call
-						for (var key in rule) {
+						for (key in rule) {
 							updatedRule[key] = rule[key];
 						}
 						
