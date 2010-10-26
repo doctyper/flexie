@@ -68,7 +68,11 @@ var Flexie = (function (window, doc) {
 	},
 	
 	FLEX_BOXES = [],
-	    POSSIBLE_FLEX_CHILDREN = [],
+	POSSIBLE_FLEX_CHILDREN = [],
+	
+	FLEX_INSTANCES = [],
+	
+	RESIZE_LISTENER,
 	
 	/*
 	selectivizr v1.0.0 - (c) Keith Clark, freely distributable under the terms 
@@ -430,6 +434,38 @@ var Flexie = (function (window, doc) {
 			if (targets[i] && targets[i].style) {
 				targets[i].style[prop] = (value ? (value + "px") : "");
 			}
+		}
+	}
+	
+	function attachResizeListener(constructor, params) {
+		FLEX_INSTANCES.push({
+			constructor : constructor,
+			params : params
+		});
+		
+		if (!RESIZE_LISTENER) {
+			var storedWidth, storedHeight,
+			    currentWidth, currentHeight,
+			    docBody = document.body,
+			    docEl = document.documentElement,
+			    i, j, instance;
+
+			window.onresize = function () {
+				currentWidth = docEl.innerWidth || docBody.clientWidth || docEl.clientWidth;
+				currentHeight = docEl.innerHeight || docBody.clientHeight || docEl.clientHeight;
+				
+				if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
+					for (i = 0, j = FLEX_INSTANCES.length; i < j; i++) {
+						instance = FLEX_INSTANCES[i];
+						instance.constructor.updateModel(instance.params);
+					}
+					
+					storedWidth = currentWidth;
+					storedHeight = currentHeight;
+				}
+			};
+			
+			RESIZE_LISTENER = true;
 		}
 	}
 
@@ -834,26 +870,8 @@ var Flexie = (function (window, doc) {
 			}
 		},
 
-		// Shoud I?
-		// Polling innerHTML is a huge tax. Not sure if it's worth it.
-		pollDOM : function (params) {
-			var self = this,
-			    innerHTML = params.target.innerHTML;
-
-			window.setInterval(function () {
-				if (params.target.innerHTML !== innerHTML) {
-					self.updateModel(params);
-					innerHTML = params.target.innerHTML;
-				}
-			}, 250);
-		},
-
-		resizeEvent : function (params) {
-			var self = this;
-			
-			window.onresize = function () {
-				self.updateModel(params);
-			};
+		trackDOM : function (params) {
+			attachResizeListener(this, params);
 		},
 
 		updateModel : function (params) {
@@ -890,12 +908,9 @@ var Flexie = (function (window, doc) {
 			
 			// Setup properties
 			self.setup(target, children, params);
-
-			// Poll the DOM for changes
-			self.pollDOM(params);
-
-			// Update the box model on resize
-			self.resizeEvent(params);
+			
+			// Resize / DOM Polling Events
+			self.trackDOM(params);
 		}
 	};
 
