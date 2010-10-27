@@ -369,7 +369,7 @@ var Flexie = (function (window, doc) {
 		if (prop === "auto" || prop === "medium") {
 			prop = unAuto(element, name);
 		} else {
-			getTrueValue(element, prop);
+			prop = getTrueValue(element, prop);
 		}
 		
 		return prop + "px";
