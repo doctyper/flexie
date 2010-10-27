@@ -902,12 +902,16 @@ var Flexie = (function (window, doc) {
 		renderModel : function (params) {
 			var self = this,
 			    target = params.target, i, j,
-			    nodes = target.childNodes, node,
+			    nodes = target.childNodes,
 			    children = [];
-
+			
+			// Sanity check.
+			if (!target.length && !nodes) {
+				return;
+			}
+			
 			params = getParams(params);
-
-			node = nodes[0];
+			
 			for (i = 0, j = nodes.length; i < j; i++) {
 				if (nodes[i]) {
 					if (nodes[i].nodeType === 1) {
