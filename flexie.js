@@ -319,6 +319,20 @@ var Flexie = (function (window, doc) {
 		return value;
 	}
 	
+	function getTrueValue(element, prop) {
+		var style = element.style.left,
+		    runtimeStyle = element.runtimeStyle.left;
+		
+		element.runtimeStyle.left = element.currentStyle.left;
+
+		element.style.left = "auto";
+		prop = element.style.pixelLeft;
+		element.style.left = style;
+		element.runtimeStyle.left = runtimeStyle;
+		
+		return prop;
+	}
+	
 	function unAuto(element, prop) {
 		var props;
 		
@@ -334,7 +348,7 @@ var Flexie = (function (window, doc) {
 			break;
 
 		default :
-			prop = element.style[prop];
+			prop = getTrueValue(element, prop);
 			break;
 		}
 
@@ -347,22 +361,10 @@ var Flexie = (function (window, doc) {
 		}
 		
 		// if property is auto, do some messy appending
-		if (prop === "auto") {
+		if (prop === "auto" || prop === "medium") {
 			prop = unAuto(element, name);
 		} else {
-			var style = element.style.left,
-			    runtimeStyle = element.runtimeStyle.left;
-			
-			try {
-				element.runtimeStyle.left = element.currentStyle.left;
-
-				element.style.left = prop || 0;
-				prop = element.style.pixelLeft;
-				element.style.left = style;
-				element.runtimeStyle.left = runtimeStyle;
-			} catch (e) {
-				prop = 0;
-			}
+			getTrueValue(element, prop);
 		}
 		
 		return prop + "px";
