@@ -320,17 +320,22 @@ var Flexie = (function (window, doc) {
 	}
 	
 	function getTrueValue(element, prop) {
-		var style = element.style.left,
-		    runtimeStyle = element.runtimeStyle.left;
+		var left, rsLeft, ret = element.currentStyle && element.currentStyle[name], style = element.style;
 		
-		element.runtimeStyle.left = element.currentStyle.left;
+		// Remember the original values
+		left = style.left;
+		rsLeft = element.runtimeStyle.left;
 
-		element.style.left = "auto";
-		prop = element.style.pixelLeft;
-		element.style.left = style;
-		element.runtimeStyle.left = runtimeStyle;
+		// Put in the new values to get a computed value out
+		element.runtimeStyle.left = element.currentStyle.left;
+		style.left = name === "fontSize" ? "1em" : (ret || 0);
+		ret = style.pixelLeft;
+
+		// Revert the changed values
+		style.left = left;
+		element.runtimeStyle.left = rsLeft;
 		
-		return prop;
+		return ret;
 	}
 	
 	function unAuto(element, prop) {
