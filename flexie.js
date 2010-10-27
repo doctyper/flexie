@@ -809,7 +809,7 @@ var Flexie = (function (window, doc) {
 						groupDimension += getComputedStyle(kid, self.anti.add[k], true);
 					}
 				}
-
+				
 				whitespace = self.props.func(target) - groupDimension;
 				ration = (whitespace / matrix.total);
 
@@ -828,6 +828,7 @@ var Flexie = (function (window, doc) {
 
 				for (i = 0, j = keys.length; i < j; i++) {
 					key = keys[i];
+					
 					widthRation = (ration * key);
 
 					flexWidths[key] = widthRation;
@@ -847,14 +848,18 @@ var Flexie = (function (window, doc) {
 				}
 			};
 
-			// Zero out any defined positioning
-			appendPixelValue(children, self.props.pos);
-
 			matrix = createMatchMatrix(params.children);
-			whitespace = findTotalWhitespace(matrix);
+			
+			if (matrix.total) {
 
-			// Distribute the calculated ratios among the children
-			distro = distributeRatio(matrix, whitespace);
+				// Zero out any defined positioning
+				appendPixelValue(children, self.props.pos);
+				
+				whitespace = findTotalWhitespace(matrix);
+
+				// Distribute the calculated ratios among the children
+				distro = distributeRatio(matrix, whitespace);
+			}
 		},
 
 		setup : function (target, children, params) {
