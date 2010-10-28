@@ -454,7 +454,7 @@ var Flexie = (function (window, doc) {
 				property = element.currentStyle[property];
 			}
 		}
-
+		
 		return returnAsInt ? parseInt(property, 10) : (property || "");
 	}
 	
@@ -771,14 +771,17 @@ var Flexie = (function (window, doc) {
 		boxPack : function (target, children, params) {
 			var self = this,
 			    groupDimension = 0, i, j,
-			    totalDimension, fractionedDimension;
+			    totalDimension, fractionedDimension,
+			    currentDimension, remainder,
+			    length = children.length - 1;
 
 			for (i = 0, j = children.length; i < j; i++) {
 				groupDimension += children[i][self.props.out];
 			}
 
 			totalDimension = self.props.func(target) - groupDimension;
-			fractionedDimension = Math.floor(totalDimension / (children.length - 1));
+			fractionedDimension = Math.ceil(totalDimension / length);
+			remainder = (fractionedDimension * length) - totalDimension;
 			
 			if (params.orient === "horizontal" && BROWSER.IE === 6) {
 				totalDimension /= 2;
@@ -794,8 +797,16 @@ var Flexie = (function (window, doc) {
 				break;
 
 			case "justify" :
-				appendPixelValue(children, self.props.pos, fractionedDimension);
-				appendPixelValue(children[0], self.props.pos, null);
+				for (i = children.length - 1; i >= 1; i--) {
+					currentDimension = fractionedDimension;
+					
+					if (remainder) {
+						currentDimension--;
+						remainder--;
+					}
+					
+					children[i].style[self.props.pos] = currentDimension + "px";
+				}
 				break;
 			}
 		},
