@@ -982,3 +982,8 @@ var Flexie = (function (window, doc) {
 	
 	return FLX;
 }(this, document));
+
+// For Google's Closure Compiler
+// Exports Public Properties
+window["Flexie"] = Flexie;
+Flexie["box"] = Flexie.box;
