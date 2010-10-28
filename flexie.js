@@ -238,7 +238,7 @@ var Flexie = (function (window, doc) {
 									updatedRule[key] = rule[key];
 								}
 							}
-
+							
 							updatedRule.selector = multi;
 
 							// Easy access for later
@@ -883,7 +883,6 @@ var Flexie = (function (window, doc) {
 					key = keys[i];
 					
 					widthRation = (ration * key);
-
 					flexWidths[key] = widthRation;
 
 					for (k = 0, l = flexers[key].length; k < l; k++) {
@@ -892,7 +891,6 @@ var Flexie = (function (window, doc) {
 
 						if (x.match) {
 							trueDim = getComputedStyle(x.match, self.props.dim, true);
-							
 							newWidth = Math.max(0, (trueDim + w));
 							x.match.style[self.props.dim] = newWidth + "px";
 						}
