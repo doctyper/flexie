@@ -688,6 +688,7 @@ var Flexie = (function (window, doc) {
 				pos : "marginLeft",
 				add : ["marginRight", BORDER_LEFT, BORDER_RIGHT],
 				dim : "width",
+				out : "offsetWidth",
 				func : clientWidth
 			};
 
@@ -695,6 +696,7 @@ var Flexie = (function (window, doc) {
 				pos : "marginTop",
 				add : ["marginBottom", BORDER_TOP, BORDER_BOTTOM],
 				dim : "height",
+				out : "offsetHeight",
 				func : clientHeight
 			};
 
@@ -772,7 +774,7 @@ var Flexie = (function (window, doc) {
 			    totalDimension, fractionedDimension;
 
 			for (i = 0, j = children.length; i < j; i++) {
-				groupDimension += self.props.func(children[i]);
+				groupDimension += children[i][self.props.out];
 			}
 
 			totalDimension = self.props.func(target) - groupDimension;
@@ -849,18 +851,12 @@ var Flexie = (function (window, doc) {
 			};
 
 			findTotalWhitespace = function (matrix) {
-				var groupDimension = 0, kid, i, j, k, l,
+				var groupDimension = 0, kid, i, j,
 				    whitespace, ration;
 
 				for (i = 0, j = children.length; i < j; i++) {
 					kid = children[i];
-					
-					groupDimension += self.props.func(kid);
-
-					for (k = 0, l = self.anti.add.length; k < l; k++) {
-						groupDimension += getComputedStyle(kid, self.props.add[k], true);
-						groupDimension += getComputedStyle(kid, self.anti.add[k], true);
-					}
+					groupDimension += kid[self.props.out];
 				}
 				
 				whitespace = self.props.func(target) - groupDimension;
