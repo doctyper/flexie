@@ -694,7 +694,7 @@ var Flexie = (function (window, doc) {
 				kid = children[i];
 
 				kid.style.cssFloat = kid.style.styleFloat = "left";
-				kid.style[wide.dim] = getComputedStyle(kid, wide.dim);
+				kid.style[wide.dim] = getComputedStyle(kid, wide.dim, null);
 
 				if (params.orient === "vertical") {
 					kid.style.cssFloat = kid.style.styleFloat = "";
@@ -785,7 +785,7 @@ var Flexie = (function (window, doc) {
 
 			case "justify" :
 				appendPixelValue(children, self.props.pos, fractionedDimension);
-				appendPixelValue(children[0], self.props.pos);
+				appendPixelValue(children[0], self.props.pos, null);
 				break;
 			}
 		},
@@ -898,7 +898,7 @@ var Flexie = (function (window, doc) {
 			if (matrix.total) {
 
 				// Zero out any defined positioning
-				appendPixelValue(children, self.props.pos);
+				appendPixelValue(children, self.props.pos, null);
 				
 				whitespace = findTotalWhitespace(matrix);
 
