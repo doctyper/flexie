@@ -257,7 +257,8 @@ var Flexie = (function (window, doc) {
 	}
 	
 	function matchFlexChildren(parent, lib, possibleChildren) {
-		var child, caller, matches = [], i, j, k, l;
+		var child, caller, unique, key,
+		    matches = [], i, j, k, l;
 		
 		for (i = 0, j = possibleChildren.length; i < j; i++) {
 			child = possibleChildren[i];
@@ -267,8 +268,14 @@ var Flexie = (function (window, doc) {
 			if (caller[0]) {
 				for (k = 0, l = caller.length; k < l; k++) {
 					if (caller[k].parentNode === parent) {
-						child.match = caller[k];
-						matches.push(child);
+						unique = {};
+						
+						for (key in child) {
+							unique[key] = child[key];
+						}
+						
+						unique.match = caller[k];
+						matches.push(unique);
 					}
 				}
 			}
