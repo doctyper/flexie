@@ -199,20 +199,24 @@ var Flexie = (function (window, doc) {
 					multiSelectors = selector.split(selectorSplit);
 					
 					for (m = 0, n = multiSelectors.length; m < n; m++) {
-						updatedRule = {};
+						multi = multiSelectors[m];
 						
-						// Each selector gets its own call
-						for (key in rule) {
-							if (rule.hasOwnProperty(key)) {
-								updatedRule[key] = rule[key];
+						if (multi && (multi = trim(multi))) {
+							updatedRule = {};
+
+							// Each selector gets its own call
+							for (key in rule) {
+								if (rule.hasOwnProperty(key)) {
+									updatedRule[key] = rule[key];
+								}
 							}
+
+							updatedRule.selector = multi;
+
+							// Easy access for later
+							updatedRule.flex = value;
+							POSSIBLE_FLEX_CHILDREN.push(updatedRule);
 						}
-						
-						updatedRule.selector = multiSelectors[m];
-						
-						// Easy access for later
-						updatedRule.flex = value;
-						POSSIBLE_FLEX_CHILDREN.push(updatedRule);
 					}
 				}
 			}
