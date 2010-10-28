@@ -119,6 +119,34 @@ var Flexie = (function (window, doc) {
 		return false;
 	}
 	
+	function attachLoadMethod(handler) {
+		// compatiable selector engines in order of CSS3 support
+		var selectorEngines = {
+			"DOMAssistant" : ["*.DOMReady", "%"],
+			"Prototype" : ["document.observe", "'dom:loaded', %"],
+			"YAHOO" : ["*.util.Event", "onDOMReady", "%"],
+			"MooTools" : ["window.addEvent", "'domready', %"],
+			"jQuery" : ["*(document).ready", "%"],
+			"dojo" : ["*.addOnLoad", "%"]
+		}, method, current, engine;
+		
+		for (engine in selectorEngines) {
+			current = selectorEngines[engine];
+			
+			if (window[engine] && (method = eval(current[0].replace("*", engine)))) {
+				if (current[2]) {
+					method = method[current[1]];
+				}
+				
+				method && eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
+			}
+		}
+		
+		if (!method) {
+			window.onload = handler;
+		}
+	}
+	
 	function buildSelectorTree(text) {
 		var rules = [], ruletext, rule, i, j, k, l,
 		    match, selector, proptext, splitprop, properties;
@@ -961,7 +989,7 @@ var Flexie = (function (window, doc) {
 		LIBRARY = determineSelectorMethod();
 
 		if (!SUPPORT && LIBRARY) {
-			selectivizr();
+			attachLoadMethod(selectivizr);
 		}
 	}());
 	
