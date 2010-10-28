@@ -169,8 +169,12 @@ var Flexie = (function (window, doc) {
 		    property, value, i, j, k, l,
 		    leadingTrim = /^\s\s*/,
 		    trailingTrim = /\s\s*$/,
-		    selectorSplit = /(\s)?,(\s)?/,
-		    multiSelectors, m, n, key, updatedRule;
+		    selectorSplit = /(\s)?,(\s)?/, trim,
+		    multiSelectors, multi, m, n, key, updatedRule;
+		
+		trim = function(string) {
+			return string.replace(leadingTrim, "").replace(trailingTrim, "");
+		};
 		
 		for (i = 0, j = rules.length; i < j; i++) {
 			rule = rules[i];
@@ -181,8 +185,8 @@ var Flexie = (function (window, doc) {
 				prop = properties[k];
 				
 				// Trim any residue whitespace (it happens)
-				prop.property = prop.property.replace(leadingTrim, "").replace(trailingTrim, "");
-				prop.value = prop.value.replace(leadingTrim, "").replace(trailingTrim, "");
+				prop.property = trim(prop.property);
+				prop.value = trim(prop.value);
 				
 				property = prop.property;
 				value = prop.value;
