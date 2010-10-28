@@ -288,7 +288,7 @@ var Flexie = (function (window, doc) {
 		var flex, selector, properties, prop,
 		    orient, align, direction, pack,
 		    lib, caller, children, i, j, k, l,
-		    box;
+		    box, params;
 		
 		for (i = 0, j = flexers.boxes.length; i < j; i++) {
 			flex = flexers.boxes[i];
@@ -320,29 +320,30 @@ var Flexie = (function (window, doc) {
 				}
 			}
 			
-			if (orient || align || direction || pack) {
-				
-				// Determine library
-				lib = LIBRARY;
-				
-				// Call it.
-				caller = lib(flex.selector);
-				
-				// In an array?
-				caller = caller[0] || caller;
-				
-				// Find possible child node matches
-				children = matchFlexChildren(caller, lib, flexers.children);
-				
-				box = new FLX.box({
-					target : caller,
-					children : children,
-					orient : orient,
-					align : align,
-					direction: direction,
-					pack : pack
-				});
-			}
+			// Determine library
+			lib = LIBRARY;
+			
+			// Call it.
+			caller = lib(flex.selector);
+			
+			// In an array?
+			caller = caller[0] || caller;
+			
+			// Find possible child node matches
+			children = matchFlexChildren(caller, lib, flexers.children);
+			
+			// Make sure there is some value associated with box properties
+			params = getParams({
+				target : caller,
+				children : children,
+				orient : orient,
+				align : align,
+				direction: direction,
+				pack : pack
+			});
+			
+			// Constructor
+			box = new FLX.box(params);
 		}
 	}
 	
@@ -956,8 +957,6 @@ var Flexie = (function (window, doc) {
 			if (!target.length && !nodes) {
 				return;
 			}
-			
-			params = getParams(params);
 			
 			for (i = 0, j = nodes.length; i < j; i++) {
 				if (nodes[i]) {
