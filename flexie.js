@@ -74,6 +74,19 @@ var Flexie = (function (window, doc) {
 	
 	RESIZE_LISTENER,
 	
+	BROWSER = {
+		IE : (function() {
+			var ie, ua = window.navigator.userAgent,
+			    match = (/(msie) ([\w.]+)/).exec(ua.toLowerCase());
+			
+			if (match) {
+				ie = parseInt(match[2], 10);
+			}
+			
+			return ie;
+		}())
+	},
+	
 	/*
 	selectivizr v1.0.0 - (c) Keith Clark, freely distributable under the terms 
 	of the MIT license.
