@@ -284,6 +284,18 @@ var Flexie = (function (window, doc) {
 		return matches;
 	}
 	
+	function getParams(params) {
+		var key;
+		
+		for (key in params) {
+			if (params.hasOwnProperty(key)) {
+				params[key] = params[key] || DEFAULTS[key];
+			}
+		}
+		
+		return params;
+	}
+	
 	function buildFlexieCall(flexers) {
 		var flex, selector, properties, prop,
 		    orient, align, direction, pack,
@@ -444,18 +456,6 @@ var Flexie = (function (window, doc) {
 		}
 
 		return returnAsInt ? parseInt(property, 10) : (property || "");
-	}
-	
-	function getParams(params) {
-		var key;
-		
-		for (key in params) {
-			if (params.hasOwnProperty(key)) {
-				params[key] = params[key] || DEFAULTS[key];
-			}
-		}
-		
-		return params;
 	}
 	
 	function clientWidth(element) {
