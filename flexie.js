@@ -53,10 +53,10 @@ var Flexie = (function (window, doc) {
 	PIXEL = /^\d+(px)?$/i,
 	SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/,
 	
-	BORDER_RIGHT = "borderLeftWidth",
-	    BORDER_BOTTOM = "borderBottomWidth",
-	    BORDER_LEFT = "borderLeftWidth",
-	    BORDER_TOP = "borderTopWidth",
+	BORDER_RIGHT = "borderRightWidth",
+	BORDER_BOTTOM = "borderBottomWidth",
+	BORDER_LEFT = "borderLeftWidth",
+	BORDER_TOP = "borderTopWidth",
 	
 	PREFIXES = " -o- -moz- -ms- -webkit- -khtml- ".split(" "),
 	
