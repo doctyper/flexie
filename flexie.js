@@ -424,20 +424,10 @@ var Flexie = (function (window, doc) {
 		return prop + "px";
 	}
 	
-	function toCamelCase(cssProp) {
-		var hyphen = /(-[a-z])/ig;
-		while (hyphen.exec(cssProp)) {
-			cssProp = cssProp.replace(RegExp.$1, RegExp.$1.substr(1).toUpperCase());
-		}
-		return cssProp;
-	}
-	
 	function getComputedStyle(element, property, returnAsInt) {
 		if (doc.defaultView && doc.defaultView.getComputedStyle) {
 			property = doc.defaultView.getComputedStyle(element, null)[property];
 		} else {
-			property = toCamelCase(property);
-			
 			if (SIZES.test(property)) {
 				property = getPixelValue(element, element.currentStyle[property], property);
 			} else {
@@ -445,9 +435,6 @@ var Flexie = (function (window, doc) {
 			}
 		}
 
-		/**
-		 * @returns property (or empty string if none)
-		*/
 		return returnAsInt ? parseInt(property, 10) : (property || "");
 	}
 	
