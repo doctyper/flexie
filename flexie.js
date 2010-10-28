@@ -406,7 +406,7 @@ var Flexie = (function (window, doc) {
 	
 	function getComputedStyle(element, property, returnAsInt) {
 		if (doc.defaultView && doc.defaultView.getComputedStyle) {
-			return doc.defaultView.getComputedStyle(element, null)[property];
+			property = doc.defaultView.getComputedStyle(element, null)[property];
 		} else {
 			property = toCamelCase(property);
 			
@@ -415,12 +415,12 @@ var Flexie = (function (window, doc) {
 			} else {
 				property = element.currentStyle[property];
 			}
-
-			/**
-			 * @returns property (or empty string if none)
-			*/
-			return returnAsInt ? parseInt(property, 10) : (property || "");
 		}
+
+		/**
+		 * @returns property (or empty string if none)
+		*/
+		return returnAsInt ? parseInt(property, 10) : (property || "");
 	}
 	
 	function getParams(params) {
@@ -705,7 +705,7 @@ var Flexie = (function (window, doc) {
 			var self = this,
 			    kid, targetDimension = self.anti.func(target),
 			    kidDimension, i, j, k, l;
-
+				
 			switch (params.align) {
 			case "stretch" :
 				appendPixelValue(children, self.anti.dim, self.anti.func(target));
