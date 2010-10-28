@@ -746,7 +746,11 @@ var Flexie = (function (window, doc) {
 
 			totalDimension = self.props.func(target) - groupDimension;
 			fractionedDimension = Math.floor(totalDimension / (children.length - 1));
-
+			
+			if (params.orient === "horizontal" && BROWSER.IE === 6) {
+				totalDimension /= 2;
+			}
+			
 			switch (params.pack) {
 			case "end" :
 				appendPixelValue(children[0], self.props.pos, totalDimension);
