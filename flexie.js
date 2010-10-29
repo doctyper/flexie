@@ -771,17 +771,19 @@ var Flexie = (function (window, doc) {
 		boxPack : function (target, children, params) {
 			var self = this,
 			    groupDimension = 0, i, j,
+			    firstComputedMargin,
 			    totalDimension, fractionedDimension,
 			    currentDimension, remainder,
 			    length = children.length - 1;
 
 			for (i = 0, j = children.length; i < j; i++) {
 				groupDimension += children[i][self.props.out];
+				groupDimension += getComputedStyle(children[i], self.props.pos, true);
+				groupDimension += getComputedStyle(children[i], self.props.add[0], true);
 			}
-
+			
+			firstComputedMargin = getComputedStyle(children[0], self.props.pos, true);
 			totalDimension = self.props.func(target) - groupDimension;
-			fractionedDimension = Math.ceil(totalDimension / length);
-			remainder = (fractionedDimension * length) - totalDimension;
 			
 			if (params.orient === "horizontal" && BROWSER.IE === 6) {
 				totalDimension /= 2;
@@ -789,14 +791,17 @@ var Flexie = (function (window, doc) {
 			
 			switch (params.pack) {
 			case "end" :
-				appendPixelValue(children[0], self.props.pos, totalDimension);
+				appendPixelValue(children[0], self.props.pos, firstComputedMargin + totalDimension);
 				break;
 
 			case "center" :
-				appendPixelValue(children[0], self.props.pos, totalDimension / 2);
+				appendPixelValue(children[0], self.props.pos, firstComputedMargin + (totalDimension / 2));
 				break;
 
 			case "justify" :
+				fractionedDimension = Math.ceil(totalDimension / length);
+				remainder = (fractionedDimension * length) - totalDimension;
+				
 				for (i = children.length - 1; i >= 1; i--) {
 					currentDimension = fractionedDimension;
 					
@@ -805,7 +810,7 @@ var Flexie = (function (window, doc) {
 						remainder--;
 					}
 					
-					children[i].style[self.props.pos] = currentDimension + "px";
+					children[i].style[self.props.pos] = getComputedStyle(children[i], self.props.pos, true) + currentDimension + "px";
 				}
 				break;
 			}
