@@ -738,26 +738,40 @@ var Flexie = (function (window, doc) {
 				
 			switch (params.align) {
 			case "stretch" :
-				appendPixelValue(children, self.anti.dim, self.anti.func(target));
+				for (i = 0, j = children.length; i < j; i++) {
+					kid = children[i];
+					
+					kidDimension = targetDimension - getComputedStyle(kid, self.anti.pos, true);
+					
+					for (k = 0, l = self.anti.add.length; k < l; k++) {
+						kidDimension -= getComputedStyle(kid, self.anti.add[k], true);
+					}
+					
+					kid.style[self.anti.dim] = (kidDimension) + "px";
+				}
 				break;
 
 			case "end" :
 				for (i = 0, j = children.length; i < j; i++) {
 					kid = children[i];
-					kidDimension = self.anti.func(kid);
+					
+					kidDimension = targetDimension - self.anti.func(kid);
+					kidDimension -= getComputedStyle(kid, self.anti.add[0], true);
+					kidDimension -= getComputedStyle(kid, self.anti.pos, true);
 
-					for (k = 0, l = self.anti.add.length; k < l; k++) {
-						kidDimension += getComputedStyle(kid, self.anti.add[k], true);
-					}
-
-					kid.style[self.anti.pos] = (targetDimension - kidDimension) + "px";
+					kid.style[self.anti.pos] = kidDimension + "px";
 				}
 				break;
 
 			case "center":
 				for (i = 0, j = children.length; i < j; i++) {
 					kid = children[i];
-					kid.style[self.anti.pos] = (targetDimension / 2 - self.anti.func(kid) / 2) + "px";
+					
+					kidDimension = (targetDimension - self.anti.func(kid)) / 2;
+					kidDimension -= getComputedStyle(kid, self.anti.add[1], true) / 2;
+					kidDimension -= getComputedStyle(kid, self.anti.pos, true) / 2;
+					
+					kid.style[self.anti.pos] = kidDimension + "px";
 				}
 				break;
 			}
