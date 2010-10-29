@@ -749,7 +749,11 @@ var Flexie = (function (window, doc) {
 				for (i = 0, j = children.length; i < j; i++) {
 					kid = children[i];
 					
-					kidDimension = targetDimension - getComputedStyle(kid, self.anti.pos, true);
+					kidDimension = targetDimension;
+					kidDimension -= getComputedStyle(kid, self.anti.pos, true);
+					
+					kidDimension -= getComputedStyle(target, self.anti.add[1], true);
+					kidDimension -= getComputedStyle(target, self.anti.add[2], true);
 					
 					for (k = 0, l = self.anti.add.length; k < l; k++) {
 						kidDimension -= getComputedStyle(kid, self.anti.add[k], true);
