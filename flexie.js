@@ -53,6 +53,11 @@ var Flexie = (function (window, doc) {
 	PIXEL = /^\d+(px)?$/i,
 	SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/,
 	
+	PADDING_RIGHT = "paddingRight",
+	PADDING_BOTTOM = "paddingBottom",
+	PADDING_LEFT = "paddingLeft",
+	PADDING_TOP = "paddingTop",
+	
 	BORDER_RIGHT = "borderRightWidth",
 	BORDER_BOTTOM = "borderBottomWidth",
 	BORDER_LEFT = "borderLeftWidth",
@@ -412,12 +417,12 @@ var Flexie = (function (window, doc) {
 		
 		switch (prop) {
 		case "width" :
-			props = ["paddingLeft", "paddingRight", BORDER_LEFT, BORDER_RIGHT];
+			props = [PADDING_LEFT, PADDING_RIGHT, BORDER_LEFT, BORDER_RIGHT];
 			prop = calcPx(element, props, prop);
 			break;
 
 		case "height" :
-			props = ["paddingTop", "paddingBottom", BORDER_TOP, BORDER_BOTTOM];
+			props = [PADDING_TOP, PADDING_BOTTOM, BORDER_TOP, BORDER_BOTTOM];
 			prop = calcPx(element, props, prop);
 			break;
 
@@ -686,7 +691,7 @@ var Flexie = (function (window, doc) {
 
 			wide = {
 				pos : "marginLeft",
-				add : ["marginRight", BORDER_LEFT, BORDER_RIGHT],
+				add : ["marginRight", PADDING_LEFT, PADDING_RIGHT, BORDER_LEFT, BORDER_RIGHT],
 				dim : "width",
 				out : "offsetWidth",
 				func : clientWidth
@@ -694,7 +699,7 @@ var Flexie = (function (window, doc) {
 
 			high = {
 				pos : "marginTop",
-				add : ["marginBottom", BORDER_TOP, BORDER_BOTTOM],
+				add : ["marginBottom", PADDING_TOP, PADDING_BOTTOM, BORDER_TOP, BORDER_BOTTOM],
 				dim : "height",
 				out : "offsetHeight",
 				func : clientHeight
