@@ -892,6 +892,8 @@ var Flexie = (function (window, doc) {
 				for (i = 0, j = children.length; i < j; i++) {
 					kid = children[i];
 					groupDimension += kid[self.props.out];
+					groupDimension += getComputedStyle(kid, self.props.pos, true);
+					groupDimension += getComputedStyle(kid, self.props.add[0], true);
 				}
 				
 				whitespace = self.props.func(target) - groupDimension;
