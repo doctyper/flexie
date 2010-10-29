@@ -491,9 +491,9 @@ var Flexie = (function (window, doc) {
 		}
 	}
 	
-	function attachResizeListener(constructor, params) {
+	function attachResizeListener(construct, params) {
 		FLEX_INSTANCES.push({
-			constructor : constructor,
+			construct : construct,
 			params : params
 		});
 		
@@ -511,7 +511,7 @@ var Flexie = (function (window, doc) {
 				if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
 					for (i = 0, j = FLEX_INSTANCES.length; i < j; i++) {
 						instance = FLEX_INSTANCES[i];
-						instance.constructor.updateModel(instance.params);
+						instance.construct.updateModel(instance.params);
 					}
 					
 					storedWidth = currentWidth;
