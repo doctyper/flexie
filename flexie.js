@@ -765,9 +765,8 @@ var Flexie = (function (window, doc) {
 				for (i = 0, j = children.length; i < j; i++) {
 					kid = children[i];
 					
-					kidDimension = targetDimension - self.anti.func(kid);
+					kidDimension = targetDimension - kid[self.anti.out];
 					kidDimension -= getComputedStyle(kid, self.anti.add[0], true);
-					kidDimension -= getComputedStyle(kid, self.anti.pos, true);
 
 					kid.style[self.anti.pos] = kidDimension + "px";
 				}
