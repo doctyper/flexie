@@ -48,7 +48,7 @@ var Flexie = (function (window, doc) {
 	SUPPORT,
 	
 	// Store reference to library
-	LIBRARY,
+	ENGINE, LIBRARY,
 	
 	PIXEL = /^\d+(px)?$/i,
 	SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/,
@@ -74,7 +74,6 @@ var Flexie = (function (window, doc) {
 	
 	FLEX_BOXES = [],
 	POSSIBLE_FLEX_CHILDREN = [],
-	
 	FLEX_INSTANCES = [],
 	
 	RESIZE_LISTENER,
@@ -118,6 +117,7 @@ var Flexie = (function (window, doc) {
 		
 		for (engine in selectorEngines) {
 			if (window[engine] && (method = eval(selectorEngines[engine].replace("*", engine)))) {
+				ENGINE = engine;
 				return method;
 			}
 		}
@@ -135,16 +135,14 @@ var Flexie = (function (window, doc) {
 			"dojo" : ["*.addOnLoad", "%"]
 		}, method, current, engine;
 		
-		for (engine in selectorEngines) {
-			current = selectorEngines[engine];
-			
-			if (window[engine] && (method = eval(current[0].replace("*", engine)))) {
-				if (current[2]) {
-					method = method[current[1]];
-				}
-				
-				method && eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
+		current = selectorEngines[ENGINE];
+		
+		if (ENGINE && (method = eval(current[0].replace("*", ENGINE)))) {
+			if (current[2]) {
+				method = method[current[1]];
 			}
+			
+			method && eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
 		}
 		
 		if (!method) {
