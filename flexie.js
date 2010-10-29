@@ -137,7 +137,7 @@ var Flexie = (function (window, doc) {
 		
 		current = selectorEngines[ENGINE];
 		
-		if (ENGINE && (method = eval(current[0].replace("*", ENGINE)))) {
+		if (current && (method = eval(current[0].replace("*", ENGINE)))) {
 			if (current[2]) {
 				method = method[current[1]];
 			}
