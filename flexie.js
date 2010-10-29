@@ -687,7 +687,8 @@ var Flexie = (function (window, doc) {
 		boxOrient : function (target, children, params) {
 			var self = this,
 			    i, j, kid,
-			    wide, high;
+			    wide, high,
+			    combinedMargin;
 
 			wide = {
 				pos : "marginLeft",
@@ -712,6 +713,15 @@ var Flexie = (function (window, doc) {
 				kid.style[wide.dim] = getComputedStyle(kid, wide.dim, null);
 
 				if (params.orient === "vertical") {
+					// Margins collapse on a normal box
+					// But not on flexbox
+					// So we hack away...
+					if (i !== 0 && i !== (children.length - 1)) {
+						combinedMargin = getComputedStyle(kid, high.pos, true) + getComputedStyle(kid, high.add[0], true);
+						
+						kid.style[high.pos] = combinedMargin;
+						kid.style[high.add[0]] = combinedMargin;
+					}
 					kid.style.cssFloat = kid.style.styleFloat = "";
 				}
 			}
@@ -798,7 +808,14 @@ var Flexie = (function (window, doc) {
 			for (i = 0, j = children.length; i < j; i++) {
 				groupDimension += children[i][self.props.out];
 				groupDimension += getComputedStyle(children[i], self.props.pos, true);
-				groupDimension += getComputedStyle(children[i], self.props.add[0], true);
+				
+				if (params.orient === "horizontal") {
+					groupDimension += getComputedStyle(children[i], self.props.add[0], true);
+				}
+			}
+			
+			if (params.orient === "vertical") {
+				groupDimension += getComputedStyle(children[children.length - 1], self.props.add[0], true) * 2;
 			}
 			
 			firstComputedMargin = getComputedStyle(children[0], self.props.pos, true);
