@@ -1019,7 +1019,7 @@ var Flexie = (function (window, doc) {
 			}
 			
 			// Setup properties
-			self.setup(target, children, params);
+			this.updateModel(params);
 			
 			// Resize / DOM Polling Events
 			self.trackDOM(params);
