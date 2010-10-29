@@ -1,0 +1,34 @@
+/* Demo Styling. Pay no attention to the CSS behind the box */
+/* (See what I did there?) */
+
+body, html {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	font: normal 12px Arial, sans-serif;
+}
+
+#box-wrap-vertical, #box-wrap-horizontal {
+	margin: 20px auto;
+	width: 700px;
+	height: 300px;
+	background: #666;
+	position: relative;
+}
+
+#box-wrap-vertical div, #box-wrap-horizontal div {
+	width: 50px;
+	height: 100px;
+	line-height: 100px;
+	text-align: center;
+	background: #999;
+	white-space: nowrap;
+	border: solid pink;
+}
+
+#box-wrap-vertical div {
+	width: auto;
+	height: 20px;
+	line-height: 20px;
+}

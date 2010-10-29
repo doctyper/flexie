@@ -1,0 +1,141 @@
+/*
+Properties to test:
+(via <http://www.html5rocks.com/tutorials/flexbox/quick/>)
+
+Parent properties:
+--------------------------
+
++ display: box
+	- This new value for the display style opts this element and its immediate children into the flexible box model.
+	  The flexbox model works only with immediate children.
+
++ box-orient
+	- How should the box's children be aligned?
+	- Values:
+		+ horizonal (default)
+		- vertical
+		- inherit
+		+ inline-axis (maps to horizontal)
+		- block-axis (maps to vertical)
+
++ box-align
+	- Basically box-pack's brother property.
+	  Sets how the box's children are aligned in the box.
+	  If the orientation is horizontal it will decide the alignment vertically and vice-versa.
+	- Values:
+		+ stretch (default)
+		+ start
+		+ end
+		+ center
+		- baseline
+
++ box-direction
+	- Children within a horizontally oriented box are, by default, displayed from left to right in the same
+	  order as they appear in the source document. Children within a vertically oriented box are displayed
+	  top to bottom in the same order. The box-direction and box-ordinal-group properties may be used to
+	  change this ordering.
+	- Values:
+		+ normal (default)
+		+ reverse
+		- inherit
+
++ box-pack
+	- Sets the alignment of the box along the box-orient axis.
+  	  So if box-orient is horizontal it will chose how the box's children are aligned horizontally, and vice-versa.
+	- Values:
+		+ start (default)
+		+ end
+		+ center
+		+ justify
+
+Child properties:
+--------------------------
++ box-flex
+	- The flexibility ratio for this child.
+	  If a child had 1 and its sibling had 2, any additional space in the parent box would be consumed
+	  twice as much by the sibling. It defaults to 0 which is inflexible.
+	- Values:
+		- 0 (default)
+		- Any integer
+
+box-ordinal-group
+	-
+	- Values:
+		- 1 (default)
+		- Any integer
+
+??? properties:
+--------------------------
+box-flex-group
+box-lines
+
+*/
+
+/* Demo Styling */
+@import url("demo.css");
+
+#box-wrap-horizontal {
+	/* Display Box */
+	display: -moz-box;
+	display: -webkit-box;
+	display: -ms-box;
+	display: box;
+	
+/*	-webkit-box-align: start;
+	-moz-box-align: start;
+	-ms-box-align: start;
+	box-align: start;
+	
+	-webkit-box-align: stretch;
+	-moz-box-align: stretch;
+	-ms-box-align: stretch;
+	box-align: stretch;
+	
+	-webkit-box-pack: justify;
+	-moz-box-pack: justify;
+	-ms-box-pack: justify;
+	box-pack: justify;*/
+}
+
+#box-wrap-horizontal div {
+	margin: 15px 5px 20px 10px;
+	padding: 10px 5px 25px 20px;
+	border-width: 9px 4px 6px 13px;
+}
+
+#box-wrap-horizontal #box-1 {
+	margin-left: 25px;
+}
+
+#box-wrap-horizontal #box-5 {
+	margin-right: 25px;
+}
+
+#box-wrap-vertical {
+	/* Display Box */
+	display: -moz-box;
+	display: -webkit-box;
+	display: -ms-box;
+	display: box;
+	
+	-webkit-box-orient: vertical;
+	-moz-box-orient: vertical;
+	-ms-box-orient: vertical;
+	box-orient: vertical;
+	
+/*	-webkit-box-align: stretch;
+	-moz-box-align: stretch;
+	-ms-box-align: stretch;
+	box-align: stretch;
+	
+	-webkit-box-pack: justify;
+	-moz-box-pack: justify;
+	-ms-box-pack: justify;
+	box-pack: justify;*/
+}
+
+#box-wrap-vertical div {
+	margin: 8px 2px 5px 4px;
+	padding: 5px 4px 3px 2px;
+	border-width: 8px 2px 7px 6px;
+}
