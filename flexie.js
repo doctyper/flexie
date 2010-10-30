@@ -398,9 +398,9 @@ var Flexie = (function (window, doc) {
 		return value;
 	}
 	
-	function getTrueValue(element, prop) {
+	function getTrueValue(element, prop, name) {
 		var left, rsLeft,
-		    ret = element.currentStyle && element.currentStyle[prop],
+		    ret = element.currentStyle && element.currentStyle[name],
 		    style = element.style;
 		
 		// Remember the original values
@@ -409,7 +409,7 @@ var Flexie = (function (window, doc) {
 
 		// Put in the new values to get a computed value out
 		element.runtimeStyle.left = element.currentStyle.left;
-		style.left = prop === "fontSize" ? "1em" : (ret || 0);
+		style.left = name === "fontSize" ? "1em" : (ret || 0);
 		ret = style.pixelLeft;
 
 		// Revert the changed values
@@ -419,7 +419,7 @@ var Flexie = (function (window, doc) {
 		return ret;
 	}
 	
-	function unAuto(element, prop) {
+	function unAuto(element, prop, name) {
 		var props;
 		
 		switch (prop) {
@@ -448,9 +448,9 @@ var Flexie = (function (window, doc) {
 		
 		// if property is auto, do some messy appending
 		if (prop === "auto" || prop === "medium") {
-			prop = unAuto(element, name);
+			prop = unAuto(element, prop, name);
 		} else {
-			prop = getTrueValue(element, prop);
+			prop = getTrueValue(element, prop, name);
 		}
 		
 		return prop + "px";
