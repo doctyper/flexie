@@ -658,13 +658,14 @@ var Flexie = (function (window, doc) {
 		// --[ init() ]---------------------------------------------------------
 		return function () {
 			// honour the <base> tag
-			var url,
+			var url, stylesheet, i, j,
 			    baseTags = doc.getElementsByTagName("BASE"),
 			    baseUrl = (baseTags.length > 0) ? baseTags[0].href : doc.location.href,
 			    cssText, tree, flexers;
 			
-			forEach(doc.styleSheets, function (i, stylesheet) {
-				if (stylesheet.href !== "") {
+			for (i = 0, j = doc.styleSheets.length; i < j; i++) {
+				stylesheet = doc.styleSheets[i];
+				if (stylesheet && stylesheet.href !== "") {
 					url = resolveUrl(stylesheet.href, baseUrl);
 					
 					if (url) {
@@ -673,7 +674,7 @@ var Flexie = (function (window, doc) {
 						flexers = findFlexBoxElements(tree);
 					}
 				}
-			});
+			}
 			
 			buildFlexieCall(flexers);
 		};
