@@ -79,7 +79,7 @@ var Flexie = (function (window, doc) {
 	RESIZE_LISTENER,
 	
 	BROWSER = {
-		IE : (function() {
+		IE : (function () {
 			var ie, ua = window.navigator.userAgent,
 			    match = (/(msie) ([\w.]+)/).exec(ua.toLowerCase());
 			
@@ -99,6 +99,32 @@ var Flexie = (function (window, doc) {
 	*/
 	selectivizr;
 	
+	// Via jQuery 1.4.3
+	// http://github.com/jquery/jquery/blob/master/src/core.js#L593
+	function forEach(object, callback, reverse) {
+		var name, i = 0, value,
+			length = object.length,
+			isObj = length === undefined;
+
+		if (isObj) {
+			for (name in object) {
+				if (object.hasOwnProperty(name)) {
+					if (callback.call(object[name], name, object[name]) === false) {
+						break;
+					}
+				}
+			}
+		} else if (reverse) {
+			for (i = length - 1; i >= 0; i--) {
+				value = object[i] && callback.call(value, i, value);
+			}
+		} else {
+			for (value = object[0]; i < length && callback.call(value, i, value) !== false; value = object[++i]) {
+				continue;
+			}
+		}
+	}
+	
 	// --[ determineSelectorMethod() ]--------------------------------------
 	// walks through the selectorEngines object testing for an suitable
 	// selector engine.
@@ -113,15 +139,15 @@ var Flexie = (function (window, doc) {
 			"Sizzle" : "*", 
 			"jQuery" : "*",
 			"dojo" : "*.query"
-		}, method, engine;
+		}, method;
 		
-		for (engine in selectorEngines) {
-			if (window[engine] && (method = eval(selectorEngines[engine].replace("*", engine)))) {
+		forEach(selectorEngines, function (engine, value) {
+			if (window[engine] && !method && (method = eval(value.replace("*", engine)))) {
 				ENGINE = engine;
-				return method;
 			}
-		}
-		return false;
+		});
+		
+		return method;
 	}
 	
 	function attachLoadMethod(handler) {
@@ -133,7 +159,7 @@ var Flexie = (function (window, doc) {
 			"MooTools" : ["window.addEvent", "'domready', %"],
 			"jQuery" : ["*(document).ready", "%"],
 			"dojo" : ["*.addOnLoad", "%"]
-		}, method, current, engine;
+		}, method, current;
 		
 		current = selectorEngines[ENGINE];
 		
@@ -142,7 +168,7 @@ var Flexie = (function (window, doc) {
 				method = method[current[1]];
 			}
 			
-			method && eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
+			eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
 		}
 		
 		if (!method) {
@@ -151,7 +177,7 @@ var Flexie = (function (window, doc) {
 	}
 	
 	function buildSelectorTree(text) {
-		var rules = [], ruletext, rule, i, j, k, l,
+		var rules = [], ruletext, rule,
 		    match, selector, proptext, splitprop, properties;
 		
 		// Tabs, Returns
@@ -162,9 +188,9 @@ var Flexie = (function (window, doc) {
 		
 		ruletext = text.split("}");
 		
-		for (i = 0, j = ruletext.length; i < j; i++) {
-			if (ruletext[i]) {
-				rule = [ruletext[i], "}"].join("");
+		forEach(ruletext, function (i, text) {
+			if (text) {
+				rule = [text, "}"].join("");
 				
 				match = (/(.*)\{(.*)\}/).exec(rule);
 				
@@ -173,8 +199,8 @@ var Flexie = (function (window, doc) {
 					proptext = match[2].split(";");
 					properties = [];
 					
-					for (k = 0, l = proptext.length; k < l; k++) {
-						splitprop = proptext[k].split(":");
+					forEach(proptext, function (i, x) {
+						splitprop = x.split(":");
 						
 						if (splitprop.length && splitprop[1]) {
 							properties.push({
@@ -182,7 +208,7 @@ var Flexie = (function (window, doc) {
 								value : splitprop[1]
 							});
 						}
-					}
+					});
 					
 					rules.push({
 						selector : selector,
@@ -190,31 +216,28 @@ var Flexie = (function (window, doc) {
 					});
 				}
 			}
-		}
+		});
 		
 		return rules;
 	}
 	
 	function findFlexBoxElements(rules) {
-		var rule, selector, properties, prop,
-		    property, value, i, j, k, l,
+		var selector, properties,
+		    property, value,
 		    leadingTrim = /^\s\s*/,
 		    trailingTrim = /\s\s*$/,
 		    selectorSplit = /(\s)?,(\s)?/, trim,
-		    multiSelectors, multi, m, n, key, updatedRule;
+		    multiSelectors, updatedRule;
 		
-		trim = function(string) {
+		trim = function (string) {
 			return string.replace(leadingTrim, "").replace(trailingTrim, "");
 		};
 		
-		for (i = 0, j = rules.length; i < j; i++) {
-			rule = rules[i];
+		forEach(rules, function (i, rule) {
 			selector = rule.selector;
 			properties = rule.properties;
 			
-			for (k = 0, l = properties.length; k < l; k++) {
-				prop = properties[k];
-				
+			forEach(properties, function (i, prop) {
 				// Trim any residue whitespace (it happens)
 				prop.property = trim(prop.property);
 				prop.value = trim(prop.value);
@@ -229,18 +252,14 @@ var Flexie = (function (window, doc) {
 					// Multiple selectors?
 					multiSelectors = selector.split(selectorSplit);
 					
-					for (m = 0, n = multiSelectors.length; m < n; m++) {
-						multi = multiSelectors[m];
-						
+					forEach(multiSelectors, function (i, multi) {
 						if (multi && (multi = trim(multi))) {
 							updatedRule = {};
 
 							// Each selector gets its own call
-							for (key in rule) {
-								if (rule.hasOwnProperty(key)) {
-									updatedRule[key] = rule[key];
-								}
-							}
+							forEach(rule, function (key) {
+								updatedRule[key] = rule[key];
+							});
 							
 							updatedRule.selector = multi;
 
@@ -248,10 +267,10 @@ var Flexie = (function (window, doc) {
 							updatedRule.flex = value;
 							POSSIBLE_FLEX_CHILDREN.push(updatedRule);
 						}
-					}
+					});
 				}
-			}
-		}
+			});
+		});
 		
 		return {
 			boxes : FLEX_BOXES,
@@ -260,62 +279,51 @@ var Flexie = (function (window, doc) {
 	}
 	
 	function matchFlexChildren(parent, lib, possibleChildren) {
-		var child, caller, unique, key,
-		    matches = [], i, j, k, l;
+		var caller, unique, matches = [];
 		
-		for (i = 0, j = possibleChildren.length; i < j; i++) {
-			child = possibleChildren[i];
-			
+		forEach(possibleChildren, function (i, child) {
 			caller = lib(child.selector);
 			
 			if (caller[0]) {
-				for (k = 0, l = caller.length; k < l; k++) {
-					if (caller[k].parentNode === parent) {
+				forEach(caller, function (i, call) {
+					if (call.parentNode === parent) {
 						unique = {};
 						
-						for (key in child) {
+						forEach(child, function (key) {
 							unique[key] = child[key];
-						}
+						});
 						
-						unique.match = caller[k];
+						unique.match = call;
 						matches.push(unique);
 					}
-				}
+				});
 			}
-		}
+		});
 		
 		return matches;
 	}
 	
 	function getParams(params) {
-		var key;
-		
-		for (key in params) {
-			if (params.hasOwnProperty(key)) {
-				params[key] = params[key] || DEFAULTS[key];
-			}
-		}
+		forEach(params, function (key, value) {
+			params[key] = value || DEFAULTS[key];
+		});
 		
 		return params;
 	}
 	
 	function buildFlexieCall(flexers) {
-		var flex, selector, properties, prop,
+		var selector, properties,
 		    orient, align, direction, pack,
-		    lib, caller, children, i, j, k, l,
+		    lib, caller, children,
 		    box, params;
 		
-		for (i = 0, j = flexers.boxes.length; i < j; i++) {
-			flex = flexers.boxes[i];
-			
+		forEach(flexers.boxes, function (i, flex) {
 			selector = flex.selector;
 			properties = flex.properties;
 			
 			orient = align = direction = pack = null;
 			
-			for (k = 0, l = properties.length; k < l; k++) {
-				prop = properties[k];
-				
+			forEach(properties, function (i, prop) {
 				switch (prop.property) {
 				case "box-orient" :
 					orient = prop.value;
@@ -333,7 +341,7 @@ var Flexie = (function (window, doc) {
 					pack = prop.value;
 					break;
 				}
-			}
+			});
 			
 			// Determine library
 			lib = LIBRARY;
@@ -359,11 +367,11 @@ var Flexie = (function (window, doc) {
 			
 			// Constructor
 			box = new FLX.box(params);
-		}
+		});
 	}
 	
 	function calcPx(element, props, dir) {
-		var value, i, j, key, globalProps, dummy;
+		var globalProps, dummy, value;
 		dir = dir.replace(dir.charAt(0), dir.charAt(0).toUpperCase());
 
 		globalProps = {
@@ -374,15 +382,14 @@ var Flexie = (function (window, doc) {
 		};
 
 		dummy = element.cloneNode(true);
-
-		for (i = 0, j = props.length; i < j; i++) {
-			dummy.style[props[i]] = "0";
-		}
-		for (key in globalProps) {
-			if (globalProps.hasOwnProperty(key)) {
-				dummy.style[key] = globalProps[key];
-			}
-		}
+		
+		forEach(props, function (i, prop) {
+			dummy.style[prop] = "0";
+		});
+		
+		forEach(globalProps, function (key, value) {
+			dummy.style[key] = value;
+		});
 
 		doc.body.appendChild(dummy);
 		value = dummy["offset" + dir];
@@ -392,7 +399,9 @@ var Flexie = (function (window, doc) {
 	}
 	
 	function getTrueValue(element, prop) {
-		var left, rsLeft, ret = element.currentStyle && element.currentStyle[name], style = element.style;
+		var left, rsLeft,
+		    ret = element.currentStyle && element.currentStyle[prop],
+		    style = element.style;
 		
 		// Remember the original values
 		left = style.left;
@@ -400,7 +409,7 @@ var Flexie = (function (window, doc) {
 
 		// Put in the new values to get a computed value out
 		element.runtimeStyle.left = element.currentStyle.left;
-		style.left = name === "fontSize" ? "1em" : (ret || 0);
+		style.left = prop === "fontSize" ? "1em" : (ret || 0);
 		ret = style.pixelLeft;
 
 		// Revert the changed values
@@ -470,25 +479,24 @@ var Flexie = (function (window, doc) {
 	}
 	
 	function appendProperty(target, prop, value) {
-		var cssText = [], i, j;
+		var cssText = [];
 
-		for (i = 0, j = PREFIXES.length; i < j; i++) {
-			cssText.push(prop + ":" + PREFIXES[i] + value);
-		}
+		forEach(PREFIXES, function (i, prefix) {
+			cssText.push(prop + ":" + prefix + value);
+		});
 
 		target.style.cssText = cssText.join(";");
 		return target;
 	}
 	
 	function appendPixelValue(target, prop, value) {
-		var targets = target[0] ? target : [target],
-		    i, j;
+		var targets = target[0] ? target : [target];
 		
-		for (i = 0, j = targets.length; i < j; i++) {
-			if (targets[i] && targets[i].style) {
-				targets[i].style[prop] = (value ? (value + "px") : "");
+		forEach(targets, function (i, target) {
+			if (target && target.style) {
+				target.style[prop] = (value ? (value + "px") : "");
 			}
-		}
+		});
 	}
 	
 	function attachResizeListener(construct, params) {
@@ -501,18 +509,16 @@ var Flexie = (function (window, doc) {
 			var storedWidth, storedHeight,
 			    currentWidth, currentHeight,
 			    docBody = document.body,
-			    docEl = document.documentElement,
-			    i, j, instance;
+			    docEl = document.documentElement;
 
 			window.onresize = function () {
 				currentWidth = docEl.innerWidth || docBody.clientWidth || docEl.clientWidth;
 				currentHeight = docEl.innerHeight || docBody.clientHeight || docEl.clientHeight;
 				
 				if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
-					for (i = 0, j = FLEX_INSTANCES.length; i < j; i++) {
-						instance = FLEX_INSTANCES[i];
+					forEach(FLEX_INSTANCES, function (i, instance) {
 						instance.construct.updateModel(instance.params);
-					}
+					});
 					
 					storedWidth = currentWidth;
 					storedHeight = currentHeight;
@@ -568,12 +574,14 @@ var Flexie = (function (window, doc) {
 		// creates one or more patches for each matched selector.
 		function patchStyleSheet(cssText) {
 			return cssText.replace(RE_SELECTOR_GROUP, function (m, prefix, selectorText) {
-				var selectorGroups, c, cs, selector;
+				var selectorGroups, selector;
 				
 				selectorGroups = selectorText.split(",");
-				for (c = 0, cs = selectorGroups.length; c < cs; c++) {
-					selector = normalizeSelectorWhitespace(selectorGroups[c]) + SPACE_STRING;
-				}
+				
+				forEach(selectorGroups, function (i, group) {
+					selector = normalizeSelectorWhitespace(group) + SPACE_STRING;
+				});
+				
 				return prefix + selectorGroups.join(",");
 			});
 		}
@@ -650,14 +658,12 @@ var Flexie = (function (window, doc) {
 		// --[ init() ]---------------------------------------------------------
 		return function () {
 			// honour the <base> tag
-			var url, stylesheet, c,
+			var url,
 			    baseTags = doc.getElementsByTagName("BASE"),
 			    baseUrl = (baseTags.length > 0) ? baseTags[0].href : doc.location.href,
 			    cssText, tree, flexers;
 			
-			for (c = 0; c < doc.styleSheets.length; c++) {
-				stylesheet = doc.styleSheets[c];
-				
+			forEach(doc.styleSheets, function (i, stylesheet) {
 				if (stylesheet.href !== "") {
 					url = resolveUrl(stylesheet.href, baseUrl);
 					
@@ -667,7 +673,7 @@ var Flexie = (function (window, doc) {
 						flexers = findFlexBoxElements(tree);
 					}
 				}
-			}
+			});
 			
 			buildFlexieCall(flexers);
 		};
@@ -684,7 +690,6 @@ var Flexie = (function (window, doc) {
 
 		boxOrient : function (target, children, params) {
 			var self = this,
-			    i, j, kid,
 			    wide, high,
 			    combinedMargin;
 
@@ -704,9 +709,7 @@ var Flexie = (function (window, doc) {
 				func : clientHeight
 			};
 
-			for (i = 0, j = children.length; i < j; i++) {
-				kid = children[i];
-
+			forEach(children, function (i, kid) {
 				kid.style.cssFloat = kid.style.styleFloat = "left";
 				kid.style[wide.dim] = getComputedStyle(kid, wide.dim, null);
 
@@ -722,7 +725,7 @@ var Flexie = (function (window, doc) {
 					}
 					kid.style.cssFloat = kid.style.styleFloat = "";
 				}
-			}
+			});
 
 			switch (params.orient) {
 			case "horizontal" :
@@ -741,79 +744,71 @@ var Flexie = (function (window, doc) {
 
 		boxAlign : function (target, children, params) {
 			var self = this,
-			    kid, targetDimension = self.anti.func(target),
-			    kidDimension, i, j, k, l;
+			    targetDimension = self.anti.func(target),
+			    kidDimension;
 				
 			switch (params.align) {
 			case "stretch" :
-				for (i = 0, j = children.length; i < j; i++) {
-					kid = children[i];
-					
+				forEach(children, function (i, kid) {
 					kidDimension = targetDimension;
 					kidDimension -= getComputedStyle(kid, self.anti.pos, true);
 					
 					kidDimension -= getComputedStyle(target, self.anti.add[1], true);
 					kidDimension -= getComputedStyle(target, self.anti.add[2], true);
 					
-					for (k = 0, l = self.anti.add.length; k < l; k++) {
-						kidDimension -= getComputedStyle(kid, self.anti.add[k], true);
-					}
+					forEach(self.anti.add, function (i, add) {
+						kidDimension -= getComputedStyle(kid, add, true);
+					});
 					
 					kid.style[self.anti.dim] = (kidDimension) + "px";
-				}
+				});
 				break;
 
 			case "end" :
-				for (i = 0, j = children.length; i < j; i++) {
-					kid = children[i];
-					
+				forEach(children, function (i, kid) {
 					kidDimension = targetDimension - kid[self.anti.out];
 					kidDimension -= getComputedStyle(kid, self.anti.add[0], true);
 
 					kid.style[self.anti.pos] = kidDimension + "px";
-				}
+				});
 				break;
 
 			case "center":
-				for (i = 0, j = children.length; i < j; i++) {
-					kid = children[i];
-					
+				forEach(children, function (i, kid) {
 					kidDimension = (targetDimension - self.anti.func(kid)) / 2;
 					kidDimension -= getComputedStyle(kid, self.anti.add[1], true) / 2;
 					kidDimension -= getComputedStyle(kid, self.anti.pos, true) / 2;
 					
 					kid.style[self.anti.pos] = kidDimension + "px";
-				}
+				});
 				break;
 			}
 		},
 
 		boxDirection : function (target, children, params) {
-			var i;
-			
 			if (params.direction === "reverse") {
-				for (i = children.length - 1; i >= 0; i--) {
-					target.appendChild(children[i]);
-				}
+				forEach(children, function (i, kid) {
+					target.appendChild(kid);
+				}, true);
 			}
 		},
 
 		boxPack : function (target, children, params) {
 			var self = this,
-			    groupDimension = 0, i, j,
+			    groupDimension = 0,
 			    firstComputedMargin,
 			    totalDimension, fractionedDimension,
 			    currentDimension, remainder,
 			    length = children.length - 1;
 
-			for (i = 0, j = children.length; i < j; i++) {
-				groupDimension += children[i][self.props.out];
-				groupDimension += getComputedStyle(children[i], self.props.pos, true);
+			forEach(children, function (i, kid) {
+				groupDimension += kid[self.props.out];
+				groupDimension += getComputedStyle(kid, self.props.pos, true);
 				
 				if (params.orient === "horizontal") {
-					groupDimension += getComputedStyle(children[i], self.props.add[0], true);
+					groupDimension += getComputedStyle(kid, self.props.add[0], true);
 				}
-			}
+			});
 			
 			if (params.orient === "vertical") {
 				groupDimension += getComputedStyle(children[children.length - 1], self.props.add[0], true) * ((params.pack === "end") ? 2 : 1);
@@ -839,7 +834,7 @@ var Flexie = (function (window, doc) {
 				fractionedDimension = Math.ceil(totalDimension / length);
 				remainder = (fractionedDimension * length) - totalDimension;
 				
-				for (i = children.length - 1; i >= 1; i--) {
+				forEach(children, function (i, kid) {
 					currentDimension = fractionedDimension;
 					
 					if (remainder) {
@@ -847,8 +842,8 @@ var Flexie = (function (window, doc) {
 						remainder--;
 					}
 					
-					children[i].style[self.props.pos] = getComputedStyle(children[i], self.props.pos, true) + currentDimension + "px";
-				}
+					kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, true) + currentDimension + "px";
+				}, true);
 				break;
 			}
 		},
@@ -861,16 +856,13 @@ var Flexie = (function (window, doc) {
 			    matrix, whitespace, distro;
 			
 			createMatchMatrix = function (matches) {
-				var kid, child, totalRatio = 0, i, j, k, l, x,
-				    key, flexers = {}, keys = [];
+				var child, totalRatio = 0,
+				    flexers = {}, keys = [];
 
-				for (i = 0, j = children.length; i < j; i++) {
-					kid = children[i];
+				forEach(children, function (i, kid) {
 					child = null;
 
-					for (k = 0, l = matches.length; k < l; k++) {
-						x = matches[k];
-
+					forEach(matches, function (i, x) {
 						if (x.match === kid) {
 							child = x.match;
 							totalRatio += parseInt(x.flex, 10);
@@ -878,19 +870,17 @@ var Flexie = (function (window, doc) {
 							flexers[x.flex] = flexers[x.flex] || [];
 							flexers[x.flex].push(x);
 						}
-					}
+					});
 
 					if (!child) {
 						flexers["0"] = flexers["0"] || [];
 						flexers["0"].push(kid);
 					}
-				}
+				});
 
-				for (key in flexers) {
-					if (flexers.hasOwnProperty(key)) {
-						keys.push(key);
-					}
-				}
+				forEach(flexers, function (key) {
+					keys.push(key);
+				});
 
 				keys.sort(function (a, b) {
 					return b - a;
@@ -904,15 +894,14 @@ var Flexie = (function (window, doc) {
 			};
 
 			findTotalWhitespace = function (matrix) {
-				var groupDimension = 0, kid, i, j,
+				var groupDimension = 0,
 				    whitespace, ration;
 
-				for (i = 0, j = children.length; i < j; i++) {
-					kid = children[i];
+				forEach(children, function (i, kid) {
 					groupDimension += kid[self.props.out];
 					groupDimension += getComputedStyle(kid, self.props.pos, true);
 					groupDimension += getComputedStyle(kid, self.props.add[0], true);
-				}
+				});
 				
 				whitespace = self.props.func(target) - groupDimension;
 				ration = (whitespace / matrix.total);
@@ -924,20 +913,17 @@ var Flexie = (function (window, doc) {
 			};
 
 			distributeRatio = function (matrix, whitespace) {
-				var flexers = matrix.flexers, i, j,
-				    keys = matrix.keys, k, l,
+				var flexers = matrix.flexers,
+				    keys = matrix.keys,
 				    ration = whitespace.ration,
-				    x, w, key, flexWidths = {},
+				    w, flexWidths = {},
 				    widthRation, trueDim, newWidth;
 
-				for (i = 0, j = keys.length; i < j; i++) {
-					key = keys[i];
-					
+				forEach(keys, function (i, key) {
 					widthRation = (ration * key);
 					flexWidths[key] = widthRation;
 
-					for (k = 0, l = flexers[key].length; k < l; k++) {
-						x = flexers[key][k];
+					forEach(flexers[key], function (i, x) {
 						w = flexWidths[key];
 
 						if (x.match) {
@@ -945,9 +931,8 @@ var Flexie = (function (window, doc) {
 							newWidth = Math.max(0, (trueDim + w));
 							x.match.style[self.props.dim] = newWidth + "px";
 						}
-
-					}
-				}
+					});
+				});
 			};
 
 			matrix = createMatchMatrix(params.children);
@@ -985,13 +970,13 @@ var Flexie = (function (window, doc) {
 		},
 
 		updateModel : function (params) {
-			var target = params.target, i, j,
+			var target = params.target,
 			    children = target.childNodes;
 
 			// Null properties
-			for (i = 0, j = children.length; i < j; i++) {
-				children[i].style.cssText = "";
-			}
+			forEach(children, function (i, kid) {
+				kid.style.cssText = "";
+			});
 
 			this.setup(target, children, params);
 		},
@@ -1040,5 +1025,8 @@ var Flexie = (function (window, doc) {
 
 // For Google's Closure Compiler
 // Exports Public Properties
+
+// Turn off dot notation warning for GCC
+/*jslint sub: true */
 window["Flexie"] = Flexie;
 Flexie["box"] = Flexie.box;
