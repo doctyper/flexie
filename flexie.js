@@ -317,6 +317,11 @@ var Flexie = (function (window, doc) {
 		    lib, caller, children,
 		    box, params;
 		
+		// No boxflex? No dice.
+		if (!flexers) {
+			return;
+		}
+		
 		forEach(flexers.boxes, function (i, flex) {
 			selector = flex.selector;
 			properties = flex.properties;
