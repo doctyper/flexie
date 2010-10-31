@@ -2,7 +2,7 @@
 File: flexie.js
 
 About: Version
-	0.2
+	0.3
 
 Project: Flexie
 
