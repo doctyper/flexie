@@ -363,6 +363,7 @@ var Flexie = (function (window, doc) {
 			// Make sure there is some value associated with box properties
 			params = getParams({
 				target : caller,
+				selector : selector,
 				children : children,
 				orient : orient,
 				align : align,
@@ -695,9 +696,40 @@ var Flexie = (function (window, doc) {
 	};
 	
 	FLX.box.prototype = {
-		boxModel : function (target, children) {
+		boxModel : function (target, children, params) {
+			var selector, stylesheet, generatedRules;
+			
 			target.style.display = "block";
-			target.style.overflow = "hidden";
+			
+			// We'll be using floats, so the easiest way to retain layout
+			// is the dreaded clear fix:
+			if (!params.cleared) {
+				selector = params.selector;
+				stylesheet = document.styleSheets;
+				stylesheet = stylesheet[stylesheet.length - 1];
+				
+				generatedRules = [
+					"content:'.'",
+					"display:block",
+					"margin:0",
+					"padding:0",
+					"border:0",
+					"height:0",
+					"background:none",
+					"clear:both",
+					"visibility:hidden"
+				].join(";");
+				
+				if (stylesheet.insertRule) {
+					stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
+				} else if (stylesheet.addRule) {
+					stylesheet.addRule("* html " + selector, "height:1%;", 0);
+					stylesheet.addRule("*+html " + selector, "display:inline-block;", 0);
+					stylesheet.addRule(selector + ":after", generatedRules, 0);
+				}
+				
+				params.cleared = TRUE;
+			}
 		},
 
 		boxOrient : function (target, children, params) {
