@@ -992,13 +992,6 @@ var Flexie = (function (window, doc) {
 			matrix = createMatchMatrix(params.children);
 			
 			if (matrix.total) {
-
-				// Zero out any defined positioning
-				// Unless there is only one child (necessary)
-				if (children.length > 1) {
-					appendPixelValue(children, self.props.pos, NULL);
-				}
-				
 				whitespace = findTotalWhitespace(matrix);
 
 				// Distribute the calculated ratios among the children
