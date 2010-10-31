@@ -752,7 +752,7 @@ var Flexie = (function (window, doc) {
 				out : "offsetHeight",
 				func : clientHeight
 			};
-
+			
 			forEach(children, function (i, kid) {
 				kid.style.cssFloat = kid.style.styleFloat = "left";
 				kid.style[wide.dim] = getComputedStyle(kid, wide.dim, NULL);
@@ -790,7 +790,7 @@ var Flexie = (function (window, doc) {
 			var self = this,
 			    targetDimension = self.anti.func(target),
 			    kidDimension;
-				
+			
 			switch (params.align) {
 			case "stretch" :
 				forEach(children, function (i, kid) {
@@ -805,7 +805,6 @@ var Flexie = (function (window, doc) {
 					});
 					
 					kidDimension = Math.max(0, kidDimension);
-					
 					kid.style[self.anti.dim] = (kidDimension) + "px";
 				});
 				break;
