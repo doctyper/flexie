@@ -432,19 +432,19 @@ var Flexie = (function (window, doc) {
 	function unAuto(element, prop, name) {
 		var props;
 		
-		switch (prop) {
+		switch (name) {
 		case "width" :
 			props = [PADDING_LEFT, PADDING_RIGHT, BORDER_LEFT, BORDER_RIGHT];
-			prop = calcPx(element, props, prop);
+			prop = calcPx(element, props, name);
 			break;
 
 		case "height" :
 			props = [PADDING_TOP, PADDING_BOTTOM, BORDER_TOP, BORDER_BOTTOM];
-			prop = calcPx(element, props, prop);
+			prop = calcPx(element, props, name);
 			break;
 
 		default :
-			prop = getTrueValue(element, prop);
+			prop = getTrueValue(element, prop, name);
 			break;
 		}
 
