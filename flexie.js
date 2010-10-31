@@ -958,7 +958,10 @@ var Flexie = (function (window, doc) {
 			if (matrix.total) {
 
 				// Zero out any defined positioning
-				appendPixelValue(children, self.props.pos, NULL);
+				// Unless there is only one child (necessary)
+				if (children.length > 1) {
+					appendPixelValue(children, self.props.pos, NULL);
+				}
 				
 				whitespace = findTotalWhitespace(matrix);
 
