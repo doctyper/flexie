@@ -771,6 +771,8 @@ var Flexie = (function (window, doc) {
 						kidDimension -= getComputedStyle(kid, add, TRUE);
 					});
 					
+					kidDimension = Math.max(0, kidDimension);
+					
 					kid.style[self.anti.dim] = (kidDimension) + "px";
 				});
 				break;
