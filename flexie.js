@@ -414,7 +414,12 @@ var Flexie = (function (window, doc) {
 
 		// Put in the new values to get a computed value out
 		element.runtimeStyle.left = element.currentStyle.left;
-		style.left = name === "fontSize" ? "1em" : (ret || 0);
+		
+		// Parse ret
+		ret = parseFloat(ret);
+		ret = (!isNaN(ret) ? ret : 0);
+		
+		style.left = (name === "fontSize") ? "1em" : (ret || 0);
 		ret = style.pixelLeft;
 
 		// Revert the changed values
