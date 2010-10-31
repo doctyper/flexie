@@ -118,10 +118,6 @@ var Flexie = (function (window, doc) {
 					}
 				}
 			}
-		} else if (reverse) {
-			for (i = length - 1; i >= 0; i--) {
-				value = object[i] && callback.call(value, i, value);
-			}
 		} else {
 			for (value = object[0]; i < length && callback.call(value, i, value) !== FALSE; value = object[++i]) {
 				continue;
@@ -791,10 +787,12 @@ var Flexie = (function (window, doc) {
 		},
 
 		boxDirection : function (target, children, params) {
+			children = children.reverse();
+			
 			if (params.direction === "reverse") {
 				forEach(children, function (i, kid) {
 					target.appendChild(kid);
-				}, TRUE);
+				});
 			}
 		},
 
@@ -839,6 +837,8 @@ var Flexie = (function (window, doc) {
 				fractionedDimension = Math.ceil(totalDimension / length);
 				remainder = (fractionedDimension * length) - totalDimension;
 				
+				children = children.reverse();
+				
 				forEach(children, function (i, kid) {
 					currentDimension = fractionedDimension;
 					
@@ -848,7 +848,7 @@ var Flexie = (function (window, doc) {
 					}
 					
 					kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
-				}, TRUE);
+				});
 				break;
 			}
 		},
