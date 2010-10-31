@@ -696,6 +696,7 @@ var Flexie = (function (window, doc) {
 	
 	FLX.box.prototype = {
 		boxModel : function (target, children) {
+			target.style.display = "block";
 			target.style.overflow = "hidden";
 		},
 
