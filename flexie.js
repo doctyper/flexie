@@ -1003,7 +1003,7 @@ var Flexie = (function (window, doc) {
 			var self = this;
 			
 			// Set up parent
-			self.boxModel(target, children);
+			self.boxModel(target, children, params);
 			self.boxOrient(target, children, params);
 			self.boxAlign(target, children, params);
 			self.boxDirection(target, children, params);
