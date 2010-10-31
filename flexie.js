@@ -841,7 +841,7 @@ var Flexie = (function (window, doc) {
 					target.appendChild(kid);
 				});
 				
-				params.reversed = true;
+				params.reversed = TRUE;
 			}
 		},
 
