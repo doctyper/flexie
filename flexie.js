@@ -800,12 +800,16 @@ var Flexie = (function (window, doc) {
 		},
 
 		boxDirection : function (target, children, params) {
-			children = children.reverse();
+			var reversedChildren;
 			
-			if (params.direction === "reverse") {
-				forEach(children, function (i, kid) {
+			if (params.direction === "reverse" && !params.reversed) {
+				reversedChildren = children.reverse();
+				
+				forEach(reversedChildren, function (i, kid) {
 					target.appendChild(kid);
 				});
+				
+				params.reversed = true;
 			}
 		},
 
