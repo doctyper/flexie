@@ -78,6 +78,10 @@ var Flexie = (function (window, doc) {
 	
 	RESIZE_LISTENER,
 	
+	TRUE = true,
+	FALSE = false,
+	NULL = null,
+	
 	BROWSER = {
 		IE : (function () {
 			var ie, ua = window.navigator.userAgent,
@@ -109,7 +113,7 @@ var Flexie = (function (window, doc) {
 		if (isObj) {
 			for (name in object) {
 				if (object.hasOwnProperty(name)) {
-					if (callback.call(object[name], name, object[name]) === false) {
+					if (callback.call(object[name], name, object[name]) === FALSE) {
 						break;
 					}
 				}
@@ -119,7 +123,7 @@ var Flexie = (function (window, doc) {
 				value = object[i] && callback.call(value, i, value);
 			}
 		} else {
-			for (value = object[0]; i < length && callback.call(value, i, value) !== false; value = object[++i]) {
+			for (value = object[0]; i < length && callback.call(value, i, value) !== FALSE; value = object[++i]) {
 				continue;
 			}
 		}
@@ -321,7 +325,7 @@ var Flexie = (function (window, doc) {
 			selector = flex.selector;
 			properties = flex.properties;
 			
-			orient = align = direction = pack = null;
+			orient = align = direction = pack = NULL;
 			
 			forEach(properties, function (i, prop) {
 				switch (prop.property) {
@@ -381,7 +385,7 @@ var Flexie = (function (window, doc) {
 			top : "-9999px"
 		};
 
-		dummy = element.cloneNode(true);
+		dummy = element.cloneNode(TRUE);
 		
 		forEach(props, function (i, prop) {
 			dummy.style[prop] = "0";
@@ -458,7 +462,7 @@ var Flexie = (function (window, doc) {
 	
 	function getComputedStyle(element, property, returnAsInt) {
 		if (doc.defaultView && doc.defaultView.getComputedStyle) {
-			property = doc.defaultView.getComputedStyle(element, null)[property];
+			property = doc.defaultView.getComputedStyle(element, NULL)[property];
 		} else {
 			if (SIZES.test(property)) {
 				property = getPixelValue(element, element.currentStyle[property], property);
@@ -525,14 +529,14 @@ var Flexie = (function (window, doc) {
 				}
 			};
 			
-			RESIZE_LISTENER = true;
+			RESIZE_LISTENER = TRUE;
 		}
 	}
 
 	function flexBoxSupported() {
 		var dummy = doc.createElement("div");
 		appendProperty(dummy, "display", "box");
-		return ((dummy.style.display).indexOf("box") !== -1) ? true : false;
+		return ((dummy.style.display).indexOf("box") !== -1) ? TRUE : FALSE;
 	}
 	
 	selectivizr = (function () {
@@ -595,7 +599,7 @@ var Flexie = (function (window, doc) {
 			try	{ 
 				return new window.ActiveXObject('Microsoft.XMLHTTP');
 			} catch (e) { 
-				return null;
+				return NULL;
 			}
 		}
 		
@@ -603,7 +607,7 @@ var Flexie = (function (window, doc) {
 		function loadStyleSheet(url) {
 			var xhr = getXHRObject();
 			
-			xhr.open("GET", url, false);
+			xhr.open("GET", url, FALSE);
 			xhr.send();
 			return (xhr.status === 200) ? xhr.responseText : "";	
 		}
@@ -624,7 +628,7 @@ var Flexie = (function (window, doc) {
 
 			// absolute path
 			if (/^https?:\/\//i.test(url)) {
-				return getProtocolAndHost(contextUrl) === getProtocolAndHost(url) ? url : null;
+				return getProtocolAndHost(contextUrl) === getProtocolAndHost(url) ? url : NULL;
 			}
 
 			// root-relative path
@@ -712,14 +716,14 @@ var Flexie = (function (window, doc) {
 
 			forEach(children, function (i, kid) {
 				kid.style.cssFloat = kid.style.styleFloat = "left";
-				kid.style[wide.dim] = getComputedStyle(kid, wide.dim, null);
+				kid.style[wide.dim] = getComputedStyle(kid, wide.dim, NULL);
 
 				if (params.orient === "vertical") {
 					// Margins collapse on a normal box
 					// But not on flexbox
 					// So we hack away...
 					if (i !== 0 && i !== (children.length - 1)) {
-						combinedMargin = getComputedStyle(kid, high.pos, true) + getComputedStyle(kid, high.add[0], true);
+						combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(kid, high.add[0], TRUE);
 						
 						kid.style[high.pos] = combinedMargin;
 						kid.style[high.add[0]] = combinedMargin;
@@ -752,13 +756,13 @@ var Flexie = (function (window, doc) {
 			case "stretch" :
 				forEach(children, function (i, kid) {
 					kidDimension = targetDimension;
-					kidDimension -= getComputedStyle(kid, self.anti.pos, true);
+					kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
 					
-					kidDimension -= getComputedStyle(target, self.anti.add[1], true);
-					kidDimension -= getComputedStyle(target, self.anti.add[2], true);
+					kidDimension -= getComputedStyle(target, self.anti.add[1], TRUE);
+					kidDimension -= getComputedStyle(target, self.anti.add[2], TRUE);
 					
 					forEach(self.anti.add, function (i, add) {
-						kidDimension -= getComputedStyle(kid, add, true);
+						kidDimension -= getComputedStyle(kid, add, TRUE);
 					});
 					
 					kid.style[self.anti.dim] = (kidDimension) + "px";
@@ -768,7 +772,7 @@ var Flexie = (function (window, doc) {
 			case "end" :
 				forEach(children, function (i, kid) {
 					kidDimension = targetDimension - kid[self.anti.out];
-					kidDimension -= getComputedStyle(kid, self.anti.add[0], true);
+					kidDimension -= getComputedStyle(kid, self.anti.add[0], TRUE);
 
 					kid.style[self.anti.pos] = kidDimension + "px";
 				});
@@ -777,8 +781,8 @@ var Flexie = (function (window, doc) {
 			case "center":
 				forEach(children, function (i, kid) {
 					kidDimension = (targetDimension - self.anti.func(kid)) / 2;
-					kidDimension -= getComputedStyle(kid, self.anti.add[1], true) / 2;
-					kidDimension -= getComputedStyle(kid, self.anti.pos, true) / 2;
+					kidDimension -= getComputedStyle(kid, self.anti.add[1], TRUE) / 2;
+					kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE) / 2;
 					
 					kid.style[self.anti.pos] = kidDimension + "px";
 				});
@@ -790,7 +794,7 @@ var Flexie = (function (window, doc) {
 			if (params.direction === "reverse") {
 				forEach(children, function (i, kid) {
 					target.appendChild(kid);
-				}, true);
+				}, TRUE);
 			}
 		},
 
@@ -804,18 +808,18 @@ var Flexie = (function (window, doc) {
 
 			forEach(children, function (i, kid) {
 				groupDimension += kid[self.props.out];
-				groupDimension += getComputedStyle(kid, self.props.pos, true);
+				groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
 				
 				if (params.orient === "horizontal") {
-					groupDimension += getComputedStyle(kid, self.props.add[0], true);
+					groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
 				}
 			});
 			
 			if (params.orient === "vertical") {
-				groupDimension += getComputedStyle(children[children.length - 1], self.props.add[0], true) * ((params.pack === "end") ? 2 : 1);
+				groupDimension += getComputedStyle(children[children.length - 1], self.props.add[0], TRUE) * ((params.pack === "end") ? 2 : 1);
 			}
 			
-			firstComputedMargin = getComputedStyle(children[0], self.props.pos, true);
+			firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
 			totalDimension = self.props.func(target) - groupDimension;
 			
 			if (params.orient === "horizontal" && BROWSER.IE === 6) {
@@ -843,8 +847,8 @@ var Flexie = (function (window, doc) {
 						remainder--;
 					}
 					
-					kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, true) + currentDimension + "px";
-				}, true);
+					kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
+				}, TRUE);
 				break;
 			}
 		},
@@ -861,7 +865,7 @@ var Flexie = (function (window, doc) {
 				    flexers = {}, keys = [];
 
 				forEach(children, function (i, kid) {
-					child = null;
+					child = NULL;
 
 					forEach(matches, function (i, x) {
 						if (x.match === kid) {
@@ -900,8 +904,8 @@ var Flexie = (function (window, doc) {
 
 				forEach(children, function (i, kid) {
 					groupDimension += kid[self.props.out];
-					groupDimension += getComputedStyle(kid, self.props.pos, true);
-					groupDimension += getComputedStyle(kid, self.props.add[0], true);
+					groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
+					groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
 				});
 				
 				whitespace = self.props.func(target) - groupDimension;
@@ -928,7 +932,7 @@ var Flexie = (function (window, doc) {
 						w = flexWidths[key];
 
 						if (x.match) {
-							trueDim = getComputedStyle(x.match, self.props.dim, true);
+							trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
 							newWidth = Math.max(0, (trueDim + w));
 							x.match.style[self.props.dim] = newWidth + "px";
 						}
@@ -941,7 +945,7 @@ var Flexie = (function (window, doc) {
 			if (matrix.total) {
 
 				// Zero out any defined positioning
-				appendPixelValue(children, self.props.pos, null);
+				appendPixelValue(children, self.props.pos, NULL);
 				
 				whitespace = findTotalWhitespace(matrix);
 
