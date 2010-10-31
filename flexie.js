@@ -976,7 +976,7 @@ var Flexie = (function (window, doc) {
 
 		updateModel : function (params) {
 			var target = params.target,
-			    children = target.childNodes;
+			    children = params.nodes;
 
 			// Null properties
 			forEach(children, function (i, kid) {
@@ -989,7 +989,7 @@ var Flexie = (function (window, doc) {
 		renderModel : function (params) {
 			var self = this,
 			    target = params.target, i, j,
-			    nodes = target.childNodes,
+			    nodes = target.childNodes, node,
 			    children = [];
 			
 			// Sanity check.
@@ -998,15 +998,28 @@ var Flexie = (function (window, doc) {
 			}
 			
 			for (i = 0, j = nodes.length; i < j; i++) {
-				if (nodes[i]) {
-					if (nodes[i].nodeType === 1) {
-						children.push(nodes[i]);
-					} else {
-						target.removeChild(nodes[i]);
-						i--;
+				node = nodes[i];
+				
+				if (node) {
+					switch (node.nodeName.toLowerCase()) {
+					case "script" :
+					case "style" :
+					case "link" :
+						break;
+
+					default :
+						if (node.nodeType === 1) {
+							children.push(node);
+						} else {
+							target.removeChild(node);
+							i--;
+						}
+						break;
 					}
 				}
 			}
+			
+			params.nodes = children;
 			
 			// Setup properties
 			this.updateModel(params);
