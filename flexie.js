@@ -440,29 +440,27 @@ var Flexie = (function (window, doc) {
 		return value;
 	}
 	
-	function getTrueValue(element, prop, name) {
+	function getTrueValue(element, name) {
 		var left, rsLeft,
 		    ret = element.currentStyle && element.currentStyle[name],
 		    style = element.style;
-		
-		// Remember the original values
-		left = style.left;
-		rsLeft = element.runtimeStyle.left;
 
-		// Put in the new values to get a computed value out
-		element.runtimeStyle.left = element.currentStyle.left;
-		
-		// Parse ret
-		ret = parseFloat(ret);
-		ret = (!isNaN(ret) ? ret : 0);
-		
-		style.left = (name === "fontSize") ? "1em" : (ret || 0);
-		ret = style.pixelLeft;
+		if (!PIXEL.test(ret) && NUMBER.test(ret)) {
 
-		// Revert the changed values
-		style.left = left;
-		element.runtimeStyle.left = rsLeft;
-		
+			// Remember the original values
+			left = style[name];
+			rsLeft = element.runtimeStyle[name];
+
+			// Put in the new values to get a computed value out
+			element.runtimeStyle[name] = element.currentStyle[name];
+			style[name] = ret || 0;
+			ret = style.pixelLeft + "px";
+
+			// Revert the changed values
+			style[name] = left || 0;
+			element.runtimeStyle[name] = rsLeft;
+		}
+
 		return ret;
 	}
 	
@@ -481,7 +479,7 @@ var Flexie = (function (window, doc) {
 			break;
 
 		default :
-			prop = getTrueValue(element, prop, name);
+			prop = getTrueValue(element, name);
 			break;
 		}
 
@@ -497,24 +495,34 @@ var Flexie = (function (window, doc) {
 		if (prop === "auto" || prop === "medium") {
 			prop = unAuto(element, prop, name);
 		} else {
-			prop = getTrueValue(element, prop, name);
+			prop = getTrueValue(element, name);
 		}
 		
-		return prop + "px";
+		return prop;
 	}
 	
 	function getComputedStyle(element, property, returnAsInt) {
+		var value;
+		
 		if (doc.defaultView && doc.defaultView.getComputedStyle) {
-			property = doc.defaultView.getComputedStyle(element, NULL)[property];
+			value = doc.defaultView.getComputedStyle(element, NULL)[property];
 		} else {
 			if (SIZES.test(property)) {
-				property = getPixelValue(element, element.currentStyle[property], property);
+				value = getPixelValue(element, element.currentStyle[property], property);
 			} else {
-				property = element.currentStyle[property];
+				value = element.currentStyle[property];
 			}
 		}
 		
-		return returnAsInt ? parseInt(property, 10) : (property || "");
+		if (returnAsInt) {
+			value = parseInt(value, 10);
+			
+			if (isNaN(value)) {
+				value = 0;
+			}
+		}
+		
+		return value;
 	}
 	
 	function clientWidth(element) {
