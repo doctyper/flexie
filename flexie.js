@@ -778,8 +778,9 @@ var Flexie = (function (window, doc) {
 					} else if (stylesheet.addRule) {
 						if (BROWSER.IE === 6) {
 							stylesheet.addRule(selector, "zoom: 1;", 0);
+						} else if (BROWSER.IE === 7) {
+							stylesheet.addRule(selector, "display:inline-block;", 0);
 						} else {
-							stylesheet.addRule("*+html " + selector, "display:inline-block;", 0);
 							stylesheet.addRule(selector + ":after", generatedRules, 0);
 						}
 					}
