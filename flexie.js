@@ -223,11 +223,12 @@ var Flexie = (function (window, doc) {
 	
 	function findFlexBoxElements(rules) {
 		var selector, properties,
-		    property, value,
+		    property, value, shortProp,
 		    leadingTrim = /^\s\s*/,
 		    trailingTrim = /\s\s*$/,
 		    selectorSplit = /(\s)?,(\s)?/, trim,
-		    multiSelectors, updatedRule;
+		    multiSelectors, updatedRule,
+		    uniqueSelectors = {};
 		
 		trim = function (string) {
 			return string.replace(leadingTrim, "").replace(trailingTrim, "");
@@ -244,32 +245,49 @@ var Flexie = (function (window, doc) {
 				
 				property = prop.property;
 				value = prop.value;
+				shortProp = property.replace("box-", "");
 				
 				if (property === "display" && value === "box") {
 					FLEX_BOXES.push(rule);
-				} else if (property === "box-flex" && value) {
-					
-					// Multiple selectors?
-					multiSelectors = selector.split(selectorSplit);
-					
-					forEach(multiSelectors, function (i, multi) {
-						if (multi && (multi = trim(multi))) {
-							updatedRule = {};
+				} else {
+					switch (shortProp) {
+					case "flex" :
+					case "ordinal-group" :
+						// Multiple selectors?
+						multiSelectors = selector.split(selectorSplit);
 
-							// Each selector gets its own call
-							forEach(rule, function (key) {
-								updatedRule[key] = rule[key];
-							});
-							
-							updatedRule.selector = multi;
+						forEach(multiSelectors, function (i, multi) {
+							if (multi && (multi = trim(multi))) {
+								
+								if (!uniqueSelectors[multi]) {
+									updatedRule = {};
 
-							// Easy access for later
-							updatedRule.flex = value;
-							POSSIBLE_FLEX_CHILDREN.push(updatedRule);
-						}
-					});
+									// Each selector gets its own call
+									forEach(rule, function (key) {
+										updatedRule[key] = rule[key];
+									});
+									
+									updatedRule.selector = multi;
+									
+									// Easy access for later
+									updatedRule[shortProp] = value;
+									
+									uniqueSelectors[multi] = updatedRule;
+								} else {
+									// Easy access for later
+									uniqueSelectors[multi][shortProp] = value;
+								}
+								
+							}
+						});
+						break;
+					}
 				}
 			});
+		});
+		
+		forEach(uniqueSelectors, function (key, node) {
+			POSSIBLE_FLEX_CHILDREN.push(node);
 		});
 		
 		return {
