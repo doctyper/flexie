@@ -1142,7 +1142,10 @@ var Flexie = (function (window, doc) {
 			this.updateModel(params);
 			
 			// Resize / DOM Polling Events
-			self.trackDOM(params);
+			// Delay for an instant because IE6 is insane.
+			window.setTimeout(function() {
+				self.trackDOM(params);
+			}, 0);
 		}
 	};
 
