@@ -50,9 +50,11 @@ var Flexie = (function (window, doc) {
 	// Store reference to library
 	ENGINE, LIBRARY,
 	
+	// REGEXP
 	PIXEL = /^-?\d+(?:px)?$/i,
 	NUMBER = /^-?\d/,
-	SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/,
+	SIZES = /width|height|margin|padding|border/,
+	MSIE = /(msie) ([\w.]+)/,
 	
 	PADDING_RIGHT = "paddingRight",
 	PADDING_BOTTOM = "paddingBottom",
@@ -86,7 +88,7 @@ var Flexie = (function (window, doc) {
 	BROWSER = {
 		IE : (function () {
 			var ie, ua = window.navigator.userAgent,
-			    match = (/(msie) ([\w.]+)/).exec(ua.toLowerCase());
+			    match = (MSIE).exec(ua.toLowerCase());
 			
 			if (match) {
 				ie = parseInt(match[2], 10);
