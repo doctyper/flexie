@@ -1017,8 +1017,10 @@ var Flexie = (function (window, doc) {
 				matrix = createMatchMatrix(params.children);
 
 				if (matrix.total) {
+					appendPixelValue(children, self.props.pos, NULL);
+					
 					whitespace = findTotalWhitespace(matrix);
-
+				
 					// Distribute the calculated ratios among the children
 					distro = distributeRatio(matrix, whitespace);
 				}
