@@ -757,9 +757,9 @@ var Flexie = (function (window, doc) {
 					selector = params.selector;
 					stylesheet = document.styleSheets;
 					stylesheet = stylesheet[stylesheet.length - 1];
-
+				
 					generatedRules = [
-						"content:'.'",
+						"content:' '",
 						"display:block",
 						"margin:0",
 						"padding:0",
@@ -767,9 +767,10 @@ var Flexie = (function (window, doc) {
 						"height:0",
 						"background:none",
 						"clear:both",
+						"font-size:0",
 						"visibility:hidden"
 					].join(";");
-
+				
 					if (stylesheet.insertRule) {
 						stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
 					} else if (stylesheet.addRule) {
