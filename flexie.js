@@ -714,299 +714,312 @@ var Flexie = (function (window, doc) {
 	};
 	
 	FLX.box.prototype = {
-		boxModel : function (target, children, params) {
-			var selector, stylesheet, generatedRules;
-			
-			target.style.display = "block";
-			
-			// We'll be using floats, so the easiest way to retain layout
-			// is the dreaded clear fix:
-			if (!params.cleared) {
-				selector = params.selector;
-				stylesheet = document.styleSheets;
-				stylesheet = stylesheet[stylesheet.length - 1];
-				
-				generatedRules = [
-					"content:'.'",
-					"display:block",
-					"margin:0",
-					"padding:0",
-					"border:0",
-					"height:0",
-					"background:none",
-					"clear:both",
-					"visibility:hidden"
-				].join(";");
-				
-				if (stylesheet.insertRule) {
-					stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
-				} else if (stylesheet.addRule) {
-					stylesheet.addRule("* html " + selector, "height:1%;", 0);
-					stylesheet.addRule("*+html " + selector, "display:inline-block;", 0);
-					stylesheet.addRule(selector + ":after", generatedRules, 0);
-				}
-				
-				params.cleared = TRUE;
-			}
-		},
+		properties : {
+			boxModel : function (target, children, params) {
+				var selector, stylesheet, generatedRules;
 
-		boxOrient : function (target, children, params) {
-			var self = this,
-			    wide, high,
-			    combinedMargin;
+				target.style.display = "block";
 
-			wide = {
-				pos : "marginLeft",
-				add : ["marginRight", PADDING_LEFT, PADDING_RIGHT, BORDER_LEFT, BORDER_RIGHT],
-				dim : "width",
-				out : "offsetWidth",
-				func : clientWidth
-			};
+				// We'll be using floats, so the easiest way to retain layout
+				// is the dreaded clear fix:
+				if (!params.cleared) {
+					selector = params.selector;
+					stylesheet = document.styleSheets;
+					stylesheet = stylesheet[stylesheet.length - 1];
 
-			high = {
-				pos : "marginTop",
-				add : ["marginBottom", PADDING_TOP, PADDING_BOTTOM, BORDER_TOP, BORDER_BOTTOM],
-				dim : "height",
-				out : "offsetHeight",
-				func : clientHeight
-			};
-			
-			forEach(children, function (i, kid) {
-				kid.style.cssFloat = kid.style.styleFloat = "left";
-				kid.style[wide.dim] = getComputedStyle(kid, wide.dim, NULL);
+					generatedRules = [
+						"content:'.'",
+						"display:block",
+						"margin:0",
+						"padding:0",
+						"border:0",
+						"height:0",
+						"background:none",
+						"clear:both",
+						"visibility:hidden"
+					].join(";");
 
-				if (params.orient === "vertical") {
-					// Margins collapse on a normal box
-					// But not on flexbox
-					// So we hack away...
-					if (i !== 0 && i !== (children.length - 1)) {
-						combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(kid, high.add[0], TRUE);
-						
-						kid.style[high.pos] = combinedMargin;
-						kid.style[high.add[0]] = combinedMargin;
+					if (stylesheet.insertRule) {
+						stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
+					} else if (stylesheet.addRule) {
+						stylesheet.addRule("* html " + selector, "height:1%;", 0);
+						stylesheet.addRule("*+html " + selector, "display:inline-block;", 0);
+						stylesheet.addRule(selector + ":after", generatedRules, 0);
 					}
-					kid.style.cssFloat = kid.style.styleFloat = "";
+
+					params.cleared = TRUE;
 				}
-			});
+			},
 
-			switch (params.orient) {
-			case "horizontal" :
-			case "inline-axis" :
-				self.props = wide;
-				self.anti = high;
-				break;
+			boxOrient : function (target, children, params) {
+				var self = this,
+				    wide, high,
+				    combinedMargin;
 
-			case "vertical" :
-			case "block-axis":
-				self.props = high;
-				self.anti = wide;
-				break;
-			}
-		},
-
-		boxAlign : function (target, children, params) {
-			var self = this,
-			    targetDimension = self.anti.func(target),
-			    kidDimension;
-			
-			switch (params.align) {
-			case "stretch" :
-				forEach(children, function (i, kid) {
-					kidDimension = targetDimension;
-					kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
-					
-					kidDimension -= getComputedStyle(target, self.anti.add[1], TRUE);
-					kidDimension -= getComputedStyle(target, self.anti.add[2], TRUE);
-					
-					forEach(self.anti.add, function (i, add) {
-						kidDimension -= getComputedStyle(kid, add, TRUE);
-					});
-					
-					kidDimension = Math.max(0, kidDimension);
-					kid.style[self.anti.dim] = (kidDimension) + "px";
-				});
-				break;
-
-			case "end" :
-				forEach(children, function (i, kid) {
-					kidDimension = targetDimension - kid[self.anti.out];
-					kidDimension -= getComputedStyle(kid, self.anti.add[0], TRUE);
-
-					kid.style[self.anti.pos] = kidDimension + "px";
-				});
-				break;
-
-			case "center":
-				forEach(children, function (i, kid) {
-					kidDimension = (targetDimension - self.anti.func(kid)) / 2;
-					kidDimension -= getComputedStyle(kid, self.anti.add[1], TRUE) / 2;
-					kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE) / 2;
-					
-					kid.style[self.anti.pos] = kidDimension + "px";
-				});
-				break;
-			}
-		},
-
-		boxDirection : function (target, children, params) {
-			var reversedChildren;
-			
-			if (params.direction === "reverse" && !params.reversed) {
-				reversedChildren = children.reverse();
-				
-				forEach(reversedChildren, function (i, kid) {
-					target.appendChild(kid);
-				});
-				
-				params.reversed = TRUE;
-			}
-		},
-
-		boxPack : function (target, children, params) {
-			var self = this,
-			    groupDimension = 0,
-			    firstComputedMargin,
-			    totalDimension, fractionedDimension,
-			    currentDimension, remainder,
-			    length = children.length - 1;
-
-			forEach(children, function (i, kid) {
-				groupDimension += kid[self.props.out];
-				groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
-				
-				if (params.orient === "horizontal") {
-					groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
-				}
-			});
-			
-			if (params.orient === "vertical") {
-				groupDimension += getComputedStyle(children[children.length - 1], self.props.add[0], TRUE) * ((params.pack === "end") ? 2 : 1);
-			}
-			
-			firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
-			totalDimension = self.props.func(target) - groupDimension;
-			
-			if (params.orient === "horizontal" && BROWSER.IE === 6) {
-				totalDimension /= 2;
-			}
-			
-			switch (params.pack) {
-			case "end" :
-				appendPixelValue(children[0], self.props.pos, firstComputedMargin + totalDimension);
-				break;
-
-			case "center" :
-				appendPixelValue(children[0], self.props.pos, firstComputedMargin + (totalDimension / 2));
-				break;
-
-			case "justify" :
-				fractionedDimension = Math.ceil(totalDimension / length);
-				remainder = (fractionedDimension * length) - totalDimension;
-				
-				children = children.reverse();
-				
-				forEach(children, function (i, kid) {
-					currentDimension = fractionedDimension;
-					
-					if (remainder) {
-						currentDimension--;
-						remainder--;
-					}
-					
-					kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
-				});
-				break;
-			}
-		},
-
-		boxFlex : function (target, children, params) {
-			var self = this,
-			    createMatchMatrix,
-			    findTotalWhitespace,
-			    distributeRatio,
-			    matrix, whitespace, distro;
-			
-			createMatchMatrix = function (matches) {
-				var child, totalRatio = 0,
-				    flexers = {}, keys = [];
-
-				forEach(children, function (i, kid) {
-					child = NULL;
-
-					forEach(matches, function (i, x) {
-						if (x.match === kid) {
-							child = x.match;
-							totalRatio += parseInt(x.flex, 10);
-
-							flexers[x.flex] = flexers[x.flex] || [];
-							flexers[x.flex].push(x);
-						}
-					});
-
-					if (!child) {
-						flexers["0"] = flexers["0"] || [];
-						flexers["0"].push(kid);
-					}
-				});
-
-				forEach(flexers, function (key) {
-					keys.push(key);
-				});
-
-				keys.sort(function (a, b) {
-					return b - a;
-				});
-
-				return {
-					keys : keys,
-					flexers : flexers,
-					total : totalRatio
+				wide = {
+					pos : "marginLeft",
+					add : ["marginRight", PADDING_LEFT, PADDING_RIGHT, BORDER_LEFT, BORDER_RIGHT],
+					dim : "width",
+					out : "offsetWidth",
+					func : clientWidth
 				};
-			};
 
-			findTotalWhitespace = function (matrix) {
-				var groupDimension = 0,
-				    whitespace, ration;
+				high = {
+					pos : "marginTop",
+					add : ["marginBottom", PADDING_TOP, PADDING_BOTTOM, BORDER_TOP, BORDER_BOTTOM],
+					dim : "height",
+					out : "offsetHeight",
+					func : clientHeight
+				};
+
+				forEach(children, function (i, kid) {
+					kid.style.cssFloat = kid.style.styleFloat = "left";
+					kid.style[wide.dim] = getComputedStyle(kid, wide.dim, NULL);
+
+					if (params.orient === "vertical") {
+						// Margins collapse on a normal box
+						// But not on flexbox
+						// So we hack away...
+						if (i !== 0 && i !== (children.length - 1)) {
+							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(kid, high.add[0], TRUE);
+
+							kid.style[high.pos] = combinedMargin;
+							kid.style[high.add[0]] = combinedMargin;
+						}
+						kid.style.cssFloat = kid.style.styleFloat = "";
+					}
+				});
+
+				switch (params.orient) {
+				case "horizontal" :
+				case "inline-axis" :
+					self.props = wide;
+					self.anti = high;
+					break;
+
+				case "vertical" :
+				case "block-axis":
+					self.props = high;
+					self.anti = wide;
+					break;
+				}
+			},
+
+			boxAlign : function (target, children, params) {
+				var self = this,
+				    targetDimension = self.anti.func(target),
+				    kidDimension;
+
+				switch (params.align) {
+				case "stretch" :
+					forEach(children, function (i, kid) {
+						kidDimension = targetDimension;
+						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
+
+						kidDimension -= getComputedStyle(target, self.anti.add[1], TRUE);
+						kidDimension -= getComputedStyle(target, self.anti.add[2], TRUE);
+
+						forEach(self.anti.add, function (i, add) {
+							kidDimension -= getComputedStyle(kid, add, TRUE);
+						});
+
+						kidDimension = Math.max(0, kidDimension);
+						kid.style[self.anti.dim] = (kidDimension) + "px";
+					});
+					break;
+
+				case "end" :
+					forEach(children, function (i, kid) {
+						kidDimension = targetDimension - kid[self.anti.out];
+						kidDimension -= getComputedStyle(kid, self.anti.add[0], TRUE);
+
+						kid.style[self.anti.pos] = kidDimension + "px";
+					});
+					break;
+
+				case "center":
+					forEach(children, function (i, kid) {
+						kidDimension = (targetDimension - self.anti.func(kid)) / 2;
+						kidDimension -= getComputedStyle(kid, self.anti.add[1], TRUE) / 2;
+						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE) / 2;
+
+						kid.style[self.anti.pos] = kidDimension + "px";
+					});
+					break;
+				}
+			},
+
+			boxDirection : function (target, children, params) {
+				var reversedChildren;
+
+				if (params.direction === "reverse" && !params.reversed) {
+					reversedChildren = children.reverse();
+
+					forEach(reversedChildren, function (i, kid) {
+						target.appendChild(kid);
+					});
+
+					params.reversed = TRUE;
+				}
+			},
+
+			boxPack : function (target, children, params) {
+				var self = this,
+				    groupDimension = 0,
+				    firstComputedMargin,
+				    totalDimension, fractionedDimension,
+				    currentDimension, remainder,
+				    length = children.length - 1;
 
 				forEach(children, function (i, kid) {
 					groupDimension += kid[self.props.out];
 					groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
-					groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
+
+					if (params.orient === "horizontal") {
+						groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
+					}
 				});
+
+				if (params.orient === "vertical") {
+					groupDimension += getComputedStyle(children[children.length - 1], self.props.add[0], TRUE) * ((params.pack === "end") ? 2 : 1);
+				}
+
+				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
+				totalDimension = self.props.func(target) - groupDimension;
+
+				if (params.orient === "horizontal" && BROWSER.IE === 6) {
+					totalDimension /= 2;
+				}
+
+				switch (params.pack) {
+				case "end" :
+					appendPixelValue(children[0], self.props.pos, firstComputedMargin + totalDimension);
+					break;
+
+				case "center" :
+					appendPixelValue(children[0], self.props.pos, firstComputedMargin + (totalDimension / 2));
+					break;
+
+				case "justify" :
+					fractionedDimension = Math.ceil(totalDimension / length);
+					remainder = (fractionedDimension * length) - totalDimension;
+
+					children = children.reverse();
+
+					forEach(children, function (i, kid) {
+						currentDimension = fractionedDimension;
+
+						if (remainder) {
+							currentDimension--;
+							remainder--;
+						}
+
+						kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
+					});
+					break;
+				}
+			},
+
+			boxFlex : function (target, children, params) {
+				var self = this,
+				    createMatchMatrix,
+				    findTotalWhitespace,
+				    distributeRatio,
+				    matrix, whitespace, distro;
+
+				if (!children.length) {
+					return;
+				}
 				
-				whitespace = self.props.func(target) - groupDimension;
-				ration = (whitespace / matrix.total);
+				createMatchMatrix = function (matches) {
+					var child, totalRatio = 0,
+					    flexers = {}, keys = [];
 
-				return {
-					whitespace : whitespace,
-					ration : ration
-				};
-			};
+					forEach(children, function (i, kid) {
+						child = NULL;
 
-			distributeRatio = function (matrix, whitespace) {
-				var flexers = matrix.flexers,
-				    keys = matrix.keys,
-				    ration = whitespace.ration,
-				    w, flexWidths = {},
-				    widthRation, trueDim, newWidth;
+						forEach(matches, function (i, x) {
+							if (x.match === kid) {
+								child = x.match;
+								totalRatio += parseInt(x.flex, 10);
 
-				forEach(keys, function (i, key) {
-					widthRation = (ration * key);
-					flexWidths[key] = widthRation;
+								flexers[x.flex] = flexers[x.flex] || [];
+								flexers[x.flex].push(x);
+							}
+						});
 
-					forEach(flexers[key], function (i, x) {
-						w = flexWidths[key];
-
-						if (x.match) {
-							trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
-							newWidth = Math.max(0, (trueDim + w));
-							x.match.style[self.props.dim] = newWidth + "px";
+						if (!child) {
+							flexers["0"] = flexers["0"] || [];
+							flexers["0"].push(kid);
 						}
 					});
-				});
-			};
 
-			matrix = createMatchMatrix(params.children);
+					forEach(flexers, function (key) {
+						keys.push(key);
+					});
+
+					keys.sort(function (a, b) {
+						return b - a;
+					});
+
+					return {
+						keys : keys,
+						flexers : flexers,
+						total : totalRatio
+					};
+				};
+
+				findTotalWhitespace = function (matrix) {
+					var groupDimension = 0,
+					    whitespace, ration;
+
+					forEach(children, function (i, kid) {
+						groupDimension += kid[self.props.out];
+						groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
+						groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
+					});
+
+					whitespace = self.props.func(target) - groupDimension;
+					ration = (whitespace / matrix.total);
+
+					return {
+						whitespace : whitespace,
+						ration : ration
+					};
+				};
+
+				distributeRatio = function (matrix, whitespace) {
+					var flexers = matrix.flexers,
+					    keys = matrix.keys,
+					    ration = whitespace.ration,
+					    w, flexWidths = {},
+					    widthRation, trueDim, newWidth;
+
+					forEach(keys, function (i, key) {
+						widthRation = (ration * key);
+						flexWidths[key] = widthRation;
+
+						forEach(flexers[key], function (i, x) {
+							w = flexWidths[key];
+
+							if (x.match) {
+								trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
+								newWidth = Math.max(0, (trueDim + w));
+								x.match.style[self.props.dim] = newWidth + "px";
+							}
+						});
+					});
+				};
+
+				matrix = createMatchMatrix(params.children);
+
+				if (matrix.total) {
+					whitespace = findTotalWhitespace(matrix);
+
+					// Distribute the calculated ratios among the children
+					distro = distributeRatio(matrix, whitespace);
+				}
+			},
 			
 			if (matrix.total) {
 				whitespace = findTotalWhitespace(matrix);
@@ -1019,17 +1032,9 @@ var Flexie = (function (window, doc) {
 		setup : function (target, children, params) {
 			var self = this;
 			
-			// Set up parent
-			self.boxModel(target, children, params);
-			self.boxOrient(target, children, params);
-			self.boxAlign(target, children, params);
-			self.boxDirection(target, children, params);
-			self.boxPack(target, children, params);
-
-			// Children properties
-			if (children.length) {
-				self.boxFlex(target, children, params);
-			}
+			forEach(self.properties, function (key, func) {
+				func.call(self, target, children, params);
+			});
 		},
 
 		trackDOM : function (params) {
