@@ -742,9 +742,12 @@ var Flexie = (function (window, doc) {
 					if (stylesheet.insertRule) {
 						stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
 					} else if (stylesheet.addRule) {
-						stylesheet.addRule("* html " + selector, "height:1%;", 0);
-						stylesheet.addRule("*+html " + selector, "display:inline-block;", 0);
-						stylesheet.addRule(selector + ":after", generatedRules, 0);
+						if (BROWSER.IE === 6) {
+							stylesheet.addRule(selector, "zoom: 1;", 0);
+						} else {
+							stylesheet.addRule("*+html " + selector, "display:inline-block;", 0);
+							stylesheet.addRule(selector + ":after", generatedRules, 0);
+						}
 					}
 
 					params.cleared = TRUE;
