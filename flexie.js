@@ -449,17 +449,17 @@ var Flexie = (function (window, doc) {
 		if (!PIXEL.test(ret) && NUMBER.test(ret)) {
 
 			// Remember the original values
-			left = style[name];
-			rsLeft = element.runtimeStyle[name];
+			left = style.left;
+			rsLeft = element.runtimeStyle.left;
 
 			// Put in the new values to get a computed value out
-			element.runtimeStyle[name] = element.currentStyle[name];
-			style[name] = ret || 0;
+			element.runtimeStyle.left = element.currentStyle.left;
+			style.left = ret || 0;
 			ret = style.pixelLeft + "px";
 
 			// Revert the changed values
-			style[name] = left || 0;
-			element.runtimeStyle[name] = rsLeft;
+			style.left = left || 0;
+			element.runtimeStyle.left = rsLeft;
 		}
 
 		return ret;
