@@ -150,6 +150,20 @@ var Flexie = (function (window, doc) {
 		return method;
 	}
 	
+	function addLoadEvent(func) {
+		var oldonload = window.onload;
+		if (typeof window.onload !== "function") {
+			window.onload = func;
+		} else {
+			window.onload = function() {
+				if (oldonload) {
+					oldonload();
+				}
+				func();
+			};
+		}
+	}
+	
 	function attachLoadMethod(handler) {
 		// compatiable selector engines in order of CSS3 support
 		var selectorEngines = {
@@ -171,9 +185,13 @@ var Flexie = (function (window, doc) {
 			eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
 		}
 		
-		if (!method) {
-			window.onload = handler;
-		}
+		addLoadEvent(function () {
+			if (!method) {
+				handler && handler();
+			}
+			
+			updateInstances();
+		});
 	}
 	
 	function buildSelectorTree(text) {
