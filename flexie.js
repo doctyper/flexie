@@ -416,29 +416,15 @@ var Flexie = (function (window, doc) {
 	}
 	
 	function calcPx(element, props, dir) {
-		var globalProps, dummy, value;
+		var value = element["offset" + dir];
 		dir = dir.replace(dir.charAt(0), dir.charAt(0).toUpperCase());
-
-		globalProps = {
-			visibility : "hidden",
-			position : "absolute",
-			left : "-9999px",
-			top : "-9999px"
-		};
-
-		dummy = element.cloneNode(TRUE);
 		
 		forEach(props, function (i, prop) {
-			dummy.style[prop] = "0";
+			prop = parseFloat(element.currentStyle[prop]);
+			if (!isNaN(prop)) {
+				value -= prop;
+			}
 		});
-		
-		forEach(globalProps, function (key, value) {
-			dummy.style[key] = value;
-		});
-
-		doc.body.appendChild(dummy);
-		value = dummy["offset" + dir];
-		doc.body.removeChild(dummy);
 
 		return value;
 	}
