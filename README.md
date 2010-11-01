@@ -30,6 +30,7 @@ Currently Supported Properties
 * box-direction
 * box-pack
 * box-flex
+* box-ordinal-group
 
 
 Not There Yet
@@ -37,7 +38,6 @@ Not There Yet
 
 * box-flex-group
 * box-lines
-* box-ordinal-group
 
 
 Why?
