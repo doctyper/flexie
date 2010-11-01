@@ -416,16 +416,18 @@ var Flexie = (function (window, doc) {
 	}
 	
 	function calcPx(element, props, dir) {
-		var value = element["offset" + dir];
-		dir = dir.replace(dir.charAt(0), dir.charAt(0).toUpperCase());
+		var dim = dir.replace(dir.charAt(0), dir.charAt(0).toUpperCase()),
+		    value = element["offset" + dim] || 0;
 		
-		forEach(props, function (i, prop) {
-			prop = parseFloat(element.currentStyle[prop]);
-			if (!isNaN(prop)) {
-				value -= prop;
-			}
-		});
-
+		if (value) {
+			forEach(props, function (i, prop) {
+				prop = parseFloat(element.currentStyle[prop]);
+				if (!isNaN(prop)) {
+					value -= prop;
+				}
+			});
+		}
+		
 		return value;
 	}
 	
