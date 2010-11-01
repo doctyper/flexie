@@ -50,7 +50,8 @@ var Flexie = (function (window, doc) {
 	// Store reference to library
 	ENGINE, LIBRARY,
 	
-	PIXEL = /^\d+(px)?$/i,
+	PIXEL = /^-?\d+(?:px)?$/i,
+	NUMBER = /^-?\d/,
 	SIZES = /width|height|top|bottom|left|right|margin|padding|border(.*)?Width/,
 	
 	PADDING_RIGHT = "paddingRight",
