@@ -35,7 +35,6 @@ Currently Supported Properties
 
 Not There Yet
 =============
-
 * box-flex-group
 * box-lines
 
@@ -43,7 +42,7 @@ Not There Yet
 Why?
 =======
 
-I really wanted to use the CSS3 Flexible Box Model.
+I *really* wanted to use the CSS3 Flexible Box Model.
 
 
 How?
