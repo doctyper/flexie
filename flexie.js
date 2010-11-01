@@ -1021,11 +1021,61 @@ var Flexie = (function (window, doc) {
 				}
 			},
 			
-			if (matrix.total) {
-				whitespace = findTotalWhitespace(matrix);
+			boxOrdinalGroup : function (target, children, params) {
+				var self = this,
+				    createMatchMatrix,
+				    organizeChildren,
+				    matrix;
 
-				// Distribute the calculated ratios among the children
-				distro = distributeRatio(matrix, whitespace);
+				if (!children.length) {
+					return;
+				}
+				
+				createMatchMatrix = function (matches) {
+					var ordinals = {}, keys = [],
+					    ordinal, order = "ordinal-group";
+
+					forEach(children, function (i, kid) {
+						forEach(matches, function (i, x) {
+							ordinal = x[order];
+							
+							if (x.match === kid && ordinal) {
+								ordinals[ordinal] = ordinals[ordinal] || [];
+								ordinals[ordinal].push(x);
+							}
+						});
+					});
+
+					forEach(ordinals, function (key) {
+						keys.push(key);
+					});
+
+					keys.sort(function (a, b) {
+						return b - a;
+					});
+
+					return {
+						keys : keys,
+						ordinals : ordinals
+					};
+				};
+				
+				organizeChildren = function (matrix) {
+					var keys = matrix.keys,
+					    ordinals = matrix.ordinals;
+					
+					forEach(keys, function (i, key) {
+						forEach(ordinals[key].reverse(), function (i, x) {
+							target.insertBefore(x.match, target.firstChild);
+						});
+					});
+				};
+
+				matrix = createMatchMatrix(params.children);
+
+				if (matrix.keys.length) {
+					organizeChildren(matrix);
+				}
 			}
 		},
 
