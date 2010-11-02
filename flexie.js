@@ -187,7 +187,10 @@ var Flexie = (function (win, doc) {
 				method = method[current[1]];
 			}
 			
-			eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
+			// This works in IE9 Preview 6, but throws an error anyway(?)
+			try {
+				eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
+			} catch (e) {}
 		}
 		
 		addEvent("load", function () {
