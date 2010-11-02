@@ -566,11 +566,13 @@ var Flexie = (function (win, doc) {
 			var storedWidth, storedHeight,
 			    currentWidth, currentHeight,
 			    docBody = doc.body,
-			    docEl = doc.documentElement;
-
+			    docEl = doc.documentElement,
+			    innerWidth = "innerWidth", innerHeight = "innerHeight",
+			    clientWidth = "clientWidth", clientHeight = "clientHeight";
+			
 			addEvent("resize", function () {
-				currentWidth = docEl.innerWidth || docBody.clientWidth || docEl.clientWidth;
-				currentHeight = docEl.innerHeight || docBody.clientHeight || docEl.clientHeight;
+				currentWidth = win[innerWidth] || docEl[innerWidth] || docEl[clientWidth] || docBody[clientWidth];
+				currentHeight = win[innerHeight] || docEl[innerHeight] || docEl[clientHeight] || docBody[clientHeight];
 				
 				if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
 					updateInstances();
