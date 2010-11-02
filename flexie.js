@@ -857,7 +857,17 @@ var Flexie = (function (win, doc) {
 						});
 
 						kidDimension = Math.max(0, kidDimension);
-						kid.style[self.anti.dim] = (kidDimension) + "px";
+						
+						switch (kid.nodeName.toLowerCase()) {
+						case "button" :
+						case "input" :
+						case "select" :
+							break;
+
+						default :
+							kid.style[self.anti.dim] = (kidDimension) + "px";
+							break;
+						}
 					});
 					break;
 
