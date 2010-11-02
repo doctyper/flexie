@@ -153,16 +153,16 @@ var Flexie = (function (win, doc) {
 		return method;
 	}
 	
-	function addLoadEvent(func) {
-		var onload = "onload",
-		    oldonload = win[onload];
+	function addEvent(type, func) {
+		type = "on" + type;
+		var oldevent = win[type];
 
-		if (typeof win[onload] !== "function") {
-			win[onload] = func;
+		if (typeof win[type] !== "function") {
+			win[type] = func;
 		} else {
-			win[onload] = function() {
-				if (oldonload) {
-					oldonload();
+			win[type] = function() {
+				if (oldevent) {
+					oldevent();
 				}
 				func();
 			};
@@ -190,7 +190,7 @@ var Flexie = (function (win, doc) {
 			eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
 		}
 		
-		addLoadEvent(function () {
+		addEvent("load", function () {
 			if (!method) {
 				handler && handler();
 			}
@@ -565,7 +565,7 @@ var Flexie = (function (win, doc) {
 			    docBody = doc.body,
 			    docEl = doc.documentElement;
 
-			win.onresize = function () {
+			addEvent("resize", function () {
 				currentWidth = docEl.innerWidth || docBody.clientWidth || docEl.clientWidth;
 				currentHeight = docEl.innerHeight || docBody.clientHeight || docEl.clientHeight;
 				
@@ -575,7 +575,7 @@ var Flexie = (function (win, doc) {
 					storedWidth = currentWidth;
 					storedHeight = currentHeight;
 				}
-			};
+			});
 			
 			RESIZE_LISTENER = TRUE;
 		}
