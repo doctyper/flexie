@@ -768,9 +768,7 @@ var Flexie = (function (win, doc) {
 						"visibility:hidden"
 					].join(";");
 				
-					if (stylesheet.insertRule) {
-						stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
-					} else if (stylesheet.addRule) {
+					if (stylesheet.addRule) {
 						if (BROWSER.IE === 6) {
 							stylesheet.addRule(selector, "zoom: 1;", 0);
 						} else if (BROWSER.IE === 7) {
@@ -778,6 +776,8 @@ var Flexie = (function (win, doc) {
 						} else {
 							stylesheet.addRule(selector + ":after", generatedRules, 0);
 						}
+					} else if (stylesheet.insertRule) {
+						stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
 					}
 
 					params.cleared = TRUE;
