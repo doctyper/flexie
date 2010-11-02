@@ -1067,8 +1067,7 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxOrdinalGroup : function (target, children, params) {
-				var self = this,
-				    createMatchMatrix,
+				var createMatchMatrix,
 				    organizeChildren,
 				    matrix;
 
