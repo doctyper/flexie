@@ -949,9 +949,10 @@ var Flexie = (function (window, doc) {
 			boxFlex : function (target, children, params) {
 				var self = this,
 				    createMatchMatrix,
+				    testForRestrictiveProperties,
 				    findTotalWhitespace,
 				    distributeRatio,
-				    matrix, whitespace, distro;
+				    matrix, restrict, whitespace, distro;
 
 				if (!children.length) {
 					return;
@@ -993,6 +994,28 @@ var Flexie = (function (window, doc) {
 						flexers : flexers,
 						total : totalRatio
 					};
+				};
+				
+				testForRestrictiveProperties = function (matrix) {
+					var flexers = matrix.flexers,
+					    keys = matrix.keys, max;
+					
+					forEach(keys, function (i, key) {
+						forEach(flexers[key], function (i, x) {
+							max = NULL;
+							
+							forEach(x.properties, function (i, rule) {
+								if ((/^max\-([a-z]+)/).test(rule.property)) {
+									max = parseFloat(rule.value);
+								}
+							});
+							
+							if (!max || x.match[self.props.out] !== max) {
+								appendPixelValue(x.match, self.props.pos, NULL);
+							}
+							
+						});
+					});
 				};
 
 				findTotalWhitespace = function (matrix) {
@@ -1040,8 +1063,7 @@ var Flexie = (function (window, doc) {
 				matrix = createMatchMatrix(params.children);
 
 				if (matrix.total) {
-					appendPixelValue(children, self.props.pos, NULL);
-					
+					restrict = testForRestrictiveProperties(matrix);
 					whitespace = findTotalWhitespace(matrix);
 				
 					// Distribute the calculated ratios among the children
