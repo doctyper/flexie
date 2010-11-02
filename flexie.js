@@ -1020,7 +1020,7 @@ var Flexie = (function (win, doc) {
 								}
 							});
 							
-							if (!max || x.match[self.props.out] !== max) {
+							if (!max || x.match[self.props.out] > max) {
 								appendPixelValue(x.match, self.props.pos, NULL);
 							}
 							
