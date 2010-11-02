@@ -173,10 +173,10 @@ var Flexie = (function (win, doc) {
 		// compatiable selector engines in order of CSS3 support
 		var selectorEngines = {
 			"DOMAssistant" : ["*.DOMReady", "%"],
-			"Prototype" : ["doc.observe", "'dom:loaded', %"],
+			"Prototype" : ["document.observe", "'dom:loaded', %"],
 			"YAHOO" : ["*.util.Event", "onDOMReady", "%"],
-			"MooTools" : ["win.addEvent", "'domready', %"],
-			"jQuery" : ["*(doc).ready", "%"],
+			"MooTools" : ["window.addEvent", "'domready', %"],
+			"jQuery" : ["*(document).ready", "%"],
 			"dojo" : ["*.addOnLoad", "%"]
 		}, method, current;
 		
