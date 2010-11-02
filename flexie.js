@@ -959,12 +959,10 @@ var Flexie = (function (window, doc) {
 				}
 				
 				createMatchMatrix = function (matches) {
-					var child, totalRatio = 0,
+					var totalRatio = 0,
 					    flexers = {}, keys = [];
 
 					forEach(children, function (i, kid) {
-						child = NULL;
-
 						forEach(matches, function (i, x) {
 							if (x.match === kid) {
 								child = x.match;
@@ -974,11 +972,6 @@ var Flexie = (function (window, doc) {
 								flexers[x.flex].push(x);
 							}
 						});
-
-						if (!child) {
-							flexers["0"] = flexers["0"] || [];
-							flexers["0"].push(kid);
-						}
 					});
 
 					forEach(flexers, function (key) {
