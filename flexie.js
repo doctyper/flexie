@@ -41,7 +41,7 @@ Class: Flexie
 /*jslint evil: true, regexp: false, plusplus: false */
 /*global window, document */
 
-var Flexie = (function (window, doc) {
+var Flexie = (function (win, doc) {
 	var FLX = {},
 	
 	// Store support for flexbox
@@ -87,7 +87,7 @@ var Flexie = (function (window, doc) {
 	
 	BROWSER = {
 		IE : (function () {
-			var ie, ua = window.navigator.userAgent,
+			var ie, ua = win.navigator.userAgent,
 			    match = (MSIE).exec(ua.toLowerCase());
 			
 			if (match) {
@@ -145,7 +145,7 @@ var Flexie = (function (window, doc) {
 		}, method;
 		
 		forEach(selectorEngines, function (engine, value) {
-			if (window[engine] && !method && (method = eval(value.replace("*", engine)))) {
+			if (win[engine] && !method && (method = eval(value.replace("*", engine)))) {
 				ENGINE = engine;
 			}
 		});
@@ -154,11 +154,13 @@ var Flexie = (function (window, doc) {
 	}
 	
 	function addLoadEvent(func) {
-		var oldonload = window.onload;
-		if (typeof window.onload !== "function") {
-			window.onload = func;
+		var onload = "onload",
+		    oldonload = win[onload];
+
+		if (typeof win[onload] !== "function") {
+			win[onload] = func;
 		} else {
-			window.onload = function() {
+			win[onload] = function() {
 				if (oldonload) {
 					oldonload();
 				}
@@ -171,10 +173,10 @@ var Flexie = (function (window, doc) {
 		// compatiable selector engines in order of CSS3 support
 		var selectorEngines = {
 			"DOMAssistant" : ["*.DOMReady", "%"],
-			"Prototype" : ["document.observe", "'dom:loaded', %"],
+			"Prototype" : ["doc.observe", "'dom:loaded', %"],
 			"YAHOO" : ["*.util.Event", "onDOMReady", "%"],
-			"MooTools" : ["window.addEvent", "'domready', %"],
-			"jQuery" : ["*(document).ready", "%"],
+			"MooTools" : ["win.addEvent", "'domready', %"],
+			"jQuery" : ["*(doc).ready", "%"],
 			"dojo" : ["*.addOnLoad", "%"]
 		}, method, current;
 		
@@ -495,8 +497,8 @@ var Flexie = (function (window, doc) {
 	function getComputedStyle(element, property, returnAsInt) {
 		var value;
 		
-		if (doc.defaultView && doc.defaultView.getComputedStyle) {
-			value = doc.defaultView.getComputedStyle(element, NULL)[property];
+		if (win.getComputedStyle) {
+			value = win.getComputedStyle(element, NULL)[property];
 		} else {
 			if (SIZES.test(property)) {
 				value = getPixelValue(element, element.currentStyle[property], property);
@@ -560,10 +562,10 @@ var Flexie = (function (window, doc) {
 		if (!RESIZE_LISTENER) {
 			var storedWidth, storedHeight,
 			    currentWidth, currentHeight,
-			    docBody = document.body,
-			    docEl = document.documentElement;
+			    docBody = doc.body,
+			    docEl = doc.documentElement;
 
-			window.onresize = function () {
+			win.onresize = function () {
 				currentWidth = docEl.innerWidth || docBody.clientWidth || docEl.clientWidth;
 				currentHeight = docEl.innerHeight || docBody.clientHeight || docEl.clientHeight;
 				
@@ -638,12 +640,12 @@ var Flexie = (function (window, doc) {
 		
 		// --[ getXHRObject() ]-------------------------------------------------
 		function getXHRObject() {
-			if (window.XMLHttpRequest) {
-				return new window.XMLHttpRequest();
+			if (win.XMLHttpRequest) {
+				return new win.XMLHttpRequest();
 			}
 			
 			try	{ 
-				return new window.ActiveXObject('Microsoft.XMLHTTP');
+				return new win.ActiveXObject('Microsoft.XMLHTTP');
 			} catch (e) { 
 				return NULL;
 			}
@@ -745,7 +747,7 @@ var Flexie = (function (window, doc) {
 				// is the dreaded clear fix:
 				if (!params.cleared) {
 					selector = params.selector;
-					stylesheet = document.styleSheets;
+					stylesheet = doc.styleSheets;
 					stylesheet = stylesheet[stylesheet.length - 1];
 				
 					generatedRules = [
@@ -1186,7 +1188,7 @@ var Flexie = (function (window, doc) {
 			
 			// Resize / DOM Polling Events
 			// Delay for an instant because IE6 is insane.
-			window.setTimeout(function() {
+			win.setTimeout(function() {
 				self.trackDOM(params);
 			}, 0);
 		}
