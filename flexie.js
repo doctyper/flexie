@@ -313,12 +313,12 @@ var Flexie = (function (win, doc) {
 								updatedRule.selector = multi;
 								
 								// Easy access for later
-								updatedRule[shortProp] = value;
+								updatedRule[shortProp] = prop.value;
 								
 								uniqueChildren[multi] = updatedRule;
 							} else {
 								// Easy access for later
-								uniqueChildren[multi][shortProp] = value;
+								uniqueChildren[multi][shortProp] = prop.value;
 							}
 							
 						}
