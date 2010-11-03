@@ -252,12 +252,23 @@ var Flexie = (function (win, doc) {
 		    property, value, shortProp,
 		    leadingTrim = /^\s\s*/,
 		    trailingTrim = /\s\s*$/,
-		    selectorSplit = /(\s)?,(\s)?/, trim,
+		    selectorSplit = /(\s)?,(\s)?/,
+		    trim, addRules,
 		    multiSelectors, updatedRule,
-		    uniqueSelectors = {};
+		    uniqueChildren = {}, uniqueBoxes = {};
 		
 		trim = function (string) {
 			return string.replace(leadingTrim, "").replace(trailingTrim, "");
+		};
+		
+		addRules = function (selector, rules) {
+			var element = uniqueBoxes[selector];
+			
+			if (element) {
+				element.properties.push(rules);
+			} else {
+				uniqueBoxes[selector] = rules;
+			}
 		};
 		
 		forEach(rules, function (i, rule) {
@@ -265,54 +276,63 @@ var Flexie = (function (win, doc) {
 			properties = rule.properties;
 			
 			forEach(properties, function (i, prop) {
-				// Trim any residue whitespace (it happens)
 				prop.property = trim(prop.property);
 				prop.value = trim(prop.value);
+				shortProp = prop.property.replace("box-", "");
 				
-				property = prop.property;
-				value = prop.value;
-				shortProp = property.replace("box-", "");
-				
-				if (property === "display" && value === "box") {
-					FLEX_BOXES.push(rule);
-				} else {
-					switch (shortProp) {
-					case "flex" :
-					case "ordinal-group" :
-						// Multiple selectors?
-						multiSelectors = selector.split(selectorSplit);
-
-						forEach(multiSelectors, function (i, multi) {
-							if (multi && (multi = trim(multi))) {
-								
-								if (!uniqueSelectors[multi]) {
-									updatedRule = {};
-
-									// Each selector gets its own call
-									forEach(rule, function (key) {
-										updatedRule[key] = rule[key];
-									});
-									
-									updatedRule.selector = multi;
-									
-									// Easy access for later
-									updatedRule[shortProp] = value;
-									
-									uniqueSelectors[multi] = updatedRule;
-								} else {
-									// Easy access for later
-									uniqueSelectors[multi][shortProp] = value;
-								}
-								
-							}
-						});
-						break;
+				switch (prop.property) {
+				case "display" :
+					if (prop.value === "box") {
+						addRules(selector, rule);
 					}
+					break;
+
+				case "box-orient" :
+				case "box-align" :
+				case "box-direction" :
+				case "box-pack" :
+					addRules(selector, rule);
+					break;
+
+				case "box-flex" :
+				case "box-ordinal-group" :
+					// Multiple selectors?
+					multiSelectors = selector.split(selectorSplit);
+		
+					forEach(multiSelectors, function (i, multi) {
+						if (multi && (multi = trim(multi))) {
+							
+							if (!uniqueChildren[multi]) {
+								updatedRule = {};
+		
+								// Each selector gets its own call
+								forEach(rule, function (key) {
+									updatedRule[key] = rule[key];
+								});
+								
+								updatedRule.selector = multi;
+								
+								// Easy access for later
+								updatedRule[shortProp] = value;
+								
+								uniqueChildren[multi] = updatedRule;
+							} else {
+								// Easy access for later
+								uniqueChildren[multi][shortProp] = value;
+							}
+							
+						}
+					});
+					break;
 				}
 			});
 		});
 		
-		forEach(uniqueSelectors, function (key, node) {
+		forEach(uniqueBoxes, function (key, node) {
+			FLEX_BOXES.push(node);
+		});
+		
+		forEach(uniqueChildren, function (key, node) {
 			POSSIBLE_FLEX_CHILDREN.push(node);
 		});
 		
