@@ -60,6 +60,7 @@ var Flexie = (function (win, doc) {
 	NUMBER = /^-?\d/,
 	SIZES = /width|height|margin|padding|border/,
 	MSIE = /(msie) ([\w.]+)/,
+	WHITESPACE_CHARACTERS = /\t|\n|\r/g,
 	
 	// String constants
     EMPTY_STRING = "",
@@ -225,7 +226,7 @@ var Flexie = (function (win, doc) {
 		    match, selector, proptext, splitprop, properties;
 		
 		// Tabs, Returns
-		text = text.replace(/\t|\n|\r/g, EMPTY_STRING);
+		text = text.replace(WHITESPACE_CHARACTERS, EMPTY_STRING);
 		
 		// Leading / Trailing Whitespace
 		text = text.replace(/\s?(\{|\:|\})\s?/g, PLACEHOLDER_STRING);
@@ -808,7 +809,8 @@ var Flexie = (function (win, doc) {
 			
 			for (i = 0, j = doc.styleSheets.length; i < j; i++) {
 				stylesheet = doc.styleSheets[i];
-				if (stylesheet && stylesheet.href !== EMPTY_STRING) {
+				
+				if (stylesheet && stylesheet.href !== NULL) {
 					url = resolveUrl(stylesheet.href, baseUrl);
 					
 					if (url) {
