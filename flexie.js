@@ -682,12 +682,6 @@ var Flexie = (function (win, doc) {
 			RESIZE_LISTENER = TRUE;
 		}
 	}
-
-	function flexBoxSupported() {
-		var dummy = doc.createElement("div");
-		appendProperty(dummy, "display", "box");
-		return ((dummy.style.display).indexOf("box") !== -1) ? TRUE : FALSE;
-	}
 	
 	selectivizr = (function () {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
@@ -829,6 +823,7 @@ var Flexie = (function (win, doc) {
 		};
 	}());
 	
+	// Flexie box constructor
 	FLX.box = function (params) {
 		this.renderModel(params);
 	};
@@ -1306,8 +1301,17 @@ var Flexie = (function (win, doc) {
 		});
 	};
 
-	FLX.init = (function () {
-		SUPPORT = flexBoxSupported();
+	FLX.flexboxSupported = (function () {
+		var dummy = doc.createElement("div");
+		appendProperty(dummy, "display", "box");
+		return ((dummy.style.display).indexOf("box") !== -1) ? TRUE : FALSE;
+	}());
+	
+	// Flexie Version
+	FLX.version = 0.4;
+
+	(function init () {
+		SUPPORT = FLX.flexboxSupported;
 		LIBRARY = determineSelectorMethod();
 
 		if (!SUPPORT && LIBRARY) {
@@ -1324,4 +1328,6 @@ var Flexie = (function (win, doc) {
 // Turn off dot notation warning for GCC
 /*jslint sub: true */
 window["Flexie"] = Flexie;
-Flexie["box"] = Flexie.box;
+Flexie["version"] = Flexie.version;
+Flexie["updateInstances"] = Flexie.updateInstances;
+Flexie["flexboxSupported"] = Flexie.flexboxSupported;
