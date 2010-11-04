@@ -54,13 +54,13 @@ No setup on your end, just stick Flexie in your markup after your [selector engi
 Requirements
 ============
 
-See Selectivizr's [Things you need to know](http://selectivizr.com/#things)
+See the [Things you need to know](http://selectivizr.com/#things)
 
 
 Acknowledgements
 ================
 
-[Selectivizr](http://selectivizr.com), for their fantastic CSS parsing engine.
+Selectivizr, for their fantastic CSS parsing engine.
 
 
 Copyright and Software License
