@@ -6,7 +6,7 @@ Legacy support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexb
 Ready For Prime Time?
 =====================
 
-Nope.
+...Maybe.
 
 Browser Support
 ===============
