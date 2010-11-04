@@ -362,15 +362,18 @@ var Flexie = (function (win, doc) {
 			caller = lib(child.selector);
 			
 			if (caller[0]) {
-				forEach(caller, function (i, call) {
-					if (call.parentNode === parent) {
+				forEach(caller, function (i, target) {
+					if (target.parentNode === parent) {
+						// Flag each unique node with FLX_DOM_ID
+						target.FLX_DOM_ID = target.FLX_DOM_ID || (++FLX_DOM_ID);
+						
 						unique = {};
 						
 						forEach(child, function (key) {
 							unique[key] = child[key];
 						});
 						
-						unique.match = call;
+						unique.match = target;
 						matches.push(unique);
 					}
 				});
@@ -393,7 +396,7 @@ var Flexie = (function (win, doc) {
 		    orient, align, direction, pack,
 		    lib, caller, children,
 		    box, params,
-		    flexBoxes = {}, match;
+		    flexBoxes = {}, match, childMatch;
 		
 		// No boxflex? No dice.
 		if (!flexers) {
@@ -472,6 +475,22 @@ var Flexie = (function (win, doc) {
 								if (value && !(new RegExp(value).test(match[key]))) {
 									match[key] += value;
 								}
+								break;
+							
+							case "children" :
+								forEach(params[key], function (k, child) {
+									childMatch = FALSE;
+									
+									forEach(match[key], function (key, existing) {
+										if (child.match.FLX_DOM_ID === existing.match.FLX_DOM_ID) {
+											childMatch = TRUE;
+										}
+									});
+									
+									if (!childMatch) {
+										match[key].push(child);
+									}
+								});
 								break;
 								
 							default :
