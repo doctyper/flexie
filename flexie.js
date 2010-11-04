@@ -42,8 +42,11 @@ Class: Flexie
 /*global window, document */
 
 var Flexie = (function (win, doc) {
+	
+	// Scope public properties
 	var FLX = {},
 	
+	// Each Flexie-modified DOM node gets a unique identifier
 	FLX_DOM_ID = 0,
 	
 	// Store support for flexbox
@@ -58,8 +61,10 @@ var Flexie = (function (win, doc) {
 	SIZES = /width|height|margin|padding|border/,
 	MSIE = /(msie) ([\w.]+)/,
 	
+	// String constants
     EMPTY_STRING = "",
     SPACE_STRING = " ",
+    PLACEHOLDER_STRING = "$1",
 
 	PADDING_RIGHT = "paddingRight",
 	PADDING_BOTTOM = "paddingBottom",
@@ -74,6 +79,8 @@ var Flexie = (function (win, doc) {
 	HORIZONTAL = "horizontal",
 	VERTICAL = "vertical",
 	
+	END_MUSTACHE = "}",
+	
 	PREFIXES = " -o- -moz- -ms- -webkit- -khtml- ".split(SPACE_STRING),
 	
 	DEFAULTS = {
@@ -83,16 +90,19 @@ var Flexie = (function (win, doc) {
 		pack : "start"
 	},
 	
+	// Global reference objects
 	FLEX_BOXES = [],
 	POSSIBLE_FLEX_CHILDREN = [],
 	FLEX_INSTANCES = [],
 	
 	RESIZE_LISTENER,
 	
+	// Minification optimizations
 	TRUE = true,
 	FALSE = false,
 	NULL = null,
 	
+	// If IE, which version?
 	BROWSER = {
 		IE : (function () {
 			var ie, ua = win.navigator.userAgent,
@@ -694,10 +704,7 @@ var Flexie = (function (win, doc) {
 		    RE_TIDY_TRAILING_WHITESPACE = /([(\[+~])\s+/g,
 		    RE_TIDY_LEADING_WHITESPACE = /\s+([)\]+~])/g,
 		    RE_TIDY_CONSECUTIVE_WHITESPACE = /\s+/g,
-		    RE_TIDY_TRIM_WHITESPACE = /^\s*((?:[\S\s]*\S)?)\s*$/,
-			
-		    // String constants
-		    PLACEHOLDER_STRING = "$1";
+		    RE_TIDY_TRIM_WHITESPACE = /^\s*((?:[\S\s]*\S)?)\s*$/;
 
 		// --[ trim() ]---------------------------------------------------------
 		// removes leading, trailing whitespace from a string
