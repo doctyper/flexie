@@ -216,7 +216,7 @@ var Flexie = (function (win, doc) {
 				handler && handler();
 			}
 			
-			updateInstances();
+			FLX.updateInstances();
 		});
 	}
 	
@@ -653,12 +653,6 @@ var Flexie = (function (win, doc) {
 		});
 	}
 	
-	function updateInstances() {
-		forEach(FLEX_INSTANCES, function (i, instance) {
-			instance.construct.updateModel(instance.params);
-		});
-	}
-	
 	function attachResizeListener(construct, params) {
 		FLEX_INSTANCES.push({
 			construct : construct,
@@ -678,7 +672,7 @@ var Flexie = (function (win, doc) {
 				currentHeight = win[innerHeight] || docEl[innerHeight] || docEl[clientHeight] || docBody[clientHeight];
 				
 				if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
-					updateInstances();
+					FLX.updateInstances();
 					
 					storedWidth = currentWidth;
 					storedHeight = currentHeight;
@@ -1304,6 +1298,12 @@ var Flexie = (function (win, doc) {
 				self.trackDOM(params);
 			}, 0);
 		}
+	};
+	
+	FLX.updateInstances = function () {
+		forEach(FLEX_INSTANCES, function (i, instance) {
+			instance.construct.updateModel(instance.params);
+		});
 	};
 
 	FLX.init = (function () {
