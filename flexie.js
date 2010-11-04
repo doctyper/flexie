@@ -56,6 +56,9 @@ var Flexie = (function (win, doc) {
 	SIZES = /width|height|margin|padding|border/,
 	MSIE = /(msie) ([\w.]+)/,
 	
+    EMPTY_STRING = "",
+    SPACE_STRING = " ",
+
 	PADDING_RIGHT = "paddingRight",
 	PADDING_BOTTOM = "paddingBottom",
 	PADDING_LEFT = "paddingLeft",
@@ -66,10 +69,13 @@ var Flexie = (function (win, doc) {
 	BORDER_LEFT = "borderLeftWidth",
 	BORDER_TOP = "borderTopWidth",
 	
-	PREFIXES = " -o- -moz- -ms- -webkit- -khtml- ".split(" "),
+	HORIZONTAL = "horizontal",
+	VERTICAL = "vertical",
+	
+	PREFIXES = " -o- -moz- -ms- -webkit- -khtml- ".split(SPACE_STRING),
 	
 	DEFAULTS = {
-		orient : "horizontal",
+		orient : HORIZONTAL,
 		align : "stretch",
 		direction : "normal",
 		pack : "start"
@@ -207,7 +213,7 @@ var Flexie = (function (win, doc) {
 		    match, selector, proptext, splitprop, properties;
 		
 		// Tabs, Returns
-		text = text.replace(/\t/g, "").replace(/\n/g, "").replace(/\r/g, "");
+		text = text.replace(/\t/g, EMPTY_STRING).replace(/\n/g, EMPTY_STRING).replace(/\r/g, EMPTY_STRING);
 		
 		// Leading / Trailing Whitespace
 		text = text.replace(/\s?(\{|\:|\})\s?/g, "$1");
@@ -216,7 +222,7 @@ var Flexie = (function (win, doc) {
 		
 		forEach(ruletext, function (i, text) {
 			if (text) {
-				rule = [text, "}"].join("");
+				rule = [text, "}"].join(EMPTY_STRING);
 				
 				match = (/(.*)\{(.*)\}/).exec(rule);
 				
@@ -258,7 +264,7 @@ var Flexie = (function (win, doc) {
 		    uniqueChildren = {}, uniqueBoxes = {};
 		
 		trim = function (string) {
-			return string.replace(leadingTrim, "").replace(trailingTrim, "");
+			return string.replace(leadingTrim, EMPTY_STRING).replace(trailingTrim, EMPTY_STRING);
 		};
 		
 		addRules = function (selector, rules) {
@@ -278,24 +284,24 @@ var Flexie = (function (win, doc) {
 			forEach(properties, function (i, prop) {
 				prop.property = trim(prop.property);
 				prop.value = trim(prop.value);
-				shortProp = prop.property.replace("box-", "");
+				shortProp = prop.property.replace("box-", EMPTY_STRING);
 				
-				switch (prop.property) {
+				switch (shortProp) {
 				case "display" :
 					if (prop.value === "box") {
 						addRules(selector, rule);
 					}
 					break;
 
-				case "box-orient" :
-				case "box-align" :
-				case "box-direction" :
-				case "box-pack" :
+				case "orient" :
+				case "align" :
+				case "direction" :
+				case "pack" :
 					addRules(selector, rule);
 					break;
 
-				case "box-flex" :
-				case "box-ordinal-group" :
+				case "flex" :
+				case "ordinal-group" :
 					// Multiple selectors?
 					multiSelectors = selector.split(selectorSplit);
 		
@@ -376,7 +382,7 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function buildFlexieCall(flexers) {
-		var selector, properties,
+		var selector, properties, shortProp,
 		    orient, align, direction, pack,
 		    lib, caller, children,
 		    box, params;
@@ -393,20 +399,22 @@ var Flexie = (function (win, doc) {
 			orient = align = direction = pack = NULL;
 			
 			forEach(properties, function (i, prop) {
-				switch (prop.property) {
-				case "box-orient" :
+				shortProp = prop.property.replace("box-", EMPTY_STRING);
+				
+				switch (shortProp) {
+				case "orient" :
 					orient = prop.value;
 					break;
 					
-				case "box-align" :
+				case "align" :
 					align = prop.value;
 					break;
 					
-				case "box-direction" :
+				case "direction" :
 					direction = prop.value;
 					break;
 					
-				case "box-pack" :
+				case "pack" :
 					pack = prop.value;
 					break;
 				}
@@ -565,7 +573,7 @@ var Flexie = (function (win, doc) {
 		
 		forEach(targets, function (i, target) {
 			if (target && target.style) {
-				target.style[prop] = (value ? (value + "px") : "");
+				target.style[prop] = (value ? (value + "px") : EMPTY_STRING);
 			}
 		});
 	}
@@ -624,8 +632,6 @@ var Flexie = (function (win, doc) {
 		    RE_TIDY_TRIM_WHITESPACE = /^\s*((?:[\S\s]*\S)?)\s*$/,
 			
 		    // String constants
-		    EMPTY_STRING = "",
-		    SPACE_STRING = " ",
 		    PLACEHOLDER_STRING = "$1";
 
 		// --[ trim() ]---------------------------------------------------------
@@ -682,7 +688,7 @@ var Flexie = (function (win, doc) {
 			
 			xhr.open("GET", url, FALSE);
 			xhr.send();
-			return (xhr.status === 200) ? xhr.responseText : "";	
+			return (xhr.status === 200) ? xhr.responseText : EMPTY_STRING;	
 		}
 		
 		// --[ resolveUrl() ]---------------------------------------------------
@@ -742,7 +748,7 @@ var Flexie = (function (win, doc) {
 			
 			for (i = 0, j = doc.styleSheets.length; i < j; i++) {
 				stylesheet = doc.styleSheets[i];
-				if (stylesheet && stylesheet.href !== "") {
+				if (stylesheet && stylesheet.href !== EMPTY_STRING) {
 					url = resolveUrl(stylesheet.href, baseUrl);
 					
 					if (url) {
@@ -829,7 +835,7 @@ var Flexie = (function (win, doc) {
 					kid.style.cssFloat = kid.style.styleFloat = "left";
 					// kid.style[wide.dim] = getComputedStyle(kid, wide.dim, NULL);
 
-					if (params.orient === "vertical") {
+					if (params.orient === VERTICAL) {
 						// Margins collapse on a normal box
 						// But not on flexbox
 						// So we hack away...
@@ -839,18 +845,18 @@ var Flexie = (function (win, doc) {
 							kid.style[high.pos] = combinedMargin;
 							kid.style[high.add[0]] = combinedMargin;
 						}
-						kid.style.cssFloat = kid.style.styleFloat = "";
+						kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
 					}
 				});
 
 				switch (params.orient) {
-				case "horizontal" :
+				case HORIZONTAL :
 				case "inline-axis" :
 					self.props = wide;
 					self.anti = high;
 					break;
 
-				case "vertical" :
+				case VERTICAL :
 				case "block-axis":
 					self.props = high;
 					self.anti = wide;
@@ -938,19 +944,19 @@ var Flexie = (function (win, doc) {
 					groupDimension += kid[self.props.out];
 					groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
 
-					if (params.orient === "horizontal") {
+					if (params.orient === HORIZONTAL) {
 						groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
 					}
 				});
 
-				if (params.orient === "vertical") {
+				if (params.orient === VERTICAL) {
 					groupDimension += getComputedStyle(children[children.length - 1], self.props.add[0], TRUE) * ((params.pack === "end") ? 2 : 1);
 				}
 
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
 				totalDimension = self.props.func(target) - groupDimension;
 
-				if (params.orient === "horizontal" && BROWSER.IE === 6) {
+				if (params.orient === HORIZONTAL && BROWSER.IE === 6) {
 					totalDimension /= 2;
 				}
 
@@ -1176,7 +1182,7 @@ var Flexie = (function (win, doc) {
 
 			// Null properties
 			forEach(children, function (i, kid) {
-				kid.style.cssText = "";
+				kid.style.cssText = EMPTY_STRING;
 			});
 
 			this.setup(target, children, params);
