@@ -123,7 +123,7 @@ var Flexie = (function (win, doc) {
 
 	selectivizr.com
 	*/
-	selectivizr;
+	selectivizrEngine;
 	
 	// Via jQuery 1.4.3
 	// http://github.com/jquery/jquery/blob/master/src/core.js#L593
@@ -684,7 +684,7 @@ var Flexie = (function (win, doc) {
 		}
 	}
 	
-	selectivizr = (function () {
+	selectivizrEngine = (function () {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
 		    RE_IMPORT = /@import\s*url\(\s*(["'])?(.*?)\1\s*\)[\w\W]*?;/g,
 		    RE_SELECTOR_GROUP = /(^|\})\s*([^\{]*?[\[:][^\{]+)/g,
@@ -1317,7 +1317,7 @@ var Flexie = (function (win, doc) {
 		LIBRARY = determineSelectorMethod();
 
 		if (!SUPPORT && LIBRARY) {
-			attachLoadMethod(selectivizr);
+			attachLoadMethod(selectivizrEngine);
 		}
 	}());
 	
