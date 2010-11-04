@@ -225,16 +225,16 @@ var Flexie = (function (win, doc) {
 		    match, selector, proptext, splitprop, properties;
 		
 		// Tabs, Returns
-		text = text.replace(/\t/g, EMPTY_STRING).replace(/\n/g, EMPTY_STRING).replace(/\r/g, EMPTY_STRING);
+		text = text.replace(/\t|\n|\r/g, EMPTY_STRING);
 		
 		// Leading / Trailing Whitespace
-		text = text.replace(/\s?(\{|\:|\})\s?/g, "$1");
+		text = text.replace(/\s?(\{|\:|\})\s?/g, PLACEHOLDER_STRING);
 		
-		ruletext = text.split("}");
+		ruletext = text.split(END_MUSTACHE);
 		
 		forEach(ruletext, function (i, text) {
 			if (text) {
-				rule = [text, "}"].join(EMPTY_STRING);
+				rule = [text, END_MUSTACHE].join(EMPTY_STRING);
 				
 				match = (/(.*)\{(.*)\}/).exec(rule);
 				
