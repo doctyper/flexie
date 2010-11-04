@@ -242,10 +242,12 @@ var Flexie = (function (win, doc) {
 						}
 					});
 					
-					rules.push({
-						selector : selector,
-						properties : properties
-					});
+					if (selector && properties.length) {
+						rules.push({
+							selector : selector,
+							properties : properties
+						});
+					}
 				}
 			}
 		});
@@ -282,54 +284,57 @@ var Flexie = (function (win, doc) {
 			properties = rule.properties;
 			
 			forEach(properties, function (i, prop) {
-				prop.property = trim(prop.property);
-				prop.value = trim(prop.value);
-				shortProp = prop.property.replace("box-", EMPTY_STRING);
+				property = trim(prop.property);
+				value = trim(prop.value);
 				
-				switch (shortProp) {
-				case "display" :
-					if (prop.value === "box") {
-						addRules(selector, rule);
-					}
-					break;
+				if (property) {
+					shortProp = property.replace("box-", EMPTY_STRING);
 
-				case "orient" :
-				case "align" :
-				case "direction" :
-				case "pack" :
-					addRules(selector, rule);
-					break;
-
-				case "flex" :
-				case "ordinal-group" :
-					// Multiple selectors?
-					multiSelectors = selector.split(selectorSplit);
-		
-					forEach(multiSelectors, function (i, multi) {
-						if (multi && (multi = trim(multi))) {
-							
-							if (!uniqueChildren[multi]) {
-								updatedRule = {};
-		
-								// Each selector gets its own call
-								forEach(rule, function (key) {
-									updatedRule[key] = rule[key];
-								});
-								
-								updatedRule.selector = multi;
-								
-								// Easy access for later
-								updatedRule[shortProp] = prop.value;
-								
-								uniqueChildren[multi] = updatedRule;
-							} else {
-								// Easy access for later
-								uniqueChildren[multi][shortProp] = prop.value;
-							}
-							
+					switch (shortProp) {
+					case "display" :
+						if (value === "box") {
+							addRules(selector, rule);
 						}
-					});
-					break;
+						break;
+
+					case "orient" :
+					case "align" :
+					case "direction" :
+					case "pack" :
+						addRules(selector, rule);
+						break;
+
+					case "flex" :
+					case "ordinal-group" :
+						// Multiple selectors?
+						multiSelectors = selector.split(selectorSplit);
+
+						forEach(multiSelectors, function (i, multi) {
+							if (multi && (multi = trim(multi))) {
+
+								if (!uniqueChildren[multi]) {
+									updatedRule = {};
+
+									// Each selector gets its own call
+									forEach(rule, function (key) {
+										updatedRule[key] = rule[key];
+									});
+
+									updatedRule.selector = multi;
+
+									// Easy access for later
+									updatedRule[shortProp] = value;
+
+									uniqueChildren[multi] = updatedRule;
+								} else {
+									// Easy access for later
+									uniqueChildren[multi][shortProp] = value;
+								}
+
+							}
+						});
+						break;
+					}
 				}
 			});
 		});
@@ -382,7 +387,7 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function buildFlexieCall(flexers) {
-		var selector, properties, shortProp,
+		var selector, properties, property, value, shortProp,
 		    orient, align, direction, pack,
 		    lib, caller, children,
 		    box, params;
@@ -399,24 +404,30 @@ var Flexie = (function (win, doc) {
 			orient = align = direction = pack = NULL;
 			
 			forEach(properties, function (i, prop) {
-				shortProp = prop.property.replace("box-", EMPTY_STRING);
 				
-				switch (shortProp) {
-				case "orient" :
-					orient = prop.value;
-					break;
-					
-				case "align" :
-					align = prop.value;
-					break;
-					
-				case "direction" :
-					direction = prop.value;
-					break;
-					
-				case "pack" :
-					pack = prop.value;
-					break;
+				property = prop.property;
+				value = prop.value;
+				
+				if (property) {
+					shortProp = property.replace("box-", EMPTY_STRING);
+
+					switch (shortProp) {
+					case "orient" :
+						orient = value;
+						break;
+
+					case "align" :
+						align = value;
+						break;
+
+					case "direction" :
+						direction = value;
+						break;
+
+					case "pack" :
+						pack = value;
+						break;
+					}
 				}
 			});
 			
