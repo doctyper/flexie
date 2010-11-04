@@ -44,6 +44,8 @@ Class: Flexie
 var Flexie = (function (win, doc) {
 	var FLX = {},
 	
+	FLX_DOM_ID = 0,
+	
 	// Store support for flexbox
 	SUPPORT,
 	
@@ -390,7 +392,8 @@ var Flexie = (function (win, doc) {
 		var selector, properties, property, value, shortProp,
 		    orient, align, direction, pack,
 		    lib, caller, children,
-		    box, params;
+		    box, params,
+		    flexBoxes = {}, match;
 		
 		// No boxflex? No dice.
 		if (!flexers) {
@@ -438,24 +441,56 @@ var Flexie = (function (win, doc) {
 			caller = lib(flex.selector);
 			
 			// In an array?
-			caller = caller[0] || caller;
+			caller = caller[0] ? caller : [caller];
 			
-			// Find possible child node matches
-			children = matchFlexChildren(caller, lib, flexers.children);
-			
-			// Make sure there is some value associated with box properties
-			params = getParams({
-				target : caller,
-				selector : selector,
-				children : children,
-				orient : orient,
-				align : align,
-				direction: direction,
-				pack : pack
+			forEach(caller, function (i, target) {
+				// If is DOM object
+				if (target.nodeType) {
+					// Flag each unique node with FLX_DOM_ID
+					target.FLX_DOM_ID = target.FLX_DOM_ID || (++FLX_DOM_ID);
+					
+					// Find possible child node matches
+					children = matchFlexChildren(target, lib, flexers.children);
+
+					// Make sure there is some value associated with box properties
+					params = {
+						target : target,
+						selector : selector,
+						children : children,
+						orient : orient,
+						align : align,
+						direction: direction,
+						pack : pack
+					};
+
+					match = flexBoxes[target.FLX_DOM_ID];
+
+					if (match) {
+						forEach(params, function (key, value) {
+							switch (key) {
+							case "selector" :
+								if (value && !(new RegExp(value).test(match[key]))) {
+									match[key] += value;
+								}
+								break;
+								
+							default :
+								if (value) {
+									match[key] = value;
+								}
+								break;
+							}
+						});
+					} else {
+						flexBoxes[target.FLX_DOM_ID] = getParams(params);
+					}
+				}
 			});
-			
+		});
+		
+		forEach(flexBoxes, function (key, flex) {
 			// Constructor
-			box = new FLX.box(params);
+			box = new FLX.box(flex);
 		});
 	}
 	
