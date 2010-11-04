@@ -10,11 +10,8 @@ Ready For Prime Time?
 
 Browser Support
 ===============
-* IE 9
-* IE 8
-* IE 7
-* IE 6
-* Opera 10.63
+* IE 6-9
+* Opera 10.0+
 
 The Flexible Box Model is [supported natively](http://www.caniuse.com/#feat=flexbox) by these browsers:
 
