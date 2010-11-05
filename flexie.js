@@ -320,6 +320,7 @@ var Flexie = (function (win, doc) {
 						break;
 
 					case "flex" :
+					case "flex-group" :
 					case "ordinal-group" :
 						// Multiple selectors?
 						multiSelectors = selector.split(selectorSplit);
@@ -1061,7 +1062,7 @@ var Flexie = (function (win, doc) {
 				    createMatchMatrix,
 				    testForRestrictiveProperties,
 				    findTotalWhitespace,
-				    distributeRatio,
+				    distributeRatio, group = "flex-group",
 				    matrix, restrict, whitespace, distro;
 
 				if (!children.length) {
@@ -1074,7 +1075,7 @@ var Flexie = (function (win, doc) {
 
 					forEach(children, function (i, kid) {
 						forEach(matches, function (i, x) {
-							if (x.match === kid) {
+							if (x.match === kid && (!x[group] || parseInt(x[group], 10) <= 1)) {
 								totalRatio += parseInt(x.flex, 10);
 
 								flexers[x.flex] = flexers[x.flex] || [];
