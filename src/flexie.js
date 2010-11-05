@@ -152,6 +152,8 @@ var Flexie = (function (win, doc) {
 	// --[ determineSelectorMethod() ]--------------------------------------
 	// walks through the selectorEngines object testing for an suitable
 	// selector engine.
+	
+	// Moving outside Selectivizr scope because detection is needed before running selectivizrEngine
 	function determineSelectorMethod() {
 		// compatiable selector engines in order of CSS3 support
 		var selectorEngines = {
@@ -174,6 +176,7 @@ var Flexie = (function (win, doc) {
 		return method;
 	}
 	
+	// Event handler for onload/onresize events
 	function addEvent(type, func) {
 		type = "on" + type;
 		var oldevent = win[type];
