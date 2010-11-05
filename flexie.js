@@ -270,7 +270,7 @@ var Flexie = (function (win, doc) {
 		return rules;
 	}
 	
-	function findFlexBoxElements(rules) {
+	function findFlexboxElements(rules) {
 		var selector, properties,
 		    property, value, shortProp,
 		    leadingTrim = /^\s\s*/,
@@ -409,7 +409,7 @@ var Flexie = (function (win, doc) {
 		    orient, align, direction, pack,
 		    lib, caller, children,
 		    box, params,
-		    flexBoxes = {}, match, childMatch;
+		    flexboxes = {}, match, childMatch;
 		
 		// No boxflex? No dice.
 		if (!flexers) {
@@ -479,7 +479,7 @@ var Flexie = (function (win, doc) {
 						pack : pack
 					};
 
-					match = flexBoxes[target.FLX_DOM_ID];
+					match = flexboxes[target.FLX_DOM_ID];
 
 					if (match) {
 						forEach(params, function (key, value) {
@@ -514,13 +514,13 @@ var Flexie = (function (win, doc) {
 							}
 						});
 					} else {
-						flexBoxes[target.FLX_DOM_ID] = getParams(params);
+						flexboxes[target.FLX_DOM_ID] = getParams(params);
 					}
 				}
 			});
 		});
 		
-		forEach(flexBoxes, function (key, flex) {
+		forEach(flexboxes, function (key, flex) {
 			// Constructor
 			box = new FLX.box(flex);
 		});
@@ -818,7 +818,7 @@ var Flexie = (function (win, doc) {
 					if (url) {
 						cssText = patchStyleSheet(parseStyleSheet(url));
 						tree = buildSelectorTree(cssText);
-						flexers = findFlexBoxElements(tree);
+						flexers = findFlexboxElements(tree);
 					}
 				}
 			}
