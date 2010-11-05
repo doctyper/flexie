@@ -55,12 +55,14 @@ var Flexie = (function (win, doc) {
 	// Store reference to library
 	ENGINE, LIBRARY,
 	
-	// REGEXP
+	// Regular Expressions
 	PIXEL = /^-?\d+(?:px)?$/i,
 	NUMBER = /^-?\d/,
 	SIZES = /width|height|margin|padding|border/,
 	MSIE = /(msie) ([\w.]+)/,
 	WHITESPACE_CHARACTERS = /\t|\n|\r/g,
+	RESTRICTIVE_PROPERTIES = /^max\-([a-z]+)/,
+	PROTOCOL = /^https?:\/\//i,
 	
 	// String constants
     EMPTY_STRING = "",
@@ -737,7 +739,7 @@ var Flexie = (function (win, doc) {
 			}
 			
 			try	{ 
-				return new win.ActiveXObject('Microsoft.XMLHTTP');
+				return new win.ActiveXObject("Microsoft.XMLHTTP");
 			} catch (e) { 
 				return NULL;
 			}
@@ -767,7 +769,7 @@ var Flexie = (function (win, doc) {
 			}
 
 			// absolute path
-			if (/^https?:\/\//i.test(url)) {
+			if (PROTOCOL.test(url)) {
 				return getProtocolAndHost(contextUrl) === getProtocolAndHost(url) ? url : NULL;
 			}
 
@@ -859,7 +861,7 @@ var Flexie = (function (win, doc) {
 				
 					if (stylesheet.addRule) {
 						if (BROWSER.IE === 6) {
-							stylesheet.addRule(selector, "zoom: 1;", 0);
+							stylesheet.addRule(selector, "zoom:1;", 0);
 						} else if (BROWSER.IE === 7) {
 							stylesheet.addRule(selector, "display:inline-block;", 0);
 						} else {
@@ -1104,7 +1106,7 @@ var Flexie = (function (win, doc) {
 							max = NULL;
 							
 							forEach(x.properties, function (i, rule) {
-								if ((/^max\-([a-z]+)/).test(rule.property)) {
+								if ((RESTRICTIVE_PROPERTIES).test(rule.property)) {
 									max = parseFloat(rule.value);
 								}
 							});
