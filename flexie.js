@@ -181,7 +181,7 @@ var Flexie = (function (win, doc) {
 		if (typeof win[type] !== "function") {
 			win[type] = func;
 		} else {
-			win[type] = function() {
+			win[type] = function () {
 				if (oldevent) {
 					oldevent();
 				}
@@ -215,8 +215,8 @@ var Flexie = (function (win, doc) {
 		}
 		
 		addEvent("load", function () {
-			if (!method) {
-				handler && handler();
+			if (!method && handler) {
+				handler();
 			}
 			
 			FLX.updateInstances();
@@ -1075,7 +1075,6 @@ var Flexie = (function (win, doc) {
 					forEach(children, function (i, kid) {
 						forEach(matches, function (i, x) {
 							if (x.match === kid) {
-								child = x.match;
 								totalRatio += parseInt(x.flex, 10);
 
 								flexers[x.flex] = flexers[x.flex] || [];
@@ -1295,7 +1294,7 @@ var Flexie = (function (win, doc) {
 			
 			// Resize / DOM Polling Events
 			// Delay for an instant because IE6 is insane.
-			win.setTimeout(function() {
+			win.setTimeout(function () {
 				self.trackDOM(params);
 			}, 0);
 		}
@@ -1316,7 +1315,7 @@ var Flexie = (function (win, doc) {
 	// Flexie Version
 	FLX.version = 0.4;
 
-	(function init () {
+	(function init() {
 		SUPPORT = FLX.flexboxSupported;
 		LIBRARY = determineSelectorMethod();
 
