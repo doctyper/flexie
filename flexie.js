@@ -1020,7 +1020,9 @@ var Flexie = (function (win, doc) {
 
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
 				totalDimension = self.props.func(target) - groupDimension;
-
+				
+				// IE6 double float margin bug
+				// http://www.positioniseverything.net/explorer/doubled-margin.html
 				if (params.orient === HORIZONTAL && BROWSER.IE === 6) {
 					totalDimension /= 2;
 				}
