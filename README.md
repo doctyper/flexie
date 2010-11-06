@@ -33,7 +33,7 @@ Currently Supported Properties
 
 Not There Yet
 =============
-* box-lines
+* box-lines (as far as I can tell, no browser currently supports this property)
 
 
 Why?
