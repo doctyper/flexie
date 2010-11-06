@@ -27,12 +27,12 @@ Currently Supported Properties
 * box-direction
 * box-pack
 * box-flex
+* box-flex-group
 * box-ordinal-group
 
 
 Not There Yet
 =============
-* box-flex-group
 * box-lines
 
 
