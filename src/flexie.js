@@ -1158,7 +1158,7 @@ var Flexie = (function (win, doc) {
 						groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
 					});
 
-					whitespace = self.props.func(target) - groupDimension;
+					whitespace = getComputedStyle(target, self.props.dim, TRUE) - groupDimension;
 					ration = (whitespace / matrix.total);
 
 					return {
