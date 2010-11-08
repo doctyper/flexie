@@ -104,6 +104,7 @@ var Flexie = (function (win, doc) {
 	TRUE = true,
 	FALSE = false,
 	NULL = null,
+	UNDEFINED = undefined,
 	
 	// If IE, which version?
 	BROWSER = {
@@ -132,7 +133,7 @@ var Flexie = (function (win, doc) {
 	function forEach(object, callback, reverse) {
 		var name, i = 0, value,
 			length = object.length,
-			isObj = length === undefined;
+			isObj = length === UNDEFINED;
 
 		if (isObj) {
 			for (name in object) {
