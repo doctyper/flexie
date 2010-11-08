@@ -1098,7 +1098,10 @@ var Flexie = (function (win, doc) {
 
 					forEach(children, function (i, kid) {
 						forEach(matches, function (i, x) {
-							if (x.match === kid && (!x[group] || parseInt(x[group], 10) <= 1)) {
+							if (x.match === kid && (!x[group] || (x[group] && parseInt(x[group], 10) <= 1))) {
+								// If no value declared, it's the default.
+								x.flex = x.flex || "0";
+								
 								totalRatio += parseInt(x.flex, 10);
 
 								flexers[x.flex] = flexers[x.flex] || [];
