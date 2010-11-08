@@ -419,7 +419,7 @@ var Flexie = (function (win, doc) {
 	
 	function buildFlexieCall(flexers) {
 		var selector, properties, property, value, shortProp,
-		    orient, align, direction, pack,
+		    display, orient, align, direction, pack,
 		    lib, caller, children,
 		    box, params,
 		    flexboxes = {}, match, childMatch;
@@ -433,7 +433,7 @@ var Flexie = (function (win, doc) {
 			selector = flex.selector;
 			properties = flex.properties;
 			
-			orient = align = direction = pack = NULL;
+			display = orient = align = direction = pack = NULL;
 			
 			forEach(properties, function (i, prop) {
 				
@@ -444,6 +444,12 @@ var Flexie = (function (win, doc) {
 					shortProp = property.replace("box-", EMPTY_STRING);
 
 					switch (shortProp) {
+					case "display" :
+						if (value === "box") {
+							display = value;
+						}
+						break;
+						
 					case "orient" :
 						orient = value;
 						break;
@@ -486,6 +492,7 @@ var Flexie = (function (win, doc) {
 						target : target,
 						selector : selector,
 						children : children,
+						display : display,
 						orient : orient,
 						align : align,
 						direction: direction,
@@ -533,9 +540,13 @@ var Flexie = (function (win, doc) {
 			});
 		});
 		
+		// Loop through each match, initialize constructor
 		forEach(flexboxes, function (key, flex) {
-			// Constructor
-			box = new FLX.box(flex);
+			// One final check to ensure each flexbox has a display property
+			if (flex.display === "box") {
+				// Constructor
+				box = new FLX.box(flex);
+			}
 		});
 	}
 	
