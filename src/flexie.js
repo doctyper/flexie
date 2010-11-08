@@ -907,18 +907,20 @@ var Flexie = (function (win, doc) {
 
 				wide = {
 					pos : "marginLeft",
-					add : ["marginRight", PADDING_LEFT, PADDING_RIGHT, BORDER_LEFT, BORDER_RIGHT],
+					opp : "marginRight",
 					dim : "width",
 					out : "offsetWidth",
-					func : clientWidth
+					func : clientWidth,
+					pad : [PADDING_LEFT, PADDING_RIGHT, BORDER_LEFT, BORDER_RIGHT]
 				};
 
 				high = {
 					pos : "marginTop",
-					add : ["marginBottom", PADDING_TOP, PADDING_BOTTOM, BORDER_TOP, BORDER_BOTTOM],
+					opp : "marginBottom",
 					dim : "height",
 					out : "offsetHeight",
-					func : clientHeight
+					func : clientHeight,
+					pad : [PADDING_TOP, PADDING_BOTTOM, BORDER_TOP, BORDER_BOTTOM]
 				};
 
 				forEach(children, function (i, kid) {
@@ -930,10 +932,10 @@ var Flexie = (function (win, doc) {
 						// But not on flexbox
 						// So we hack away...
 						if (i !== 0 && i !== (children.length - 1)) {
-							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(kid, high.add[0], TRUE);
+							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(kid, high.opp, TRUE);
 
 							kid.style[high.pos] = combinedMargin;
-							kid.style[high.add[0]] = combinedMargin;
+							kid.style[high.opp] = combinedMargin;
 						}
 						kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
 					}
@@ -965,11 +967,11 @@ var Flexie = (function (win, doc) {
 						kidDimension = targetDimension;
 						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
 
-						kidDimension -= getComputedStyle(target, self.anti.add[1], TRUE);
-						kidDimension -= getComputedStyle(target, self.anti.add[2], TRUE);
+						kidDimension -= getComputedStyle(target, self.anti.pad[0], TRUE);
+						kidDimension -= getComputedStyle(target, self.anti.pad[1], TRUE);
 
-						forEach(self.anti.add, function (i, add) {
-							kidDimension -= getComputedStyle(kid, add, TRUE);
+						forEach(self.anti.pad, function (i, pad) {
+							kidDimension -= getComputedStyle(kid, pad, TRUE);
 						});
 
 						kidDimension = Math.max(0, kidDimension);
@@ -990,7 +992,7 @@ var Flexie = (function (win, doc) {
 				case "end" :
 					forEach(children, function (i, kid) {
 						kidDimension = targetDimension - kid[self.anti.out];
-						kidDimension -= getComputedStyle(kid, self.anti.add[0], TRUE);
+						kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
 
 						kid.style[self.anti.pos] = kidDimension + "px";
 					});
@@ -999,7 +1001,7 @@ var Flexie = (function (win, doc) {
 				case "center":
 					forEach(children, function (i, kid) {
 						kidDimension = (targetDimension - self.anti.func(kid)) / 2;
-						kidDimension -= getComputedStyle(kid, self.anti.add[1], TRUE) / 2;
+						kidDimension -= getComputedStyle(kid, self.anti.pad[0], TRUE) / 2;
 						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE) / 2;
 
 						kid.style[self.anti.pos] = kidDimension + "px";
@@ -1035,12 +1037,12 @@ var Flexie = (function (win, doc) {
 					groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
 
 					if (params.orient === HORIZONTAL) {
-						groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
+						groupDimension += getComputedStyle(kid, self.props.opp, TRUE);
 					}
 				});
 
 				if (params.orient === VERTICAL) {
-					groupDimension += getComputedStyle(children[children.length - 1], self.props.add[0], TRUE) * ((params.pack === "end") ? 2 : 1);
+					groupDimension += getComputedStyle(children[children.length - 1], self.props.opp, TRUE) * ((params.pack === "end") ? 2 : 1);
 				}
 
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
@@ -1086,8 +1088,10 @@ var Flexie = (function (win, doc) {
 				    createMatchMatrix,
 				    testForRestrictiveProperties,
 				    findTotalWhitespace,
-				    distributeRatio, group = "flex-group",
-				    matrix, restrict, whitespace, distro;
+				    distributeRatio,
+				    reBoxAlign,
+				    group = "flex-group",
+				    matrix, restrict, whitespace, distro, realign;
 
 				if (!children.length) {
 					return;
@@ -1155,7 +1159,7 @@ var Flexie = (function (win, doc) {
 					forEach(children, function (i, kid) {
 						groupDimension += kid[self.props.out];
 						groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
-						groupDimension += getComputedStyle(kid, self.props.add[0], TRUE);
+						groupDimension += getComputedStyle(kid, self.props.opp, TRUE);
 					});
 
 					whitespace = getComputedStyle(target, self.props.dim, TRUE) - groupDimension;
