@@ -974,6 +974,7 @@ var Flexie = (function (win, doc) {
 							kidDimension -= getComputedStyle(kid, pad, TRUE);
 						});
 
+						kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
 						kidDimension = Math.max(0, kidDimension);
 						
 						switch (kid.nodeName.toLowerCase()) {
