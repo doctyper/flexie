@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Flexie | Flexbox Playground</title>
+		
+		<link rel="stylesheet" href="css/reset.css" type="text/css" />
+		<link rel="stylesheet" href="css/demo.css" type="text/css" />
+		<link rel="stylesheet" href="css/flexbox-properties.css" type="text/css" />
+	</head>
+	<body>
+		<div id="flexie-playground">
+			<form action="#preview" method="get">
+				<fieldset>
+					<label for="box-orient">Box Orient:</label>
+					<select id="box-orient">
+						<option selected="selected" value="horizontal">Horizontal</option>
+						<option value="vertical">Vertical</option>
+						<option value="inline-axis">Inline Axis</option>
+						<option value="block-axis">Block Axis</option>
+					</select>
+				</fieldset>
+				<fieldset>
+					<label for="box-align">Box Align:</label>
+					<select id="box-align">
+						<option selected="selected" value="stretch">Stretch</option>
+						<option value="start">Start</option>
+						<option value="end">End</option>
+						<option value="center">Center</option>
+						<!-- <option value="baseline">Baseline</option> -->
+					</select>
+				</fieldset>
+				<fieldset>
+					<label for="box-direction">Box Direction:</label>
+					<select id="box-direction">
+						<option selected="selected" value="normal">Normal</option>
+						<option value="reverse">Reverse</option>
+						<!-- <option value="inherit">Inherit</option> -->
+					</select>
+				</fieldset>
+				<fieldset>
+					<label for="box-pack">Box Pack:</label>
+					<select id="box-pack">
+						<option selected="selected" value="start">Start</option>
+						<option value="end">End</option>
+						<option value="center">Center</option>
+						<option value="justify">Justify</option>
+					</select>
+				</fieldset>
+				<fieldset>
+					<label for="box-flex">Box Flex:</label>
+					<select id="box-flex">
+						<option selected="selected" value="0-0-0">0-0-0</option>
+						<option value="0-1-0">0-1-0</option>
+						<option value="1-0-0">1-0-0</option>
+						<option value="0-1-1">0-1-1</option>
+						<option value="1-2-1">1-2-1</option>
+					</select>
+				</fieldset>
+				<fieldset>
+					<label for="box-ordinal-group">Box Ordinal Group:</label>
+					<select id="box-ordinal-group">
+						<option selected="selected" value="1-1-1">1-1-1</option>
+						<option value="1-2-1">1-2-1</option>
+						<option value="1-2-2">1-2-2</option>
+						<option value="1-2-3">1-2-3</option>
+					</select>
+				</fieldset>
+			</form>
+		</div>
+		
+		<!-- Note that there is no extra markup needed for layout purposes -->
+		<div id="box-wrap">
+			<div id="box-wrap-inner">
+				<div class="foo">Foo</div>
+				<div class="bar">Bar</div>
+				<div class="biz">Biz</div>
+			</div>
+		</div>
+		
+		<!-- jQuery -->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
+		<script src="src/flexie.js" type="text/javascript"></script>
+		
+		<!-- Playground -->
+		<script type="text/javascript">
+			(function () {
+				var DEFAULTS = {
+					orient : "horizontal",
+					align : "stretch",
+					direction : "normal",
+					pack : "start"
+				},
+				
+				PREFIXES = "-webkit- -moz- -ms- ".split(" "),
+				DOM_PREFIXES = "Webkit Moz O ms Khtml".split(" "),
+				
+				PARENT_CSS_PROPERTIES = {
+					"display" : "box"
+				},
+				
+				CHILD_CSS_PROPERTIES = {};
+				
+				function applyFlexboxProperty (target, property, value) {
+					var domPrefixes = DOM_PREFIXES, box,
+					    propertyFragments = property.split("-"),
+					    domProperty = "", values;
+					
+					$.each(propertyFragments, function (i, fragment) {
+						domProperty += fragment.charAt(0).toUpperCase() + fragment.substr(1);
+					});
+					
+					if (Flexie.flexboxSupported) {
+						$.each(domPrefixes, function (i, prefix) {
+							switch (property) {
+							case "box-flex" :
+							case "box-ordinal-group" :
+								values = value.split("-");
+								
+								// Null values first
+								// Set display to something other than block
+								// Set opacity to 0 to hide new display setting
+								// Solves a bug in Webkit browsers where box-flex properties do not revert once a value is applied.
+								target.children().css("opacity", "0").css(prefix + domProperty, "0").css("display", "inline-block");
+								
+								// Set a timeout.
+								// Solves the same Webkit bug. Webkit needs a pause to register the new values.
+								window.setTimeout(function() {
+									// Set correct box-flex property
+									// Remove display/opacity values
+									target.children().each(function (i, child) {
+										$(child).css(prefix + domProperty, values[i]).css("display", "").css("opacity", "");
+									});
+								}, 0);
+								break;
+							
+							default :
+								target.get(0).style[prefix + domProperty] = value;
+								break;
+							}
+						});
+					} else {
+						Flexie.destroyInstance(target.get(0));
+						
+						DEFAULTS.target = DEFAULTS.target || target.get(0);
+						DEFAULTS.selector = DEFAULTS.selector || target.selector;
+						DEFAULTS.children = DEFAULTS.children || target.children();
+						DEFAULTS[property.replace("box-", "")] = value;
+						
+						box = new Flexie.box(DEFAULTS);
+					}
+				}
+				
+				function parentRuleOutput (target, prefixes, rules) {
+					var cssText = [];
+					
+					$.each(rules, function (property, value) {
+						$.each(prefixes, function (i, prefix) {
+							cssText.push(prefix + property + ": " + value + ";" + (prefixes[i + 1] === undefined ? "\n" : ""));
+						});
+					});
+					
+					return target.selector + " {\n" + "\t" + cssText.join("\n\t") + "}\n\n";
+				}
+				
+				function childRuleOutput (children, prefixes, rules) {
+					var cssText = [], vals;
+					
+					if (!$.isEmptyObject(rules)) {
+						$.each(children, function (i, child) {
+							cssText.push("." + $(child).attr("class") + " {");
+
+							$.each(rules, function (property, value) {
+								vals = value.split("-");
+
+								$.each(prefixes, function (x, prefix) {
+									cssText.push("\t" + prefix + property + ": " + vals[i] + ";" + (prefixes[x + 1] === undefined ? "\n" : ""));
+								});
+							});
+							
+							cssText[cssText.length - 1] = cssText[cssText.length - 1].replace(/\n$/, "");
+							cssText.push("}\n");
+						});
+					}
+					
+					return cssText.join("\n") || "";
+				}
+				
+				function outputFlexboxCSS (target, property, value) {
+					var output = $("#flexie-css-output pre"), cssText;
+					
+					switch (property) {
+					case "box-flex" :
+					case "box-ordinal-group" :
+						CHILD_CSS_PROPERTIES[property] = value;
+						break;
+					
+					default :
+						PARENT_CSS_PROPERTIES[property] = value;
+						break;
+					}
+					
+					cssText = parentRuleOutput(target, PREFIXES, PARENT_CSS_PROPERTIES);
+					cssText += childRuleOutput(target.children(), PREFIXES, CHILD_CSS_PROPERTIES);
+					
+					if (!output.get(0)) {
+						output = $('<div id="flexie-css-output"><pre></pre></div>').appendTo("body").find("pre");
+					}
+					
+					output.html(cssText);
+				}
+
+				$(document).ready(function () {
+					var target = $("#box-wrap-inner"),
+					    select, property, value;
+					
+					$("#flexie-playground select").bind("change", function () {
+						select = $(this);
+						property = select.attr("id");
+						value = select.val();
+
+						applyFlexboxProperty(target, property, value);
+						outputFlexboxCSS(target, property, value);
+					});
+				});
+			})();
+		</script>
+	</body>
+</html>
