@@ -1255,7 +1255,7 @@ var Flexie = (function (win, doc) {
 						var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
 						    offset;
 						
-						forEach(children, function (i, kid) {
+						forEach(target.childNodes, function (i, kid) {
 							offset = offset || kid[offsetProp];
 							
 							while (kid[offsetProp] !== offset) {
