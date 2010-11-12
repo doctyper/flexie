@@ -1352,6 +1352,25 @@ var Flexie = (function (win, doc) {
 			instance.construct.updateModel(instance.params);
 		});
 	};
+	
+	FLX.destroyInstance = function (target) {
+		var instances = FLEX_INSTANCES;
+		
+		forEach(FLEX_INSTANCES, function (i, instance) {
+			if (instance && instance.params && instance.params.target === target) {
+				instance.params.target.FLX_DOM_ID = null;
+				instance.params.target.style.cssText = "";
+				
+				forEach(instance.params.children, function (i, x) {
+					x.match.style.cssText = "";
+				});
+				
+				instances = FLEX_INSTANCES.splice(i, 1);
+			}
+		});
+		
+		FLEX_INSTANCES = instances;
+	};
 
 	FLX.flexboxSupported = (function () {
 		var dummy = doc.createElement("div");
