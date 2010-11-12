@@ -1068,7 +1068,7 @@ var Flexie = (function (win, doc) {
 					fractionedDimension = Math.ceil(totalDimension / length);
 					remainder = (fractionedDimension * length) - totalDimension;
 
-					forEach(children.reverse(), function (i, kid) {
+					forEach(children, function (i, kid) {
 						currentDimension = fractionedDimension;
 
 						if (remainder) {
@@ -1076,12 +1076,25 @@ var Flexie = (function (win, doc) {
 							remainder--;
 						}
 						
-						if (children[i + 1]) {
+						if (i) {
 							kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
 						}
 					});
 					break;
 				}
+				
+				// Float drop fix
+				// Test offset values. If different, let's bring the widow back
+				var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
+				    offset;
+				
+				forEach(target.childNodes, function (i, kid) {
+					offset = offset || kid[offsetProp];
+					
+					while (kid[offsetProp] !== offset) {
+						kid.style[self.props.dim] = getComputedStyle(kid, self.props.dim, TRUE) - 1;
+					}
+				});
 			},
 			
 			boxOrdinalGroup : function (target, children, params) {
