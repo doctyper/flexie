@@ -9,37 +9,34 @@ body, html {
 	font: normal 13px/16px "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-body {
-	padding-bottom: 40px;
-}
-
 #flexie-playground {
 	padding: 20px;
 	text-align: center;
 }
 
 #flexie-playground fieldset {
+	margin: 0 8px;
 	display: inline;
-	line-height: 3;
 }
 
-#flexie-playground fieldset label {
-	margin-left: 10px;
+#flexie-playground fieldset legend {
+	padding-bottom: 2px;
+	display: block;
 	color: #888;
-	font-size: 11px;
+	font-size: 10px;
 	font-weight: bold;
+	width: 100%;
+	text-align: center;
+	border-bottom: 1px solid #eee;
 }
 
-#flexie-playground fieldset:first-child label {
-	margin-left: 0;
+#flexie-playground fieldset select {
+	margin-top: 5px;
+	display: inline-block;
 }
 
 #flexie-playground form * {
 	vertical-align: middle;
-}
-
-#flexie-playground option {
-	line-height: 1.2;
 }
 
 #flexie-css-output {
