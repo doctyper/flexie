@@ -1,12 +1,14 @@
 Flexie
 ===============
-
 Legacy support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/).
+
+See it in Action?
+=================
+[Flexie Playground](http://doctyper.github.com/flexie/playground/)
 
 Ready For Prime Time?
 =====================
-
-...Maybe.
+...Possibly.
 
 Browser Support
 ===============
@@ -38,13 +40,11 @@ Not There Yet
 
 Why?
 =======
-
 I *really* wanted to use the CSS3 Flexible Box Model.
 
 
 How?
 =======
-
 It works like [Selectivizr](http://selectivizr.com). In fact, it uses Selectivizr's engine to traverse your style sheets and looks for `display: box` elements. After that, it looks for any of the currently supported properties.
 
 Note: Flexie looks for non-namespaced properties. For example, it will ignore `-moz-box-pack`, but not `box-pack`. For best results, make sure to use a non-namespaced property. But you were already doing that to future-proof your code, weren't you?
@@ -53,7 +53,6 @@ No setup on your end, just stick Flexie in your markup after your [selector engi
 
 Requirements
 ============
-
 See the [Things you need to know](http://selectivizr.com/#things)
 
 Also, a caveat. As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.
@@ -61,13 +60,11 @@ Also, a caveat. As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slig
 
 Acknowledgements
 ================
-
 Selectivizr, for their fantastic CSS parsing engine.
 
 
 Copyright and Software License
 ==============================
-
 The MIT License
 
 Copyright (c) 2010 Richard Herrera
@@ -93,7 +90,6 @@ THE SOFTWARE.
 
 Contact
 =======
-
 * rich {at} doctyper {dot} com
 * [@doctyper](http://twitter.com/doctyper) on Twitter
 * <http://doctyper.com>
@@ -101,5 +97,4 @@ Contact
 
 Links
 =====
-
 * Flexie on GitHub: <http://github.com/doctyper/flexie>
