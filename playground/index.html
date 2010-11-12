@@ -193,6 +193,14 @@
 					} else {
 						Flexie.destroyInstance(target.get(0));
 						
+						if (property === "box-direction" && value === "normal") {
+							$(target.children().get().reverse()).each(function () {
+								target.append(this);
+							});
+							
+							DEFAULTS.reversed = false;
+						}
+						
 						DEFAULTS.target = DEFAULTS.target || target.get(0);
 						DEFAULTS.selector = DEFAULTS.selector || target.selector;
 						DEFAULTS.children = DEFAULTS.children || function () {
