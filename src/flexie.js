@@ -1193,6 +1193,19 @@ var Flexie = (function (win, doc) {
 								x.match.style[self.props.dim] = newWidth + "px";
 							}
 						});
+						
+						// Float drop fix
+						// Test offset values. If different, let's bring the widow back
+						var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
+						    offset;
+						
+						forEach(children, function (i, kid) {
+							offset = offset || kid[offsetProp];
+							
+							while (kid[offsetProp] !== offset) {
+								kid.style[self.props.dim] = getComputedStyle(kid, self.props.dim, TRUE) - 1;
+							}
+						});
 					});
 				};
 
