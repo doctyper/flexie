@@ -1068,17 +1068,17 @@ var Flexie = (function (win, doc) {
 					fractionedDimension = Math.ceil(totalDimension / length);
 					remainder = (fractionedDimension * length) - totalDimension;
 
-					children = children.reverse();
-
-					forEach(children, function (i, kid) {
+					forEach(children.reverse(), function (i, kid) {
 						currentDimension = fractionedDimension;
 
 						if (remainder) {
 							currentDimension--;
 							remainder--;
 						}
-
-						kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
+						
+						if (children[i + 1]) {
+							kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
+						}
 					});
 					break;
 				}
