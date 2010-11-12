@@ -1181,19 +1181,15 @@ var Flexie = (function (win, doc) {
 					var flexers = matrix.flexers,
 					    keys = matrix.keys,
 					    ration = whitespace.ration,
-					    w, flexWidths = {},
 					    widthRation, trueDim, newWidth;
 
 					forEach(keys, function (i, key) {
 						widthRation = (ration * key);
-						flexWidths[key] = widthRation;
 
 						forEach(flexers[key], function (i, x) {
-							w = flexWidths[key];
-
 							if (x.match) {
 								trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
-								newWidth = Math.max(0, (trueDim + w));
+								newWidth = Math.max(0, (trueDim + widthRation));
 								x.match.style[self.props.dim] = newWidth + "px";
 							}
 						});
