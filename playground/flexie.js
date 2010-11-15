@@ -223,7 +223,7 @@ var Flexie = (function (win, doc) {
 				handler();
 			}
 			
-			FLX.updateInstances();
+			FLX.updateInstance();
 		});
 	}
 	
@@ -700,7 +700,7 @@ var Flexie = (function (win, doc) {
 				currentHeight = win[innerHeight] || docEl[innerHeight] || docEl[clientHeight] || docBody[clientHeight];
 				
 				if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
-					FLX.updateInstances();
+					FLX.updateInstance();
 					
 					storedWidth = currentWidth;
 					storedHeight = currentHeight;
@@ -1360,9 +1360,11 @@ var Flexie = (function (win, doc) {
 		}
 	};
 	
-	FLX.updateInstances = function () {
+	FLX.updateInstance = function (target) {
 		forEach(FLEX_INSTANCES, function (i, instance) {
-			instance.construct.updateModel(instance.params);
+			if (!target || (instance && instance.params && instance.params.target === target)) {
+				instance.construct.updateModel(instance.params);
+			}
 		});
 	};
 	
@@ -1413,5 +1415,6 @@ var Flexie = (function (win, doc) {
 /*jslint sub: true */
 window["Flexie"] = Flexie;
 Flexie["version"] = Flexie.version;
-Flexie["updateInstances"] = Flexie.updateInstances;
+Flexie["updateInstance"] = Flexie.updateInstance;
+Flexie["destroyInstance"] = Flexie.destroyInstance;
 Flexie["flexboxSupported"] = Flexie.flexboxSupported;
