@@ -5,6 +5,8 @@ var DEFAULTS = {
 	pack : "start"
 },
 
+ORIGINAL_HTML,
+
 PREFIXES = "-webkit- -moz- -ms- ".split(" "),
 DOM_PREFIXES = "Webkit Moz O ms Khtml".split(" "),
 
@@ -34,29 +36,22 @@ function applyFlexboxProperty (target, property, value) {
 				// Set display to something other than block
 				// Set opacity to 0 to hide new display setting
 				// Solves a bug in Webkit browsers where box-flex properties do not revert once a value is applied.
-				target.children().eq(props[2] - 1).css("opacity", "0").css(prefix + domProperty, "0").css("display", "inline-block");
+				$("box-" + props[2]).css("opacity", "0").css(prefix + domProperty, "0").css("display", "inline-block");
 				
 				// Set a timeout.
 				// Solves the same Webkit bug. Webkit needs a pause to register the new values.
 				window.setTimeout(function() {
 					// Set correct box-flex property
 					// Remove display/opacity values
-					target.children().eq(props[2] - 1).css(prefix + domProperty, value).css("display", "").css("opacity", "");
+					$("box-" + props[2]).css(prefix + domProperty, value).css("display", "").css("opacity", "");
 				}, 0);
 			} else {
 				target.get(0).style[prefix + domProperty] = value;
 			}
 		});
 	} else {
-		Flexie.destroyInstance(target.get(0));
-		
-		if (property === "box-direction" && value === "normal") {
-			$(target.children().get().reverse()).each(function () {
-				target.append(this);
-			});
-			
-			DEFAULTS.reversed = false;
-		}
+		ORIGINAL_HTML = ORIGINAL_HTML || target.outerHTML;
+		target.outerHTML = ORIGINAL_HTML;
 		
 		DEFAULTS.target = DEFAULTS.target || target.get(0);
 		DEFAULTS.selector = DEFAULTS.selector || target.selector;
@@ -65,7 +60,7 @@ function applyFlexboxProperty (target, property, value) {
 			
 			target.children().each(function () {
 				var obj = {
-					selector : "." + $(this).attr("class"),
+					selector : "#" + $(this).attr("id"),
 					properties : [],
 					match : this
 				};
@@ -106,9 +101,10 @@ function childRuleOutput (children, prefixes, rules) {
 			
 			fragments = (/(.*)\-(\d)+/).exec(property);
 			property = fragments[1];
-			node = children.eq(fragments[2] - 1);
 			
-			cssText.push("." + node.attr("class") + " {");
+			node = $("#box-" + fragments[2]);
+			
+			cssText.push("#" + node.attr("id") + " {");
 			
 			$.each(prefixes, function (x, prefix) {
 				cssText.push("\t" + prefix + property + ": " + value + ";" + (prefixes[x + 1] === undefined ? "\n" : ""));
@@ -143,9 +139,15 @@ function outputFlexboxCSS (target, property, value) {
 
 $(document).ready(function () {
 	var target = $("#box-wrap-inner"),
+	    selects = $("#flexie-playground select"),
 	    select, property, value;
 	
-	$("#flexie-playground select").bind("change", function () {
+	// sets selected index to first item using the DOM
+	selects.each(function () {
+		$(this).get(0).selectedIndex = 0;
+	});
+	
+	selects.bind("change", function () {
 		select = $(this);
 		property = select.attr("id");
 		value = select.val();
