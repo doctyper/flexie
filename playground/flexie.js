@@ -681,6 +681,49 @@ var Flexie = (function (win, doc) {
 		});
 	}
 	
+	function createMatchMatrix(matches, children, type) {
+		var groups = {}, keys = [], totalRatio = 0,
+		    group, order = "ordinal-group";
+
+		forEach(children, function (i, kid) {
+			forEach(matches, function (i, x) {
+				if (type) {
+					// If no value declared, it's the default.
+					group = x[order] || "1";
+
+					if (x.match === kid) {
+						groups[group] = groups[group] || [];
+						groups[group].push(x);
+					}
+				} else {
+					// If no value declared, it's the default.
+					group = x.flex || "0";
+
+					if (x.match === kid && (!x[group] || (x[group] && parseInt(x[group], 10) <= 1))) {
+						totalRatio += parseInt(group, 10);
+
+						groups[group] = groups[group] || [];
+						groups[group].push(x);
+					}
+				}
+			});
+		});
+
+		forEach(groups, function (key) {
+			keys.push(key);
+		});
+
+		keys.sort(function (a, b) {
+			return b - a;
+		});
+
+		return {
+			keys : keys,
+			groups : groups,
+			total : totalRatio
+		};
+	}
+	
 	function attachResizeListener(construct, params) {
 		FLEX_INSTANCES.push({
 			construct : construct,
@@ -1098,46 +1141,16 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxOrdinalGroup : function (target, children, params) {
-				var createMatchMatrix,
-				    organizeChildren,
+				var organizeChildren,
 				    matrix;
 
 				if (!children.length) {
 					return;
 				}
 				
-				createMatchMatrix = function (matches) {
-					var ordinals = {}, keys = [],
-					    ordinal, order = "ordinal-group";
-
-					forEach(children, function (i, kid) {
-						forEach(matches, function (i, x) {
-							ordinal = x[order] || "1";
-							
-							if (x.match === kid) {
-								ordinals[ordinal] = ordinals[ordinal] || [];
-								ordinals[ordinal].push(x);
-							}
-						});
-					});
-
-					forEach(ordinals, function (key) {
-						keys.push(key);
-					});
-
-					keys.sort(function (a, b) {
-						return b - a;
-					});
-
-					return {
-						keys : keys,
-						ordinals : ordinals
-					};
-				};
-				
 				organizeChildren = function (matrix) {
 					var keys = matrix.keys,
-					    ordinals = matrix.ordinals;
+					    ordinals = matrix.groups;
 					
 					forEach(keys, function (i, key) {
 						forEach(ordinals[key].reverse(), function (i, x) {
@@ -1146,7 +1159,7 @@ var Flexie = (function (win, doc) {
 					});
 				};
 
-				matrix = createMatchMatrix(params.children);
+				matrix = createMatchMatrix(params.children, children, true);
 
 				if (matrix.keys.length) {
 					organizeChildren(matrix);
@@ -1155,7 +1168,6 @@ var Flexie = (function (win, doc) {
 
 			boxFlex : function (target, children, params) {
 				var self = this,
-				    createMatchMatrix,
 				    testForRestrictiveProperties,
 				    findTotalWhitespace,
 				    distributeRatio,
@@ -1167,41 +1179,8 @@ var Flexie = (function (win, doc) {
 					return;
 				}
 				
-				createMatchMatrix = function (matches) {
-					var totalRatio = 0,
-					    flexers = {}, keys = [];
-
-					forEach(children, function (i, kid) {
-						forEach(matches, function (i, x) {
-							if (x.match === kid && (!x[group] || (x[group] && parseInt(x[group], 10) <= 1))) {
-								// If no value declared, it's the default.
-								x.flex = x.flex || "0";
-								
-								totalRatio += parseInt(x.flex, 10);
-
-								flexers[x.flex] = flexers[x.flex] || [];
-								flexers[x.flex].push(x);
-							}
-						});
-					});
-
-					forEach(flexers, function (key) {
-						keys.push(key);
-					});
-
-					keys.sort(function (a, b) {
-						return b - a;
-					});
-
-					return {
-						keys : keys,
-						flexers : flexers,
-						total : totalRatio
-					};
-				};
-				
 				testForRestrictiveProperties = function (matrix) {
-					var flexers = matrix.flexers,
+					var flexers = matrix.groups,
 					    keys = matrix.keys, max;
 					
 					forEach(keys, function (i, key) {
@@ -1247,7 +1226,7 @@ var Flexie = (function (win, doc) {
 				};
 
 				distributeRatio = function (matrix, whitespace) {
-					var flexers = matrix.flexers,
+					var flexers = matrix.groups,
 					    keys = matrix.keys,
 					    ration = whitespace.ration,
 					    widthRation, trueDim, newWidth;
@@ -1278,7 +1257,7 @@ var Flexie = (function (win, doc) {
 					});
 				};
 
-				matrix = createMatchMatrix(params.children);
+				matrix = createMatchMatrix(params.children, children);
 
 				if (matrix.total) {
 					restrict = testForRestrictiveProperties(matrix);
