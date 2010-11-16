@@ -94,7 +94,7 @@ function parentRuleOutput (target, prefixes, rules) {
 }
 
 function childRuleOutput (children, prefixes, rules) {
-	var cssText = [], fragments, node;
+	var cssRules = {}, rule, cssText = "", fragments, node, key;
 	
 	if (!$.isEmptyObject(rules)) {
 		$.each(rules, function (property, value) {
@@ -103,19 +103,27 @@ function childRuleOutput (children, prefixes, rules) {
 			property = fragments[1];
 			
 			node = $("#box-" + fragments[2]);
+			key = "#" + node.attr("id") + " {\n";
 			
-			cssText.push("#" + node.attr("id") + " {");
+			rule = cssRules[key];
+			if (!rule) {
+				rule = cssRules[key] = [];
+			}
 			
 			$.each(prefixes, function (x, prefix) {
-				cssText.push("\t" + prefix + property + ": " + value + ";" + (prefixes[x + 1] === undefined ? "\n" : ""));
+				rule.push("\t" + prefix + property + ": " + value + ";" + (prefixes[x + 1] === undefined ? "\n" : ""));
 			});
+		});
+		
+		$.each(cssRules, function (key, value) {
+			value[value.length - 1] = value[value.length - 1].replace(/\n$/, "");
+			value.push("}\n\n");
 			
-			cssText[cssText.length - 1] = cssText[cssText.length - 1].replace(/\n$/, "");
-			cssText.push("}\n");
+			cssText += key + value.join("\n");
 		});
 	}
 	
-	return cssText.join("\n") || "";
+	return cssText;
 }
 
 function outputFlexboxCSS (target, property, value) {
