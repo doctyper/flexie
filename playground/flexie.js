@@ -2,7 +2,7 @@
 File: flexie.js
 
 About: Version
-	0.5
+	0.6
 
 Project: Flexie
 
@@ -724,6 +724,21 @@ var Flexie = (function (win, doc) {
 		};
 	}
 	
+	function floatDropFix(target, params, instance) {
+		// Float drop fix
+		// Test offset values. If different, let's bring the widow back
+		var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
+		    offset;
+		
+		forEach(target.childNodes, function (i, kid) {
+			offset = offset || kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE);
+		
+			while ((kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE)) !== offset) {
+				kid.style[instance.props.dim] = getComputedStyle(kid, instance.props.dim, TRUE) - 1;
+			}
+		});
+	}
+	
 	function attachResizeListener(construct, params) {
 		FLEX_INSTANCES.push({
 			construct : construct,
@@ -943,6 +958,18 @@ var Flexie = (function (win, doc) {
 				}
 			},
 
+			boxDirection : function (target, children, params) {
+				if (params.direction === "reverse" && !params.reversed) {
+					children = children.reverse();
+
+					forEach(children, function (i, kid) {
+						target.appendChild(kid);
+					});
+
+					params.reversed = TRUE;
+				}
+			},
+
 			boxOrient : function (target, children, params) {
 				var self = this,
 				    wide, high,
@@ -974,12 +1001,11 @@ var Flexie = (function (win, doc) {
 						// Margins collapse on a normal box
 						// But not on flexbox
 						// So we hack away...
-						if (i !== 0 && i !== (children.length - 1)) {
-							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(kid, high.opp, TRUE);
-
+						if (i) {
+							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(children[i - 1], high.opp, TRUE);
 							kid.style[high.pos] = combinedMargin;
-							kid.style[high.opp] = combinedMargin;
 						}
+						
 						kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
 					}
 				});
@@ -1001,7 +1027,7 @@ var Flexie = (function (win, doc) {
 
 			boxAlign : function (target, children, params) {
 				var self = this,
-				    targetDimension = self.anti.func(target),
+				    targetDimension = getComputedStyle(target, self.anti.dim, TRUE),
 				    kidDimension;
 
 				switch (params.align) {
@@ -1044,27 +1070,10 @@ var Flexie = (function (win, doc) {
 
 				case "center":
 					forEach(children, function (i, kid) {
-						kidDimension = (targetDimension - self.anti.func(kid)) / 2;
-						kidDimension -= getComputedStyle(kid, self.anti.pad[0], TRUE) / 2;
-						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE) / 2;
-
+						kidDimension = (targetDimension - kid[self.anti.out]) / 2;
 						kid.style[self.anti.pos] = kidDimension + "px";
 					});
 					break;
-				}
-			},
-
-			boxDirection : function (target, children, params) {
-				var reversedChildren;
-
-				if (params.direction === "reverse" && !params.reversed) {
-					reversedChildren = children.reverse();
-
-					forEach(reversedChildren, function (i, kid) {
-						target.appendChild(kid);
-					});
-
-					params.reversed = TRUE;
 				}
 			},
 
@@ -1086,11 +1095,11 @@ var Flexie = (function (win, doc) {
 				});
 
 				if (params.orient === VERTICAL) {
-					groupDimension += getComputedStyle(children[children.length - 1], self.props.opp, TRUE) * ((params.pack === "end") ? 2 : 1);
+					groupDimension += getComputedStyle(children[children.length - 1], self.props.opp, TRUE);
 				}
 
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
-				totalDimension = self.props.func(target) - groupDimension;
+				totalDimension = getComputedStyle(target, self.props.dim, TRUE) - groupDimension;
 				
 				// IE6 double float margin bug
 				// http://www.positioniseverything.net/explorer/doubled-margin.html
@@ -1108,36 +1117,29 @@ var Flexie = (function (win, doc) {
 					break;
 
 				case "justify" :
-					fractionedDimension = Math.ceil(totalDimension / length);
+					fractionedDimension = Math.floor(totalDimension / length);
 					remainder = (fractionedDimension * length) - totalDimension;
-
-					forEach(children, function (i, kid) {
+					
+					var i = children.length - 1;
+					while (i) {
+						kid = children[i];
 						currentDimension = fractionedDimension;
 
 						if (remainder) {
-							currentDimension--;
-							remainder--;
+							currentDimension++;
+							remainder++;
 						}
 						
-						if (i) {
-							kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
-						}
-					});
+						kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
+						
+						i--;
+					}
 					break;
 				}
 				
 				// Float drop fix
 				// Test offset values. If different, let's bring the widow back
-				var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
-				    offset;
-				
-				forEach(target.childNodes, function (i, kid) {
-					offset = offset || kid[offsetProp];
-					
-					while (kid[offsetProp] !== offset) {
-						kid.style[self.props.dim] = getComputedStyle(kid, self.props.dim, TRUE) - 1;
-					}
-				});
+				floatDropFix(target, params, self);
 			},
 			
 			boxOrdinalGroup : function (target, children, params) {
@@ -1244,16 +1246,7 @@ var Flexie = (function (win, doc) {
 						
 						// Float drop fix
 						// Test offset values. If different, let's bring the widow back
-						var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
-						    offset;
-						
-						forEach(target.childNodes, function (i, kid) {
-							offset = offset || kid[offsetProp];
-							
-							while (kid[offsetProp] !== offset) {
-								kid.style[self.props.dim] = getComputedStyle(kid, self.props.dim, TRUE) - 1;
-							}
-						});
+						floatDropFix(target, params, self);
 					});
 				};
 
@@ -1373,7 +1366,7 @@ var Flexie = (function (win, doc) {
 	}());
 	
 	// Flexie Version
-	FLX.version = 0.5;
+	FLX.version = 0.6;
 
 	(function init() {
 		SUPPORT = FLX.flexboxSupported;
