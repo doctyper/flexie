@@ -1070,10 +1070,7 @@ var Flexie = (function (win, doc) {
 
 				case "center":
 					forEach(children, function (i, kid) {
-						kidDimension = (targetDimension - self.anti.func(kid)) / 2;
-						kidDimension -= getComputedStyle(kid, self.anti.pad[0], TRUE) / 2;
-						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE) / 2;
-
+						kidDimension = (targetDimension - kid[self.anti.out]) / 2;
 						kid.style[self.anti.pos] = kidDimension + "px";
 					});
 					break;
