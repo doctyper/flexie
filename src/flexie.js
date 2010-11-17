@@ -958,6 +958,18 @@ var Flexie = (function (win, doc) {
 				}
 			},
 
+			boxDirection : function (target, children, params) {
+				if (params.direction === "reverse" && !params.reversed) {
+					children = children.reverse();
+
+					forEach(children, function (i, kid) {
+						target.appendChild(kid);
+					});
+
+					params.reversed = TRUE;
+				}
+			},
+
 			boxOrient : function (target, children, params) {
 				var self = this,
 				    wide, high,
@@ -1066,20 +1078,6 @@ var Flexie = (function (win, doc) {
 						kid.style[self.anti.pos] = kidDimension + "px";
 					});
 					break;
-				}
-			},
-
-			boxDirection : function (target, children, params) {
-				var reversedChildren;
-
-				if (params.direction === "reverse" && !params.reversed) {
-					reversedChildren = children.reverse();
-
-					forEach(reversedChildren, function (i, kid) {
-						target.appendChild(kid);
-					});
-
-					params.reversed = TRUE;
 				}
 			},
 
