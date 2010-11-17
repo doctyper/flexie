@@ -724,6 +724,21 @@ var Flexie = (function (win, doc) {
 		};
 	}
 	
+	function floatDropFix(target, params, instance) {
+		// Float drop fix
+		// Test offset values. If different, let's bring the widow back
+		var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
+		    offset;
+		
+		forEach(target.childNodes, function (i, kid) {
+			offset = offset || kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE);
+		
+			while ((kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE)) !== offset) {
+				kid.style[instance.props.dim] = getComputedStyle(kid, instance.props.dim, TRUE) - 1;
+			}
+		});
+	}
+	
 	function attachResizeListener(construct, params) {
 		FLEX_INSTANCES.push({
 			construct : construct,
@@ -1128,16 +1143,7 @@ var Flexie = (function (win, doc) {
 				
 				// Float drop fix
 				// Test offset values. If different, let's bring the widow back
-				var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
-				    offset;
-				
-				forEach(target.childNodes, function (i, kid) {
-					offset = offset || kid[offsetProp];
-					
-					while (kid[offsetProp] !== offset) {
-						kid.style[self.props.dim] = getComputedStyle(kid, self.props.dim, TRUE) - 1;
-					}
-				});
+				floatDropFix(target, params, self);
 			},
 			
 			boxOrdinalGroup : function (target, children, params) {
@@ -1244,16 +1250,7 @@ var Flexie = (function (win, doc) {
 						
 						// Float drop fix
 						// Test offset values. If different, let's bring the widow back
-						var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
-						    offset;
-						
-						forEach(target.childNodes, function (i, kid) {
-							offset = offset || kid[offsetProp];
-							
-							while (kid[offsetProp] !== offset) {
-								kid.style[self.props.dim] = getComputedStyle(kid, self.props.dim, TRUE) - 1;
-							}
-						});
+						floatDropFix(target, params, self);
 					});
 				};
 
