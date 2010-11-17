@@ -1095,7 +1095,7 @@ var Flexie = (function (win, doc) {
 				});
 
 				if (params.orient === VERTICAL) {
-					groupDimension += getComputedStyle(children[children.length - 1], self.props.opp, TRUE) * ((params.pack === "end") ? 2 : 1);
+					groupDimension += getComputedStyle(children[children.length - 1], self.props.opp, TRUE);
 				}
 
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
