@@ -1001,12 +1001,11 @@ var Flexie = (function (win, doc) {
 						// Margins collapse on a normal box
 						// But not on flexbox
 						// So we hack away...
-						if (i !== 0 && i !== (children.length - 1)) {
-							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(kid, high.opp, TRUE);
-
+						if (i) {
+							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(children[i - 1], high.opp, TRUE);
 							kid.style[high.pos] = combinedMargin;
-							kid.style[high.opp] = combinedMargin;
 						}
+						
 						kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
 					}
 				});
