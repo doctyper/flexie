@@ -2,7 +2,7 @@
 File: flexie.js
 
 About: Version
-	0.5
+	0.6
 
 Project: Flexie
 
@@ -1366,7 +1366,7 @@ var Flexie = (function (win, doc) {
 	}());
 	
 	// Flexie Version
-	FLX.version = 0.5;
+	FLX.version = 0.6;
 
 	(function init() {
 		SUPPORT = FLX.flexboxSupported;
