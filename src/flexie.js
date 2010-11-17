@@ -1027,7 +1027,7 @@ var Flexie = (function (win, doc) {
 
 			boxAlign : function (target, children, params) {
 				var self = this,
-				    targetDimension = self.anti.func(target),
+				    targetDimension = getComputedStyle(target, self.anti.dim, TRUE),
 				    kidDimension;
 
 				switch (params.align) {
@@ -1102,7 +1102,7 @@ var Flexie = (function (win, doc) {
 				}
 
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
-				totalDimension = self.props.func(target) - groupDimension;
+				totalDimension = getComputedStyle(target, self.props.dim, TRUE) - groupDimension;
 				
 				// IE6 double float margin bug
 				// http://www.positioniseverything.net/explorer/doubled-margin.html
