@@ -1,0 +1,2417 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+
+		<link rel="stylesheet" href="http://github.com/jquery/qunit/raw/master/qunit/qunit.css" type="text/css" media="screen" />
+		<script type="text/javascript" src="http://github.com/jquery/qunit/raw/master/qunit/qunit.js"></script>
+
+		<link rel="stylesheet" href="css/test.css" type="text/css" media="screen" />
+		<script src="https://github.com/doctyper/flexie/raw/master/src/flexie.js" type="text/javascript"></script>
+		
+		<script type="text/javascript">
+			Flexie.test = (function() {
+				var prefixes = " -o- -moz- -ms- -webkit- -khtml- ".split(" ");
+				
+				function appendProperty(target, prop, value) {
+					var cssText = [];
+
+					for (i = 0, j = prefixes.length; i < j; i++) {
+						cssText.push(prop + ":" + prefixes[i] + value);
+					}
+
+					target.style.cssText = cssText.join(";");
+					return target;
+				}
+				
+				return {
+					parseChildren : function (children) {
+						var matches = [];
+
+						children.each(function () {
+							var obj = {
+								selector : "#" + $(this).attr("id"),
+								properties : [],
+								match : this
+							};
+
+							matches.push(obj);
+						});
+
+						return matches;
+					},
+					
+					applyBoxModel : function(params) {
+						var element = params.target;
+						
+						// Start fresh
+						// this.reset(element);
+						
+						if (Flexie.flexboxSupported) {
+							element.style.cssText = "display: -webkit-box; display: -moz-box; display: -o-box; display: -ms-box; display: -khtml-box; display: box;";
+							
+							for (var key in params) {
+								var uc_key = key.charAt(0).toUpperCase() + key.substr(1);
+								this.applyProp(element, "box" + uc_key, params[key]);
+							}
+						} else {
+							new Flexie.box(params);
+						}
+					},
+					
+					applyProp : function(element, prop, value) {
+						var uc_prop = prop.charAt(0).toUpperCase() + prop.substr(1),
+
+						props = [
+							prop,
+							'Webkit' + uc_prop,
+							'Moz' + uc_prop,
+							'O' + uc_prop,
+							'ms' + uc_prop,
+							'Khtml' + uc_prop
+						];
+
+						for (var i = 0, j = props.length; i < j; i++) {
+							element.style[props[i]] = value;
+						}
+					},
+					
+					reset : function(element) {
+						element.style.cssText = "";
+					}
+				};
+			})();
+		</script>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				// This is a fix for Gecko
+				// Offsets in Gecko do not include border widths
+				var offset = function (node, type) {
+					var value = node.offset()[type], prev,
+					    props = [], el;
+					
+					if ($.browser.mozilla) {
+						props = (type === "left") ? ["Left", "Right"] : [/*"Top", "Bottom"*/];
+						
+						node.prevAll().each(function (i) {
+							el = $(this);
+							
+							$.each(props, function (i, prop) {
+								prop = window.parseInt(el.css("border" + prop + "Width"), 10);
+								if (!isNaN(prop)) {
+									value += prop;
+								}
+							});
+						});
+					}
+					
+					return value;
+				};
+				
+				var withinOne = function (DOMOffset, expectedOffset) {
+					var one = false;
+					
+					$.each(DOMOffset, function (key, value) {
+						if (expectedOffset[key] === value || (expectedOffset[key] - 1) === value || (expectedOffset[key] + 1) === value) {
+							one = true;
+						}
+					});
+					
+					return one;
+				};
+				
+				var element;
+				
+				// module("box-orient: horizontal, box-align: stretch, box-direction: normal");
+				// 	asyncTest("box-pack: start", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "horizontal",
+				// 			align : "stretch",
+				// 			pack : "start",
+				// 			direction : "normal"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: end", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "horizontal",
+				// 			align : "stretch",
+				// 			pack : "end",
+				// 			direction : "normal"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: center", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "horizontal",
+				// 			align : "stretch",
+				// 			pack : "center",
+				// 			direction : "normal"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: justify", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "horizontal",
+				// 			align : "stretch",
+				// 			pack : "justify",
+				// 			direction : "normal"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 
+				// module("box-orient: vertical, box-align: stretch, box-direction: normal");
+				// 	asyncTest("box-pack: start", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "vertical",
+				// 			align : "stretch",
+				// 			pack : "start",
+				// 			direction : "normal"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: end", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "vertical",
+				// 			align : "stretch",
+				// 			pack : "end",
+				// 			direction : "normal"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: center", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "vertical",
+				// 			align : "stretch",
+				// 			pack : "center",
+				// 			direction : "normal"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: justify", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "vertical",
+				// 			align : "stretch",
+				// 			pack : "justify",
+				// 			direction : "normal"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 
+				// module("box-orient: horizontal, box-align: stretch, box-direction: reverse");
+				// 	asyncTest("box-pack: start", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "horizontal",
+				// 			align : "stretch",
+				// 			pack : "start",
+				// 			direction : "reverse"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: end", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "horizontal",
+				// 			align : "stretch",
+				// 			pack : "end",
+				// 			direction : "reverse"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: center", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "horizontal",
+				// 			align : "stretch",
+				// 			pack : "center",
+				// 			direction : "reverse"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: justify", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "horizontal",
+				// 			align : "stretch",
+				// 			pack : "justify",
+				// 			direction : "reverse"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 
+				// module("box-orient: vertical, box-align: stretch, box-direction: reverse");
+				// 	asyncTest("box-pack: start", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "vertical",
+				// 			align : "stretch",
+				// 			pack : "start",
+				// 			direction : "reverse"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: end", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "vertical",
+				// 			align : "stretch",
+				// 			pack : "end",
+				// 			direction : "reverse"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: center", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "vertical",
+				// 			align : "stretch",
+				// 			pack : "center",
+				// 			direction : "reverse"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				// 	asyncTest("box-pack: justify", function () {
+				// 		element = $("#box-wrap-inner");
+				// 		children = element.children();
+				// 	
+				// 		Flexie.test.applyBoxModel({
+				// 			target : element.get(0),
+				// 			children : Flexie.test.parseChildren(children),
+				// 			orient : "vertical",
+				// 			align : "stretch",
+				// 			pack : "justify",
+				// 			direction : "reverse"
+				// 		});
+				// 	
+				// 		same(children.eq(0).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "First Child Offset");
+				// 	
+				// 		same(children.eq(1).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Second Child Offset");
+				// 	
+				// 		same(children.eq(2).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Third Child Offset");
+				// 
+				// 		same(children.eq(3).offset(), {
+				// 			top : 00,
+				// 			left : 00
+				// 		}, "Fourth Child Offset");
+				// 		
+				// 		start();
+				// 	});
+				
+				module("box-orient: horizontal, box-align: start, box-direction: normal");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "start",
+							pack : "start",
+							direction : "normal"
+						});
+						
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 23
+						}, "First Child Offset");
+						
+						same(children.eq(1).offset(), {
+							top : 38,
+							left : 89
+						}, "Second Child Offset");
+						
+						same(children.eq(2).offset(), {
+							top : 38,
+							left : 171
+						}, "Third Child Offset");
+						
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 259
+						}, "Fourth Child Offset");
+
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+				
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "start",
+							pack : "end",
+							direction : "normal"
+						});
+						
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 232
+						}, "First Child Offset");
+						
+						same(children.eq(1).offset(), {
+							top : 38,
+							left : 298
+						}, "Second Child Offset");
+						
+						same(children.eq(2).offset(), {
+							top : 38,
+							left : 380
+						}, "Third Child Offset");
+						
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 468
+						}, "Fourth Child Offset");
+				
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+				
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "start",
+							pack : "center",
+							direction : "normal"
+						});
+						
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 127
+						}, "First Child Offset");
+						
+						same(children.eq(1).offset(), {
+							top : 38,
+							left : 193
+						}, "Second Child Offset");
+						
+						same(children.eq(2).offset(), {
+							top : 38,
+							left : 275
+						}, "Third Child Offset");
+						
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 363
+						}, "Fourth Child Offset");
+				
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+									
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "start",
+							pack : "justify",
+							direction : "normal"
+						});
+						
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 23
+						}, "First Child Offset");
+						
+						same(children.eq(1).offset(), {
+							top : 38,
+							left : 158
+						}, "Second Child Offset");
+						
+						same(children.eq(2).offset(), {
+							top : 38,
+							left : 310
+						}, "Third Child Offset");
+						
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 468
+						}, "Fourth Child Offset");
+									
+						start();
+					});
+				
+				module("box-orient: vertical, box-align: start, box-direction: normal");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "start",
+							pack : "start",
+							direction : "normal"
+						});
+						
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 23
+						}, "First Child Offset");
+						
+						same(children.eq(1).offset(), {
+							top : 99,
+							left : 24
+						}, "Second Child Offset");
+						
+						same(children.eq(2).offset(), {
+							top : 171,
+							left : 25
+						}, "Third Child Offset");
+						
+						same(children.eq(3).offset(), {
+							top : 249,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "start",
+							pack : "end",
+							direction : "normal"
+						});
+						
+						same(children.eq(0).offset(), {
+							top : 278,
+							left : 23
+						}, "First Child Offset");
+						
+						same(children.eq(1).offset(), {
+							top : 338,
+							left : 24
+						}, "Second Child Offset");
+						
+						same(children.eq(2).offset(), {
+							top : 410,
+							left : 25
+						}, "Third Child Offset");
+						
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "start",
+							pack : "center",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 158,
+							left : 23
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 218,
+							left : 24
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 290,
+							left : 25
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 368,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "start",
+							pack : "justify",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 23
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 178,
+							left : 24
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 330,
+							left : 25
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: horizontal, box-align: start, box-direction: reverse");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "start",
+							pack : "start",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 284
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 38,
+							left : 204
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 38,
+							left : 117
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "start",
+							pack : "end",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 38,
+							left : 413
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 38,
+							left : 326
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 234
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "start",
+							pack : "center",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 388
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 38,
+							left : 308
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 38,
+							left : 221
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 129
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "start",
+							pack : "justify",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 38,
+							left : 343
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 38,
+							left : 186
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: vertical, box-align: start, box-direction: reverse");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "start",
+							pack : "start",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 282,
+							left : 23
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 209,
+							left : 24
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 130,
+							left : 25
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "start",
+							pack : "end",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 23
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 448,
+							left : 24
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 369,
+							left : 25
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 276,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "start",
+							pack : "center",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 401,
+							left : 23
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 328,
+							left : 24
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 249,
+							left : 25
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 156,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "start",
+							pack : "justify",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 23
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 368,
+							left : 24
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 209,
+							left : 25
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: horizontal, box-align: end, box-direction: normal");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "end",
+							pack : "start",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 23
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 509,
+							left : 89
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 502,
+							left : 171
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 259
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "end",
+							pack : "end",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 232
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 509,
+							left : 298
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 502,
+							left : 380
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "end",
+							pack : "center",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 127
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 509,
+							left : 193
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 502,
+							left : 275
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 363
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "end",
+							pack : "justify",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 23
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 509,
+							left : 158
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 502,
+							left : 310
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: vertical, box-align: end, box-direction: normal");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "end",
+							pack : "start",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 99,
+							left : 478
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 171,
+							left : 472
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 249,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "end",
+							pack : "end",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 278,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 338,
+							left : 478
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 410,
+							left : 472
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "end",
+							pack : "center",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 158,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 218,
+							left : 478
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 290,
+							left : 472
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 368,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "end",
+							pack : "justify",
+							direction : "normal"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 39,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 178,
+							left : 478
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 330,
+							left : 472
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: horizontal, box-align: end, box-direction: reverse");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "end",
+							pack : "start",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 284
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 509,
+							left : 204
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 502,
+							left : 117
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "end",
+							pack : "end",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 509,
+							left : 413
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 502,
+							left : 326
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 234
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "end",
+							pack : "center",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 388
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 509,
+							left : 308
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 502,
+							left : 221
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 129
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "end",
+							pack : "justify",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 509,
+							left : 343
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 502,
+							left : 186
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 488,
+							left : 25
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: vertical, box-align: end, box-direction: reverse");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "end",
+							pack : "start",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 282,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 209,
+							left : 478
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 130,
+							left : 472
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "end",
+							pack : "end",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 448,
+							left : 478
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 369,
+							left : 472
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 276,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "end",
+							pack : "center",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 401,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 328,
+							left : 478
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 249,
+							left : 472
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 156,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "end",
+							pack : "justify",
+							direction : "reverse"
+						});
+					
+						same(children.eq(0).offset(), {
+							top : 521,
+							left : 493
+						}, "First Child Offset");
+					
+						same(children.eq(1).offset(), {
+							top : 368,
+							left : 478
+						}, "Second Child Offset");
+					
+						same(children.eq(2).offset(), {
+							top : 209,
+							left : 472
+						}, "Third Child Offset");
+				
+						same(children.eq(3).offset(), {
+							top : 37,
+							left : 468
+						}, "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: horizontal, box-align: center, box-direction: normal");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "center",
+							pack : "start",
+							direction : "normal"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 280,
+							left : 23
+						}), "First Child Offset Within One");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 273,
+							left : 89
+						}), "Second Child Offset Within One");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 270,
+							left : 171
+						}), "Third Child Offset Within One");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 262,
+							left : 259
+						}), "Fourth Child Offset Within One");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "center",
+							pack : "end",
+							direction : "normal"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 280,
+							left : 232
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 273,
+							left : 298
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 270,
+							left : 380
+						}), "Third Child Offset");
+									
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 262,
+							left : 468
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "center",
+							pack : "center",
+							direction : "normal"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 280,
+							left : 127
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 273,
+							left : 193
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 270,
+							left : 275
+						}), "Third Child Offset");
+									
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 262,
+							left : 363
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "center",
+							pack : "justify",
+							direction : "normal"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 280,
+							left : 23
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 273,
+							left : 158
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 270,
+							left : 310
+						}), "Third Child Offset");
+									
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 262,
+							left : 468
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: vertical, box-align: center, box-direction: normal");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "center",
+							pack : "start",
+							direction : "normal"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 39,
+							left : 258
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 99,
+							left : 251
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 171,
+							left : 248
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 249,
+							left : 246
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "center",
+							pack : "end",
+							direction : "normal"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 278,
+							left : 258
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 338,
+							left : 251
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 410,
+							left : 248
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 488,
+							left : 246
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "center",
+							pack : "center",
+							direction : "normal"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 158,
+							left : 258
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 218,
+							left : 251
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 290,
+							left : 248
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 368,
+							left : 246
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "center",
+							pack : "justify",
+							direction : "normal"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 39,
+							left : 258
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 178,
+							left : 251
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 330,
+							left : 248
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 488,
+							left : 246
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: horizontal, box-align: center, box-direction: reverse");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "center",
+							pack : "start",
+							direction : "reverse"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 280,
+							left : 284
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 273,
+							left : 204
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 270,
+							left : 117
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 262,
+							left : 25
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "center",
+							pack : "end",
+							direction : "reverse"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 280,
+							left : 493
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 273,
+							left : 413
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 270,
+							left : 326
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 262,
+							left : 234
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "center",
+							pack : "center",
+							direction : "reverse"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 280,
+							left : 388
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 273,
+							left : 308
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 270,
+							left : 221
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 262,
+							left : 129
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "horizontal",
+							align : "center",
+							pack : "justify",
+							direction : "reverse"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 280,
+							left : 493
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 273,
+							left : 343
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 270,
+							left : 186
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 262,
+							left : 25
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+				
+				module("box-orient: vertical, box-align: center, box-direction: reverse");
+					asyncTest("box-pack: start", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "center",
+							pack : "start",
+							direction : "reverse"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 282,
+							left : 258
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 209,
+							left : 251
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 130,
+							left : 248
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 37,
+							left : 246
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: end", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "center",
+							pack : "end",
+							direction : "reverse"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 521,
+							left : 258
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 448,
+							left : 251
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 369,
+							left : 248
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 276,
+							left : 246
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: center", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "center",
+							pack : "center",
+							direction : "reverse"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 401,
+							left : 258
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 328,
+							left : 251
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 249,
+							left : 248
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 156,
+							left : 246
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+					asyncTest("box-pack: justify", function () {
+						element = $("#box-wrap-inner");
+						children = element.children();
+					
+						Flexie.test.applyBoxModel({
+							target : element.get(0),
+							children : Flexie.test.parseChildren(children),
+							orient : "vertical",
+							align : "center",
+							pack : "justify",
+							direction : "reverse"
+						});
+					
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 521,
+							left : 258
+						}), "First Child Offset");
+					
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 368,
+							left : 251
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 209,
+							left : 248
+						}), "Third Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 37,
+							left : 246
+						}), "Fourth Child Offset");
+						
+						start();
+					});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="qunit-fixture">
+			<div id="box-wrap">
+				<div id="box-wrap-inner">
+					<div id="box-1">1</div>
+					<div id="box-2">2</div>
+					<div id="box-3">3</div>
+					<div id="box-4">4</div>
+				</div>
+			</div>
+		</div>
+		<h1 id="qunit-header">QUnit example</h1>
+		<h2 id="qunit-banner"></h2>
+		<div id="qunit-testrunner-toolbar"></div>
+		<h2 id="qunit-userAgent"></h2>
+		<ol id="qunit-tests"></ol>
+	</body>
+</html>

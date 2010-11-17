@@ -1,0 +1,149 @@
+/* v1.0 | 20080212 */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+body, html {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	font: normal 13px/16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* First, we create a box with header and footer, content area in between. */
+#box-wrap { 
+	margin: 0;
+	width: 600px;
+	height: 600px;
+	background: #d9ecf5;
+	border: 1px solid #8ec1da;
+}
+
+#box-wrap-inner {
+	padding: 35px 47px 22px 18px;
+	width: 535px;
+	height: 543px;
+	
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-box;
+	display: box;
+	
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	-ms-box-orient: horizontal;
+	box-orient: horizontal;
+
+	-webkit-box-align: start;
+	-moz-box-align: start;
+	-ms-box-align: start;
+	box-align: start;
+
+	-webkit-box-pack: end;
+	-moz-box-pack: end;
+	-ms-box-pack: end;
+	box-pack: end;
+
+	-webkit-box-direction: normal;
+	-moz-box-direction: normal;
+	-ms-box-direction: normal;
+	box-direction: normal;
+}
+
+#box-wrap-inner div {
+	background: #f8f8f8;
+	border: solid #8ec1da;
+	text-align: center;
+}
+
+#box-wrap-inner #box-1 {
+	margin: 3px 5px 2px 4px;
+	padding: 5px 4px 3px 2px;
+	width: 44px;
+	height: 44px;
+	line-height: 44px;
+	border-width: 1px 2px 3px 4px;
+}
+
+#box-wrap-inner #box-2 {
+	margin: 2px 1px 3px 5px;
+	padding: 1px 3px 5px 7px;
+	width: 53px;
+	height: 53px;
+	line-height: 53px;
+	border-width: 2px 4px 6px 8px;
+}
+
+#box-wrap-inner #box-3 {
+	margin: 2px 4px 5px 6px;
+	padding: 1px 2px 3px 4px;
+	width: 62px;
+	height: 62px;
+	line-height: 62px;
+	border-width: 1px 3px 5px 7px;
+}
+
+#box-wrap-inner #box-4 {
+	margin: 1px 3px 4px 6px;
+	padding: 5px 4px 3px 2px;
+	width: 71px;
+	height: 71px;
+	line-height: 71px;
+	border-width: 5px 4px 3px 2px;
+}
+
+#qunit-fixture {
+	position: absolute;
+	left: 0;
+	top: 0;
+	visibility: hidden;
+}
