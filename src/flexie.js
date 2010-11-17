@@ -1117,21 +1117,23 @@ var Flexie = (function (win, doc) {
 					break;
 
 				case "justify" :
-					fractionedDimension = Math.ceil(totalDimension / length);
+					fractionedDimension = Math.floor(totalDimension / length);
 					remainder = (fractionedDimension * length) - totalDimension;
-
-					forEach(children, function (i, kid) {
+					
+					var i = children.length - 1;
+					while (i) {
+						kid = children[i];
 						currentDimension = fractionedDimension;
 
 						if (remainder) {
-							currentDimension--;
-							remainder--;
+							currentDimension++;
+							remainder++;
 						}
 						
-						if (i) {
-							kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
-						}
-					});
+						kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
+						
+						i--;
+					}
 					break;
 				}
 				
