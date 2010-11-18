@@ -72,31 +72,6 @@ body, html {
 	padding: 35px 47px 22px 18px;
 	width: 535px;
 	height: 543px;
-	
-	display: -webkit-box;
-	display: -moz-box;
-	display: -ms-box;
-	display: box;
-	
-	-webkit-box-orient: horizontal;
-	-moz-box-orient: horizontal;
-	-ms-box-orient: horizontal;
-	box-orient: horizontal;
-
-	-webkit-box-align: start;
-	-moz-box-align: start;
-	-ms-box-align: start;
-	box-align: start;
-
-	-webkit-box-pack: end;
-	-moz-box-pack: end;
-	-ms-box-pack: end;
-	box-pack: end;
-
-	-webkit-box-direction: normal;
-	-moz-box-direction: normal;
-	-ms-box-direction: normal;
-	box-direction: normal;
 }
 
 #box-wrap-inner div {
