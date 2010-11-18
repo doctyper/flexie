@@ -995,7 +995,6 @@ var Flexie = (function (win, doc) {
 
 				forEach(children, function (i, kid) {
 					kid.style.cssFloat = kid.style.styleFloat = "left";
-					// kid.style[wide.dim] = getComputedStyle(kid, wide.dim, NULL);
 
 					if (params.orient === VERTICAL) {
 						// Margins collapse on a normal box
