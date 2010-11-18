@@ -63,7 +63,8 @@ body, html {
 }
 
 #box-wrap-inner {
-	overflow: hidden;
+	padding: 1px 0 0;
+/*	overflow: hidden;*/
 	background: #d9ecf5;
 }
 
