@@ -36,14 +36,14 @@ function applyFlexboxProperty (target, property, value) {
 				// Set display to something other than block
 				// Set opacity to 0 to hide new display setting
 				// Solves a bug in Webkit browsers where box-flex properties do not revert once a value is applied.
-				$("box-" + props[2]).css("opacity", "0").css(prefix + domProperty, "0").css("display", "inline-block");
+				$("#box-" + props[2]).css("opacity", "0").css(prefix + domProperty, "0").css("display", "inline-block");
 				
 				// Set a timeout.
 				// Solves the same Webkit bug. Webkit needs a pause to register the new values.
 				window.setTimeout(function() {
 					// Set correct box-flex property
 					// Remove display/opacity values
-					$("box-" + props[2]).css(prefix + domProperty, value).css("display", "").css("opacity", "");
+					$("#box-" + props[2]).css(prefix + domProperty, value).css("display", "").css("opacity", "");
 				}, 0);
 			} else {
 				target.get(0).style[prefix + domProperty] = value;
