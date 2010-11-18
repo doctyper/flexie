@@ -1002,7 +1002,7 @@ var Flexie = (function (win, doc) {
 						// So we hack away...
 						if (i) {
 							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(children[i - 1], high.opp, TRUE);
-							kid.style[high.pos] = combinedMargin;
+							kid.style[high.pos] = combinedMargin + "px";
 						}
 						
 						kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
