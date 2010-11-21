@@ -1152,12 +1152,17 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxOrdinalGroup : function (target, children, params) {
-				var organizeChildren,
-				    matrix;
+				var self = this,
+				    saveMarginOffset, organizeChildren, resetMarginOffset,
+				    matrix, first, firstComputedMargin;
 
 				if (!children.length) {
 					return;
 				}
+				
+				saveMarginOffset = function (matrix, children) {
+					firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
+				};
 				
 				organizeChildren = function (matrix) {
 					var keys = matrix.keys,
@@ -1169,11 +1174,19 @@ var Flexie = (function (win, doc) {
 						});
 					});
 				};
+				
+				resetMarginOffset = function (matrix, children) {
+					appendPixelValue(children, self.props.pos, NULL);
+					appendPixelValue(children[0], self.props.pos, firstComputedMargin);
+					firstComputedMargin = NULL;
+				};
 
 				matrix = createMatchMatrix(params.children, children, true);
 
 				if (matrix.keys.length) {
+					saveMarginOffset(matrix, target.childNodes);
 					organizeChildren(matrix);
+					resetMarginOffset(matrix, target.childNodes);
 				}
 			},
 
