@@ -1129,7 +1129,9 @@ var Flexie = (function (win, doc) {
 					fractionedDimension = Math.floor(totalDimension / length);
 					remainder = (fractionedDimension * length) - totalDimension;
 					
-					var i = children.length - 1;
+					var i = children.length - 1,
+					    value;
+					
 					while (i) {
 						kid = children[i];
 						currentDimension = fractionedDimension;
@@ -1139,10 +1141,17 @@ var Flexie = (function (win, doc) {
 							remainder++;
 						}
 						
-						kid.style[self.props.pos] = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
+						value = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
+						kid.style[self.props.pos] = value;
+						
+						// IE8 collapsing margin fix
+						if (params.orient === VERTICAL && children[i - 1]) {
+							children[i - 1].style[self.props.opp] = value;
+						}
 						
 						i--;
 					}
+					
 					break;
 				}
 				
