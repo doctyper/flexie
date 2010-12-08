@@ -728,13 +728,13 @@ var Flexie = (function (win, doc) {
 		// Float drop fix
 		// Test offset values. If different, let's bring the widow back
 		var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
-		    offset;
+		    offset, dim;
 		
 		forEach(target.childNodes, function (i, kid) {
 			offset = offset || kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE);
-		
-			while ((kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE)) !== offset) {
-				kid.style[instance.props.dim] = getComputedStyle(kid, instance.props.dim, TRUE) - 1;
+			
+			while ((dim = getComputedStyle(kid, instance.props.dim, TRUE)) && (kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE)) !== offset) {
+				kid.style[instance.props.dim] = dim - 1;
 			}
 		});
 	}
