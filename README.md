@@ -21,6 +21,8 @@ The Flexible Box Model is [supported natively](http://www.caniuse.com/#feat=flex
 * Safari 3.2+
 * Chrome 5.0+
 
+Webkit browsers (Safari + Chrome) have incomplete support for the box-align property. Flexie normalizes this property in Webkit browsers.
+
 
 Currently Supported Properties
 ==============================
@@ -55,7 +57,7 @@ Requirements
 ============
 See the [Things you need to know](http://selectivizr.com/#things)
 
-Also, a caveat. As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.
+Also, a caveat. As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. <strike>Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.</strike> As of version 0.7, Flexie normalizes the `box-align` property across Webkit browsers.
 
 
 Acknowledgements
