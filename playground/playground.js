@@ -19,7 +19,8 @@ CHILD_CSS_PROPERTIES = {};
 function applyFlexboxProperty (target, property, value) {
 	var domPrefixes = DOM_PREFIXES, box,
 	    propertyFragments = property.split("-"),
-	    domProperty = "", props, values;
+	    domProperty = "", props, values,
+	    SUPPORT = Flexie.flexboxSupported;
 	
 	$.each(propertyFragments, function (i, fragment) {
 		domProperty += fragment.charAt(0).toUpperCase() + fragment.substr(1);
@@ -27,7 +28,11 @@ function applyFlexboxProperty (target, property, value) {
 	
 	props = (/(.*)\-(\d)+/).exec(property);
 	
-	if (Flexie.flexboxSupported) {
+	if (SUPPORT) {
+		if (SUPPORT.partialSupport) {
+			target.children().attr("style", "");
+		}
+		
 		$.each(domPrefixes, function (i, prefix) {
 			if (/box\-(flex|ordinal\-group)/.test(property)) {
 				domProperty = domProperty.replace(/\d$/, "");
@@ -49,9 +54,16 @@ function applyFlexboxProperty (target, property, value) {
 				target.get(0).style[prefix + domProperty] = value;
 			}
 		});
-	} else {
+	}
+	
+	if (!SUPPORT || (SUPPORT.partialSupport === "stretch" && (target.css("-webkit-box-align") === "stretch" || value === "stretch"))) {
 		ORIGINAL_HTML = ORIGINAL_HTML || target.outerHTML;
-		target.outerHTML = ORIGINAL_HTML;
+		
+		if (!SUPPORT) {
+			target.outerHTML = ORIGINAL_HTML;
+		} else {
+			target.children().attr("style", "");
+		}
 		
 		DEFAULTS.target = DEFAULTS.target || target.get(0);
 		DEFAULTS.selector = DEFAULTS.selector || target.selector;
