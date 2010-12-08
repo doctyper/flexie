@@ -660,14 +660,14 @@ var Flexie = (function (win, doc) {
 		return element.innerHeight || element.clientHeight;
 	}
 	
-	function appendProperty(target, prop, value) {
+	function appendProperty(target, prop, value, prefixName) {
 		var cssText = [];
 
 		forEach(PREFIXES, function (i, prefix) {
-			cssText.push(prop + ":" + prefix + value);
+			cssText.push((prefixName ? prefix : "") + prop + ":" + (!prefixName ? prefix : "") + value);
 		});
 
-		target.style.cssText = cssText.join(";");
+		target.style.cssText += cssText.join(";");
 		return target;
 	}
 	
@@ -993,21 +993,23 @@ var Flexie = (function (win, doc) {
 					pad : [PADDING_TOP, PADDING_BOTTOM, BORDER_TOP, BORDER_BOTTOM]
 				};
 
-				forEach(children, function (i, kid) {
-					kid.style.cssFloat = kid.style.styleFloat = "left";
+				if (!SUPPORT) {
+					forEach(children, function (i, kid) {
+						kid.style.cssFloat = kid.style.styleFloat = "left";
 
-					if (params.orient === VERTICAL) {
-						// Margins collapse on a normal box
-						// But not on flexbox
-						// So we hack away...
-						if (i) {
-							combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(children[i - 1], high.opp, TRUE);
-							kid.style[high.pos] = combinedMargin + "px";
+						if (params.orient === VERTICAL) {
+							// Margins collapse on a normal box
+							// But not on flexbox
+							// So we hack away...
+							if (i) {
+								combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(children[i - 1], high.opp, TRUE);
+								kid.style[high.pos] = combinedMargin + "px";
+							}
+
+							kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
 						}
-						
-						kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
-					}
-				});
+					});
+				}
 
 				switch (params.orient) {
 				case HORIZONTAL :
@@ -1294,11 +1296,17 @@ var Flexie = (function (win, doc) {
 		},
 
 		setup : function (target, children, params) {
-			var self = this;
+			var self = this,
+			    stretch = "stretch";
 			
-			forEach(self.properties, function (key, func) {
-				func.call(self, target, children, params);
-			});
+			if (params.align === stretch && SUPPORT && SUPPORT.partialSupport === stretch) {
+				self.properties.boxOrient.call(self, target, children, params);
+				self.properties.boxAlign.call(self, target, children, params);
+			} else if (!SUPPORT) {
+				forEach(self.properties, function (key, func) {
+					func.call(self, target, children, params);
+				});
+			}
 		},
 
 		trackDOM : function (params) {
@@ -1390,23 +1398,39 @@ var Flexie = (function (win, doc) {
 		FLEX_INSTANCES = instances;
 	};
 
-	FLX.flexboxSupported = (function () {
-		var dummy = doc.createElement("div");
+	FLX.flexboxSupport = function () {
+		var height = 100, childHeight,
+		    dummy = doc.createElement("div");
+		
+		dummy.style.width = dummy.style.height = height + "px";
+		dummy.innerHTML = '<div style="height:' + (height / 2) + 'px"></div>';
+		
 		appendProperty(dummy, "display", "box");
-		return ((dummy.style.display).indexOf("box") !== -1) ? TRUE : FALSE;
-	}());
+		appendProperty(dummy, "box-align", "stretch", TRUE);
+		
+		doc.body.appendChild(dummy);
+		childHeight = dummy.firstChild.offsetHeight;
+		doc.body.removeChild(dummy);
+		
+		return ((dummy.style.display).indexOf("box") !== -1) ? ((childHeight === 100) ? TRUE : {
+			partialSupport : "stretch"
+		}) : FALSE;
+	};
+	
+	FLX.init = function () {
+		FLX.flexboxSupported = SUPPORT = FLX.flexboxSupport();
+		LIBRARY = determineSelectorMethod();
+
+		if ((!SUPPORT || (SUPPORT.partialSupport === "stretch")) && LIBRARY) {
+			selectivizrEngine();
+		}
+	};
 	
 	// Flexie Version
 	FLX.version = 0.6;
 
-	(function init() {
-		SUPPORT = FLX.flexboxSupported;
-		LIBRARY = determineSelectorMethod();
-
-		if (!SUPPORT && LIBRARY) {
-			attachLoadMethod(selectivizrEngine);
-		}
-	}());
+	// Load when the DOM is ready
+	attachLoadMethod(FLX.init);
 	
 	return FLX;
 }(this, document));
