@@ -1002,7 +1002,7 @@ var Flexie = (function (win, doc) {
 							// So we hack away...
 							if (i) {
 								combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(children[i - 1], high.opp, TRUE);
-								kid.style[high.pos] = combinedMargin + "px";
+								appendPixelValue(kid, high.pos, combinedMargin);
 							} else if (BROWSER.IE < 8) {
 								// For IE < 8, make sure we account for parent padding as well.
 								targetPadding = getComputedStyle(target, high.pad[0], TRUE);
@@ -1063,7 +1063,7 @@ var Flexie = (function (win, doc) {
 							break;
 
 						default :
-							kid.style[self.anti.dim] = (kidDimension) + "px";
+							appendPixelValue(kid, self.anti.dim, kidDimension);
 							break;
 						}
 					});
@@ -1073,15 +1073,14 @@ var Flexie = (function (win, doc) {
 					forEach(children, function (i, kid) {
 						kidDimension = targetDimension - kid[self.anti.out];
 						kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
-
-						kid.style[self.anti.pos] = kidDimension + "px";
+						appendPixelValue(kid, self.anti.pos, kidDimension);
 					});
 					break;
 
 				case "center":
 					forEach(children, function (i, kid) {
 						kidDimension = (targetDimension - kid[self.anti.out]) / 2;
-						kid.style[self.anti.pos] = kidDimension + "px";
+						appendPixelValue(kid, self.anti.pos, kidDimension);
 					});
 					break;
 				}
@@ -1157,12 +1156,12 @@ var Flexie = (function (win, doc) {
 							remainder++;
 						}
 						
-						value = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension + "px";
-						kid.style[self.props.pos] = value;
+						value = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension;
+						appendPixelValue(kid, self.props.pos, value);
 						
 						// IE8 collapsing margin fix
 						if (params.orient === VERTICAL && children[i - 1]) {
-							children[i - 1].style[self.props.opp] = value;
+							appendPixelValue(children[i - 1], self.props.opp, value);
 						}
 						
 						i--;
@@ -1287,7 +1286,7 @@ var Flexie = (function (win, doc) {
 							if (x.match) {
 								trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
 								newWidth = Math.max(0, (trueDim + widthRation));
-								x.match.style[self.props.dim] = newWidth + "px";
+								appendPixelValue(x.match, self.props.dim, newWidth);
 							}
 						});
 						
