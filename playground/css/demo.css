@@ -21,11 +21,10 @@ body, html {
 
 #flexie-playground fieldset legend {
 	padding-bottom: 2px;
-	display: block;
+	display: inline-block;
 	color: #888;
 	font-size: 10px;
 	font-weight: bold;
-	width: 100%;
 	text-align: center;
 	border-bottom: 1px solid #eee;
 }
