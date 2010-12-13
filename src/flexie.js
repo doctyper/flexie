@@ -971,9 +971,8 @@ var Flexie = (function (win, doc) {
 			},
 
 			boxOrient : function (target, children, params) {
-				var self = this,
-				    wide, high,
-				    combinedMargin;
+				var self = this, wide, high,
+				    targetPadding, firstComputedMargin, combinedMargin;
 
 				wide = {
 					pos : "marginLeft",
@@ -1004,6 +1003,11 @@ var Flexie = (function (win, doc) {
 							if (i) {
 								combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(children[i - 1], high.opp, TRUE);
 								kid.style[high.pos] = combinedMargin + "px";
+							} else if (BROWSER.IE < 8) {
+								// For IE < 8, make sure we account for parent padding as well.
+								targetPadding = getComputedStyle(target, high.pad[0], TRUE);
+								firstComputedMargin = targetPadding + getComputedStyle(kid, high.pos, TRUE);
+								appendPixelValue(kid, high.pos, firstComputedMargin);
 							}
 
 							kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
