@@ -61,11 +61,12 @@ body, html {
 
 /* First, we create a box with header and footer, content area in between. */
 #box-wrap { 
-	margin: 0;
+	margin: 12px 14px 7px 5px;
 	width: 600px;
 	height: 600px;
 	background: #d9ecf5;
-	border: 1px solid #8ec1da;
+	border: solid #8ec1da;
+	border-width: 7px 5px 4px 2px;
 }
 
 #box-wrap-inner {

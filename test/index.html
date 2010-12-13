@@ -141,29 +141,29 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 23
+							top : 57,
+							left : 29
 						}, "First Child Offset");
 						same(children.eq(0).width(), 44, "First Child Width");
 						same(children.eq(0).height(), 469, "First Child Height");
 					
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 89
+							top : 56,
+							left : 95
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 53, "Second Child Width");
 						same(children.eq(1).height(), 467, "Second Child Height");
 					
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 171
+							top : 56,
+							left : 177
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 62, "Third Child Width");
 						same(children.eq(2).height(), 469, "Third Child Height");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 259
+							top : 55,
+							left : 265
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 71, "Fourth Child Width");
 						same(children.eq(3).height(), 465, "Fourth Child Height");
@@ -184,29 +184,29 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 232
+							top : 57,
+							left : 238
 						}, "First Child Offset");
 						same(children.eq(0).width(), 44, "First Child Width");
 						same(children.eq(0).height(), 469, "First Child Height");
 					
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 298
+							top : 56,
+							left : 304
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 53, "Second Child Width");
 						same(children.eq(1).height(), 467, "Second Child Height");
 					
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 380
+							top : 56,
+							left : 386
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 62, "Third Child Width");
 						same(children.eq(2).height(), 469, "Third Child Height");
 									
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 468
+							top : 55,
+							left : 474
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 71, "Fourth Child Width");
 						same(children.eq(3).height(), 465, "Fourth Child Height");
@@ -227,29 +227,29 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 127
+							top : 57,
+							left : 133
 						}, "First Child Offset");
 						same(children.eq(0).width(), 44, "First Child Width");
 						same(children.eq(0).height(), 469, "First Child Height");
 					
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 193
+							top : 56,
+							left : 199
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 53, "Second Child Width");
 						same(children.eq(1).height(), 467, "Second Child Height");
 					
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 275
+							top : 56,
+							left : 281
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 62, "Third Child Width");
 						same(children.eq(2).height(), 469, "Third Child Height");
 									
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 363
+							top : 55,
+							left : 369
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 71, "Fourth Child Width");
 						same(children.eq(3).height(), 465, "Fourth Child Height");
@@ -269,31 +269,31 @@
 							direction : "normal"
 						});
 						
-						same(children.eq(0).offset(), {
-							top : 39,
-							left : 23
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 57,
+							left : 29
+						}), "First Child Offset");
 						same(children.eq(0).width(), 44, "First Child Width");
 						same(children.eq(0).height(), 469, "First Child Height");
-
-						same(children.eq(1).offset(), {
-							top : 38,
-							left : 158
-						}, "Second Child Offset");
+				
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 56,
+							left : 164
+						}), "Second Child Offset");
 						same(children.eq(1).width(), 53, "Second Child Width");
 						same(children.eq(1).height(), 467, "Second Child Height");
-
-						same(children.eq(2).offset(), {
-							top : 38,
-							left : 310
-						}, "Third Child Offset");
+				
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 56,
+							left : 316
+						}), "Third Child Offset");
 						same(children.eq(2).width(), 62, "Third Child Width");
 						same(children.eq(2).height(), 469, "Third Child Height");
-
-						same(children.eq(3).offset(), {
-							top : 37,
-							left : 468
-						}, "Fourth Child Offset");
+				
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 55,
+							left : 474
+						}), "Fourth Child Offset");
 						same(children.eq(3).width(), 71, "Fourth Child Width");
 						same(children.eq(3).height(), 465, "Fourth Child Height");
 					
@@ -313,35 +313,35 @@
 							pack : "start",
 							direction : "normal"
 						});
-					
+						
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 23
+							top : 57,
+							left : 29
 						}, "First Child Offset");
 						same(children.eq(0).width(), 449, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
-					
+
 						same(children.eq(1).offset(), {
-							top : 99,
-							left : 24
+							top : 117,
+							left : 30
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 442, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
-					
+
 						same(children.eq(2).offset(), {
-							top : 171,
-							left : 25
+							top : 189,
+							left : 31
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 444, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
-				
+
 						same(children.eq(3).offset(), {
-							top : 249,
-							left : 25
+							top : 267,
+							left : 31
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 449, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
-						
+
 						start();
 					});
 					asyncTest("box-pack: end", function () {
@@ -356,35 +356,35 @@
 							pack : "end",
 							direction : "normal"
 						});
-					
+						
 						same(children.eq(0).offset(), {
-							top : 278,
-							left : 23
+							top : 296,
+							left : 29
 						}, "First Child Offset");
 						same(children.eq(0).width(), 449, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
-					
+
 						same(children.eq(1).offset(), {
-							top : 338,
-							left : 24
+							top : 356,
+							left : 30
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 442, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
-					
+
 						same(children.eq(2).offset(), {
-							top : 410,
-							left : 25
+							top : 428,
+							left : 31
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 444, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
-				
+
 						same(children.eq(3).offset(), {
-							top : 488,
-							left : 25
+							top : 506,
+							left : 31
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 449, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
-						
+
 						start();
 					});
 					asyncTest("box-pack: center", function () {
@@ -399,35 +399,35 @@
 							pack : "center",
 							direction : "normal"
 						});
-					
+						
 						same(children.eq(0).offset(), {
-							top : 158,
-							left : 23
+							top : 176,
+							left : 29
 						}, "First Child Offset");
 						same(children.eq(0).width(), 449, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
-					
+
 						same(children.eq(1).offset(), {
-							top : 218,
-							left : 24
+							top : 236,
+							left : 30
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 442, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
-					
+
 						same(children.eq(2).offset(), {
-							top : 290,
-							left : 25
+							top : 308,
+							left : 31
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 444, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
-				
+
 						same(children.eq(3).offset(), {
-							top : 368,
-							left : 25
+							top : 386,
+							left : 31
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 449, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
-						
+
 						start();
 					});
 					asyncTest("box-pack: justify", function () {
@@ -443,34 +443,34 @@
 							direction : "normal"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 39,
-							left : 23
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 57,
+							left : 29
+						}), "First Child Offset Within One");
 						same(children.eq(0).width(), 449, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
-					
-						same(children.eq(1).offset(), {
-							top : 178,
-							left : 24
-						}, "Second Child Offset");
+
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 196,
+							left : 30
+						}), "Second Child Offset Within One");
 						same(children.eq(1).width(), 442, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
-					
-						same(children.eq(2).offset(), {
-							top : 330,
-							left : 25
-						}, "Third Child Offset");
+
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 348,
+							left : 31
+						}), "Third Child Offset Within One");
 						same(children.eq(2).width(), 444, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
-				
-						same(children.eq(3).offset(), {
-							top : 488,
-							left : 25
-						}, "Fourth Child Offset");
+
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 506,
+							left : 31
+						}), "Fourth Child Offset Within One");
 						same(children.eq(3).width(), 449, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
-						
+
 						start();
 					});
 				
@@ -489,29 +489,29 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 284
+							top : 57,
+							left : 290
 						}, "First Child Offset");
 						same(children.eq(0).width(), 44, "First Child Width");
 						same(children.eq(0).height(), 469, "First Child Height");
 					
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 204
+							top : 56,
+							left : 210
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 53, "Second Child Width");
 						same(children.eq(1).height(), 467, "Second Child Height");
 					
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 117
+							top : 56,
+							left : 123
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 62, "Third Child Width");
 						same(children.eq(2).height(), 469, "Third Child Height");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 25
+							top : 55,
+							left : 31
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 71, "Fourth Child Width");
 						same(children.eq(3).height(), 465, "Fourth Child Height");
@@ -532,29 +532,29 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 493
+							top : 57,
+							left : 499
 						}, "First Child Offset");
 						same(children.eq(0).width(), 44, "First Child Width");
 						same(children.eq(0).height(), 469, "First Child Height");
 					
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 413
+							top : 56,
+							left : 419
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 53, "Second Child Width");
 						same(children.eq(1).height(), 467, "Second Child Height");
 					
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 326
+							top : 56,
+							left : 332
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 62, "Third Child Width");
 						same(children.eq(2).height(), 469, "Third Child Height");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 234
+							top : 55,
+							left : 240
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 71, "Fourth Child Width");
 						same(children.eq(3).height(), 465, "Fourth Child Height");
@@ -575,29 +575,29 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 388
+							top : 57,
+							left : 394
 						}, "First Child Offset");
 						same(children.eq(0).width(), 44, "First Child Width");
 						same(children.eq(0).height(), 469, "First Child Height");
 					
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 308
+							top : 56,
+							left : 314
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 53, "Second Child Width");
 						same(children.eq(1).height(), 467, "Second Child Height");
 					
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 221
+							top : 56,
+							left : 227
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 62, "Third Child Width");
 						same(children.eq(2).height(), 469, "Third Child Height");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 129
+							top : 55,
+							left : 135
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 71, "Fourth Child Width");
 						same(children.eq(3).height(), 465, "Fourth Child Height");
@@ -617,31 +617,31 @@
 							direction : "reverse"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 39,
-							left : 493
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 57,
+							left : 499
+						}), "First Child Offset");
 						same(children.eq(0).width(), 44, "First Child Width");
 						same(children.eq(0).height(), 469, "First Child Height");
 					
-						same(children.eq(1).offset(), {
-							top : 38,
-							left : 343
-						}, "Second Child Offset");
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 56,
+							left : 349
+						}), "Second Child Offset");
 						same(children.eq(1).width(), 53, "Second Child Width");
 						same(children.eq(1).height(), 467, "Second Child Height");
 					
-						same(children.eq(2).offset(), {
-							top : 38,
-							left : 186
-						}, "Third Child Offset");
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 56,
+							left : 192
+						}), "Third Child Offset");
 						same(children.eq(2).width(), 62, "Third Child Width");
 						same(children.eq(2).height(), 469, "Third Child Height");
 				
-						same(children.eq(3).offset(), {
-							top : 37,
-							left : 25
-						}, "Fourth Child Offset");
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 55,
+							left : 31
+						}), "Fourth Child Offset");
 						same(children.eq(3).width(), 71, "Fourth Child Width");
 						same(children.eq(3).height(), 465, "Fourth Child Height");
 						
@@ -663,29 +663,29 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 282,
-							left : 23
+							top : 300,
+							left : 29
 						}, "First Child Offset");
 						same(children.eq(0).width(), 449, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
 					
 						same(children.eq(1).offset(), {
-							top : 209,
-							left : 24
+							top : 227,
+							left : 30
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 442, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
 					
 						same(children.eq(2).offset(), {
-							top : 130,
-							left : 25
+							top : 148,
+							left : 31
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 444, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 25
+							top : 55,
+							left : 31
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 449, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
@@ -706,29 +706,29 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 521,
-							left : 23
+							top : 539,
+							left : 29
 						}, "First Child Offset");
 						same(children.eq(0).width(), 449, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
 					
 						same(children.eq(1).offset(), {
-							top : 448,
-							left : 24
+							top : 466,
+							left : 30
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 442, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
 					
 						same(children.eq(2).offset(), {
-							top : 369,
-							left : 25
+							top : 387,
+							left : 31
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 444, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
 				
 						same(children.eq(3).offset(), {
-							top : 276,
-							left : 25
+							top : 294,
+							left : 31
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 449, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
@@ -749,29 +749,29 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 401,
-							left : 23
+							top : 419,
+							left : 29
 						}, "First Child Offset");
 						same(children.eq(0).width(), 449, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
 					
 						same(children.eq(1).offset(), {
-							top : 328,
-							left : 24
+							top : 346,
+							left : 30
 						}, "Second Child Offset");
 						same(children.eq(1).width(), 442, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
 					
 						same(children.eq(2).offset(), {
-							top : 249,
-							left : 25
+							top : 267,
+							left : 31
 						}, "Third Child Offset");
 						same(children.eq(2).width(), 444, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
 				
 						same(children.eq(3).offset(), {
-							top : 156,
-							left : 25
+							top : 174,
+							left : 31
 						}, "Fourth Child Offset");
 						same(children.eq(3).width(), 449, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
@@ -791,31 +791,31 @@
 							direction : "reverse"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 521,
-							left : 23
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 539,
+							left : 29
+						}), "First Child Offset");
 						same(children.eq(0).width(), 449, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
 					
-						same(children.eq(1).offset(), {
-							top : 368,
-							left : 24
-						}, "Second Child Offset");
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 386,
+							left : 30
+						}), "Second Child Offset");
 						same(children.eq(1).width(), 442, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
 					
-						same(children.eq(2).offset(), {
-							top : 209,
-							left : 25
-						}, "Third Child Offset");
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 227,
+							left : 31
+						}), "Third Child Offset");
 						same(children.eq(2).width(), 444, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
-				
-						same(children.eq(3).offset(), {
-							top : 37,
-							left : 25
-						}, "Fourth Child Offset");
+									
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 55,
+							left : 31
+						}), "Fourth Child Offset");
 						same(children.eq(3).width(), 449, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
 						
@@ -837,23 +837,23 @@
 						});
 						
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 23
+							top : 57,
+							left : 29
 						}, "First Child Offset");
 						
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 89
+							top : 56,
+							left : 95
 						}, "Second Child Offset");
 						
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 171
+							top : 56,
+							left : 177
 						}, "Third Child Offset");
 						
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 259
+							top : 55,
+							left : 265
 						}, "Fourth Child Offset");
 				
 						start();
@@ -872,23 +872,23 @@
 						});
 						
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 232
+							top : 57,
+							left : 238
 						}, "First Child Offset");
 						
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 298
+							top : 56,
+							left : 304
 						}, "Second Child Offset");
 						
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 380
+							top : 56,
+							left : 386
 						}, "Third Child Offset");
 						
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 468
+							top : 55,
+							left : 474
 						}, "Fourth Child Offset");
 				
 						start();
@@ -907,23 +907,23 @@
 						});
 						
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 127
+							top : 57,
+							left : 133
 						}, "First Child Offset");
 						
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 193
+							top : 56,
+							left : 199
 						}, "Second Child Offset");
 						
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 275
+							top : 56,
+							left : 281
 						}, "Third Child Offset");
 						
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 363
+							top : 55,
+							left : 369
 						}, "Fourth Child Offset");
 				
 						start();
@@ -941,25 +941,25 @@
 							direction : "normal"
 						});
 						
-						same(children.eq(0).offset(), {
-							top : 39,
-							left : 23
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 57,
+							left : 29
+						}), "First Child Offset");
 						
-						same(children.eq(1).offset(), {
-							top : 38,
-							left : 158
-						}, "Second Child Offset");
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 56,
+							left : 164
+						}), "Second Child Offset");
 						
-						same(children.eq(2).offset(), {
-							top : 38,
-							left : 310
-						}, "Third Child Offset");
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 56,
+							left : 316
+						}), "Third Child Offset");
 						
-						same(children.eq(3).offset(), {
-							top : 37,
-							left : 468
-						}, "Fourth Child Offset");
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 55,
+							left : 474
+						}), "Fourth Child Offset");
 									
 						start();
 					});
@@ -979,23 +979,23 @@
 						});
 						
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 23
+							top : 57,
+							left : 29
 						}, "First Child Offset");
 						
 						same(children.eq(1).offset(), {
-							top : 99,
-							left : 24
+							top : 117,
+							left : 30
 						}, "Second Child Offset");
 						
 						same(children.eq(2).offset(), {
-							top : 171,
-							left : 25
+							top : 189,
+							left : 31
 						}, "Third Child Offset");
 						
 						same(children.eq(3).offset(), {
-							top : 249,
-							left : 25
+							top : 267,
+							left : 31
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1014,23 +1014,23 @@
 						});
 						
 						same(children.eq(0).offset(), {
-							top : 278,
-							left : 23
+							top : 296,
+							left : 29
 						}, "First Child Offset");
 						
 						same(children.eq(1).offset(), {
-							top : 338,
-							left : 24
+							top : 356,
+							left : 30
 						}, "Second Child Offset");
 						
 						same(children.eq(2).offset(), {
-							top : 410,
-							left : 25
+							top : 428,
+							left : 31
 						}, "Third Child Offset");
 						
 						same(children.eq(3).offset(), {
-							top : 488,
-							left : 25
+							top : 506,
+							left : 31
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1049,23 +1049,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 158,
-							left : 23
+							top : 176,
+							left : 29
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 218,
-							left : 24
+							top : 236,
+							left : 30
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 290,
-							left : 25
+							top : 308,
+							left : 31
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 368,
-							left : 25
+							top : 386,
+							left : 31
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1083,25 +1083,25 @@
 							direction : "normal"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 39,
-							left : 23
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 57,
+							left : 29
+						}), "First Child Offset");
 					
-						same(children.eq(1).offset(), {
-							top : 178,
-							left : 24
-						}, "Second Child Offset");
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 196,
+							left : 30
+						}), "Second Child Offset");
 					
-						same(children.eq(2).offset(), {
-							top : 330,
-							left : 25
-						}, "Third Child Offset");
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 348,
+							left : 31
+						}), "Third Child Offset");
 				
-						same(children.eq(3).offset(), {
-							top : 488,
-							left : 25
-						}, "Fourth Child Offset");
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 506,
+							left : 31
+						}), "Fourth Child Offset");
 						
 						start();
 					});
@@ -1121,23 +1121,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 284
+							top : 57,
+							left : 290
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 204
+							top : 56,
+							left : 210
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 117
+							top : 56,
+							left : 123
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 25
+							top : 55,
+							left : 31
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1156,23 +1156,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 493
+							top : 57,
+							left : 499
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 413
+							top : 56,
+							left : 419
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 326
+							top : 56,
+							left : 332
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 234
+							top : 55,
+							left : 240
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1191,23 +1191,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 388
+							top : 57,
+							left : 394
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 38,
-							left : 308
+							top : 56,
+							left : 314
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 38,
-							left : 221
+							top : 56,
+							left : 227
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 129
+							top : 55,
+							left : 135
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1225,25 +1225,25 @@
 							direction : "reverse"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 39,
-							left : 493
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 57,
+							left : 499
+						}), "First Child Offset");
 					
-						same(children.eq(1).offset(), {
-							top : 38,
-							left : 343
-						}, "Second Child Offset");
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 56,
+							left : 349
+						}), "Second Child Offset");
 					
-						same(children.eq(2).offset(), {
-							top : 38,
-							left : 186
-						}, "Third Child Offset");
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 56,
+							left : 192
+						}), "Third Child Offset");
 				
-						same(children.eq(3).offset(), {
-							top : 37,
-							left : 25
-						}, "Fourth Child Offset");
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 55,
+							left : 31
+						}), "Fourth Child Offset");
 						
 						start();
 					});
@@ -1263,23 +1263,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 282,
-							left : 23
+							top : 300,
+							left : 29
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 209,
-							left : 24
+							top : 227,
+							left : 30
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 130,
-							left : 25
+							top : 148,
+							left : 31
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 25
+							top : 55,
+							left : 31
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1298,23 +1298,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 521,
-							left : 23
+							top : 539,
+							left : 29
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 448,
-							left : 24
+							top : 466,
+							left : 30
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 369,
-							left : 25
+							top : 387,
+							left : 31
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 276,
-							left : 25
+							top : 294,
+							left : 31
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1333,23 +1333,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 401,
-							left : 23
+							top : 419,
+							left : 29
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 328,
-							left : 24
+							top : 346,
+							left : 30
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 249,
-							left : 25
+							top : 267,
+							left : 31
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 156,
-							left : 25
+							top : 174,
+							left : 31
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1367,25 +1367,25 @@
 							direction : "reverse"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 521,
-							left : 23
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 539,
+							left : 29
+						}), "First Child Offset");
 					
-						same(children.eq(1).offset(), {
-							top : 368,
-							left : 24
-						}, "Second Child Offset");
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 386,
+							left : 30
+						}), "Second Child Offset");
 					
-						same(children.eq(2).offset(), {
-							top : 209,
-							left : 25
-						}, "Third Child Offset");
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 227,
+							left : 31
+						}), "Third Child Offset");
 				
-						same(children.eq(3).offset(), {
-							top : 37,
-							left : 25
-						}, "Fourth Child Offset");
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 55,
+							left : 31
+						}), "Fourth Child Offset");
 						
 						start();
 					});
@@ -1405,23 +1405,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 521,
-							left : 23
+							top : 539,
+							left : 29
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 509,
-							left : 89
+							top : 527,
+							left : 95
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 502,
-							left : 171
+							top : 520,
+							left : 177
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 488,
-							left : 259
+							top : 506,
+							left : 265
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1440,23 +1440,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 521,
-							left : 232
+							top : 539,
+							left : 238
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 509,
-							left : 298
+							top : 527,
+							left : 304
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 502,
-							left : 380
+							top : 520,
+							left : 386
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 488,
-							left : 468
+							top : 506,
+							left : 474
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1475,23 +1475,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 521,
-							left : 127
+							top : 539,
+							left : 133
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 509,
-							left : 193
+							top : 527,
+							left : 199
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 502,
-							left : 275
+							top : 520,
+							left : 281
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 488,
-							left : 363
+							top : 506,
+							left : 369
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1509,25 +1509,25 @@
 							direction : "normal"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 521,
-							left : 23
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 539,
+							left : 29
+						}), "First Child Offset");
 					
-						same(children.eq(1).offset(), {
-							top : 509,
-							left : 158
-						}, "Second Child Offset");
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 527,
+							left : 164
+						}), "Second Child Offset");
 					
-						same(children.eq(2).offset(), {
-							top : 502,
-							left : 310
-						}, "Third Child Offset");
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 520,
+							left : 316
+						}), "Third Child Offset");
 				
-						same(children.eq(3).offset(), {
-							top : 488,
-							left : 468
-						}, "Fourth Child Offset");
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 506,
+							left : 474
+						}), "Fourth Child Offset");
 						
 						start();
 					});
@@ -1547,23 +1547,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 39,
-							left : 493
+							top : 57,
+							left : 499
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 99,
-							left : 478
+							top : 117,
+							left : 484
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 171,
-							left : 472
+							top : 189,
+							left : 478
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 249,
-							left : 468
+							top : 267,
+							left : 474
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1582,23 +1582,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 278,
-							left : 493
+							top : 296,
+							left : 499
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 338,
-							left : 478
+							top : 356,
+							left : 484
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 410,
-							left : 472
+							top : 428,
+							left : 478
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 488,
-							left : 468
+							top : 506,
+							left : 474
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1617,23 +1617,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 158,
-							left : 493
+							top : 176,
+							left : 499
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 218,
-							left : 478
+							top : 236,
+							left : 484
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 290,
-							left : 472
+							top : 308,
+							left : 478
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 368,
-							left : 468
+							top : 386,
+							left : 474
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1651,29 +1651,29 @@
 							direction : "normal"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 39,
-							left : 493
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 57,
+							left : 499
+						}), "First Child Offset");
 					
-						same(children.eq(1).offset(), {
-							top : 178,
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 196,
+							left : 484
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 348,
 							left : 478
-						}, "Second Child Offset");
-					
-						same(children.eq(2).offset(), {
-							top : 330,
-							left : 472
-						}, "Third Child Offset");
+						}), "Third Child Offset");
 				
-						same(children.eq(3).offset(), {
-							top : 488,
-							left : 468
-						}, "Fourth Child Offset");
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 506,
+							left : 474
+						}), "Fourth Child Offset");
 						
 						start();
 					});
-				
+					
 				module("box-orient: horizontal, box-align: end, box-direction: reverse");
 					asyncTest("box-pack: start", function () {
 						element = $("#box-wrap-inner");
@@ -1689,23 +1689,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 521,
-							left : 284
+							top : 539,
+							left : 290
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 509,
-							left : 204
+							top : 527,
+							left : 210
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 502,
-							left : 117
+							top : 520,
+							left : 123
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 488,
-							left : 25
+							top : 506,
+							left : 31
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1724,23 +1724,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 521,
-							left : 493
+							top : 539,
+							left : 499
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 509,
-							left : 413
+							top : 527,
+							left : 419
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 502,
-							left : 326
+							top : 520,
+							left : 332
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 488,
-							left : 234
+							top : 506,
+							left : 240
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1759,23 +1759,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 521,
-							left : 388
+							top : 539,
+							left : 394
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 509,
-							left : 308
+							top : 527,
+							left : 314
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 502,
-							left : 221
+							top : 520,
+							left : 227
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 488,
-							left : 129
+							top : 506,
+							left : 135
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1793,25 +1793,25 @@
 							direction : "reverse"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 521,
-							left : 493
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 539,
+							left : 499
+						}), "First Child Offset");
 					
-						same(children.eq(1).offset(), {
-							top : 509,
-							left : 343
-						}, "Second Child Offset");
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 527,
+							left : 349
+						}), "Second Child Offset");
 					
-						same(children.eq(2).offset(), {
-							top : 502,
-							left : 186
-						}, "Third Child Offset");
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 520,
+							left : 192
+						}), "Third Child Offset");
 				
-						same(children.eq(3).offset(), {
-							top : 488,
-							left : 25
-						}, "Fourth Child Offset");
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 506,
+							left : 31
+						}), "Fourth Child Offset");
 						
 						start();
 					});
@@ -1831,23 +1831,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 282,
-							left : 493
+							top : 300,
+							left : 499
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 209,
-							left : 478
+							top : 227,
+							left : 484
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 130,
-							left : 472
+							top : 148,
+							left : 478
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 37,
-							left : 468
+							top : 55,
+							left : 474
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1866,23 +1866,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 521,
-							left : 493
+							top : 539,
+							left : 499
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 448,
-							left : 478
+							top : 466,
+							left : 484
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 369,
-							left : 472
+							top : 387,
+							left : 478
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 276,
-							left : 468
+							top : 294,
+							left : 474
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1901,23 +1901,23 @@
 						});
 					
 						same(children.eq(0).offset(), {
-							top : 401,
-							left : 493
+							top : 419,
+							left : 499
 						}, "First Child Offset");
 					
 						same(children.eq(1).offset(), {
-							top : 328,
-							left : 478
+							top : 346,
+							left : 484
 						}, "Second Child Offset");
 					
 						same(children.eq(2).offset(), {
-							top : 249,
-							left : 472
+							top : 267,
+							left : 478
 						}, "Third Child Offset");
 				
 						same(children.eq(3).offset(), {
-							top : 156,
-							left : 468
+							top : 174,
+							left : 474
 						}, "Fourth Child Offset");
 						
 						start();
@@ -1935,25 +1935,25 @@
 							direction : "reverse"
 						});
 					
-						same(children.eq(0).offset(), {
-							top : 521,
-							left : 493
-						}, "First Child Offset");
+						same(true, withinOne(children.eq(0).offset(), {
+							top : 539,
+							left : 499
+						}), "First Child Offset");
 					
-						same(children.eq(1).offset(), {
-							top : 368,
+						same(true, withinOne(children.eq(1).offset(), {
+							top : 386,
+							left : 484
+						}), "Second Child Offset");
+					
+						same(true, withinOne(children.eq(2).offset(), {
+							top : 227,
 							left : 478
-						}, "Second Child Offset");
-					
-						same(children.eq(2).offset(), {
-							top : 209,
-							left : 472
-						}, "Third Child Offset");
+						}), "Third Child Offset");
 				
-						same(children.eq(3).offset(), {
-							top : 37,
-							left : 468
-						}, "Fourth Child Offset");
+						same(true, withinOne(children.eq(3).offset(), {
+							top : 55,
+							left : 474
+						}), "Fourth Child Offset");
 						
 						start();
 					});
@@ -1973,23 +1973,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 280,
-							left : 23
+							top : 298,
+							left : 29
 						}), "First Child Offset Within One");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 273,
-							left : 89
+							top : 291,
+							left : 95
 						}), "Second Child Offset Within One");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 270,
-							left : 171
+							top : 288,
+							left : 177
 						}), "Third Child Offset Within One");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 262,
-							left : 259
+							top : 280,
+							left : 265
 						}), "Fourth Child Offset Within One");
 						
 						start();
@@ -2008,23 +2008,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 280,
-							left : 232
+							top : 298,
+							left : 238
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 273,
-							left : 298
+							top : 291,
+							left : 304
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 270,
-							left : 380
+							top : 288,
+							left : 386
 						}), "Third Child Offset");
 									
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 262,
-							left : 468
+							top : 280,
+							left : 474
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2043,23 +2043,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 280,
-							left : 127
+							top : 298,
+							left : 133
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 273,
-							left : 193
+							top : 291,
+							left : 199
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 270,
-							left : 275
+							top : 288,
+							left : 281
 						}), "Third Child Offset");
 									
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 262,
-							left : 363
+							top : 280,
+							left : 369
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2078,23 +2078,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 280,
-							left : 23
+							top : 298,
+							left : 29
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 273,
-							left : 158
+							top : 291,
+							left : 164
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 270,
-							left : 310
+							top : 288,
+							left : 316
 						}), "Third Child Offset");
 									
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 262,
-							left : 468
+							top : 280,
+							left : 474
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2115,23 +2115,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 39,
-							left : 258
+							top : 57,
+							left : 264
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 99,
-							left : 251
+							top : 117,
+							left : 257
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 171,
-							left : 248
+							top : 189,
+							left : 254
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 249,
-							left : 246
+							top : 267,
+							left : 252
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2150,23 +2150,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 278,
-							left : 258
+							top : 296,
+							left : 264
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 338,
-							left : 251
+							top : 356,
+							left : 257
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 410,
-							left : 248
+							top : 428,
+							left : 254
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 488,
-							left : 246
+							top : 506,
+							left : 252
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2185,23 +2185,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 158,
-							left : 258
+							top : 176,
+							left : 264
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 218,
-							left : 251
+							top : 236,
+							left : 257
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 290,
-							left : 248
+							top : 308,
+							left : 254
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 368,
-							left : 246
+							top : 386,
+							left : 252
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2220,23 +2220,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 39,
-							left : 258
+							top : 57,
+							left : 264
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 178,
-							left : 251
+							top : 196,
+							left : 257
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 330,
-							left : 248
+							top : 348,
+							left : 254
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 488,
-							left : 246
+							top : 506,
+							left : 252
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2257,23 +2257,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 280,
-							left : 284
+							top : 298,
+							left : 290
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 273,
-							left : 204
+							top : 291,
+							left : 210
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 270,
-							left : 117
+							top : 288,
+							left : 123
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 262,
-							left : 25
+							top : 280,
+							left : 31
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2292,23 +2292,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 280,
-							left : 493
+							top : 298,
+							left : 499
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 273,
-							left : 413
+							top : 291,
+							left : 419
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 270,
-							left : 326
+							top : 288,
+							left : 332
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 262,
-							left : 234
+							top : 280,
+							left : 240
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2327,23 +2327,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 280,
-							left : 388
+							top : 298,
+							left : 394
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 273,
-							left : 308
+							top : 291,
+							left : 314
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 270,
-							left : 221
+							top : 288,
+							left : 227
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 262,
-							left : 129
+							top : 280,
+							left : 135
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2362,23 +2362,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 280,
-							left : 493
+							top : 298,
+							left : 499
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 273,
-							left : 343
+							top : 291,
+							left : 349
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 270,
-							left : 186
+							top : 288,
+							left : 192
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 262,
-							left : 25
+							top : 280,
+							left : 31
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2399,23 +2399,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 282,
-							left : 258
+							top : 300,
+							left : 264
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 209,
-							left : 251
+							top : 227,
+							left : 257
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 130,
-							left : 248
+							top : 148,
+							left : 254
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 37,
-							left : 246
+							top : 55,
+							left : 252
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2434,23 +2434,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 521,
-							left : 258
+							top : 539,
+							left : 264
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 448,
-							left : 251
+							top : 466,
+							left : 257
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 369,
-							left : 248
+							top : 387,
+							left : 254
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 276,
-							left : 246
+							top : 294,
+							left : 252
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2469,23 +2469,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 401,
-							left : 258
+							top : 419,
+							left : 264
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 328,
-							left : 251
+							top : 346,
+							left : 257
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 249,
-							left : 248
+							top : 267,
+							left : 254
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 156,
-							left : 246
+							top : 174,
+							left : 252
 						}), "Fourth Child Offset");
 						
 						start();
@@ -2504,23 +2504,23 @@
 						});
 					
 						same(true, withinOne(children.eq(0).offset(), {
-							top : 521,
-							left : 258
+							top : 539,
+							left : 264
 						}), "First Child Offset");
 					
 						same(true, withinOne(children.eq(1).offset(), {
-							top : 368,
-							left : 251
+							top : 386,
+							left : 257
 						}), "Second Child Offset");
 					
 						same(true, withinOne(children.eq(2).offset(), {
-							top : 209,
-							left : 248
+							top : 227,
+							left : 254
 						}), "Third Child Offset");
 				
 						same(true, withinOne(children.eq(3).offset(), {
-							top : 37,
-							left : 246
+							top : 55,
+							left : 252
 						}), "Fourth Child Offset");
 						
 						start();
