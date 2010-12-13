@@ -1090,7 +1090,8 @@ var Flexie = (function (win, doc) {
 			boxPack : function (target, children, params) {
 				var self = this,
 				    groupDimension = 0,
-				    firstComputedMargin,
+				    firstComputedMargin = 0,
+				    targetPadding = 0,
 				    totalDimension, fractionedDimension,
 				    currentDimension, remainder,
 				    length = children.length - 1;
@@ -1106,6 +1107,11 @@ var Flexie = (function (win, doc) {
 
 				if (params.orient === VERTICAL) {
 					groupDimension += getComputedStyle(children[children.length - 1], self.props.opp, TRUE);
+					
+					// Fixe IE < 8 collapsing margin
+					if (BROWSER.IE < 8) {
+						targetPadding = getComputedStyle(target, self.props.pad[0], TRUE);
+					}
 				}
 
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
@@ -1124,15 +1130,19 @@ var Flexie = (function (win, doc) {
 
 				switch (params.pack) {
 				case "end" :
-					appendPixelValue(children[0], self.props.pos, firstComputedMargin + totalDimension);
+					appendPixelValue(children[0], self.props.pos, targetPadding + firstComputedMargin + totalDimension);
 					break;
 
 				case "center" :
-					appendPixelValue(children[0], self.props.pos, firstComputedMargin + (totalDimension / 2));
+					if (targetPadding) {
+						targetPadding /= 2;
+					}
+					
+					appendPixelValue(children[0], self.props.pos, targetPadding + firstComputedMargin + (totalDimension / 2));
 					break;
 
 				case "justify" :
-					fractionedDimension = Math.floor(totalDimension / length);
+					fractionedDimension = Math.floor((targetPadding + totalDimension) / length);
 					remainder = (fractionedDimension * length) - totalDimension;
 					
 					var i = children.length - 1,
