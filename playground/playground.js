@@ -151,10 +151,10 @@ function outputFlexboxCSS (target, property, value) {
 	cssText += childRuleOutput(target.children(), PREFIXES, CHILD_CSS_PROPERTIES);
 	
 	if (!output.get(0)) {
-		output = $('<div id="flexie-css-output"><pre></pre></div>').appendTo("body").find("pre");
+		output = $('<div id="flexie-css-output"></div>').appendTo("body");
 	}
 	
-	output.text(cssText);
+	output.html('<pre>' + cssText + '</pre>');
 }
 
 $(document).ready(function () {
