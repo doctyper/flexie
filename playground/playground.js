@@ -94,11 +94,12 @@ function applyFlexboxProperty (target, property, value) {
 }
 
 function parentRuleOutput (target, prefixes, rules) {
-	var cssText = [];
+	var cssText = [], display;
 	
 	$.each(rules, function (property, value) {
 		$.each(prefixes, function (i, prefix) {
-			cssText.push(prefix + property + ": " + value + ";" + (prefixes[i + 1] === undefined ? "\n" : ""));
+			display = (property === "display");
+			cssText.push((display ? property : (prefix + property)) + ": " + (display ? (prefix + value) : value) + ";" + (prefixes[i + 1] === undefined ? "\n" : ""));
 		});
 	});
 	
