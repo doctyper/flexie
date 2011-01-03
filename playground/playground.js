@@ -57,11 +57,7 @@ function applyFlexboxProperty (target, property, value) {
 	}
 	
 	if (!SUPPORT || (SUPPORT.partialSupport === "stretch" && (target.css("-webkit-box-align") === "stretch" || value === "stretch"))) {
-		ORIGINAL_HTML = ORIGINAL_HTML || target.outerHTML;
-		
-		if (!SUPPORT) {
-			target.outerHTML = ORIGINAL_HTML;
-		} else {
+		if (SUPPORT) {
 			target.children().attr("style", "");
 		}
 		
