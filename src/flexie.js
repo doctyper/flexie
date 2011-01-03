@@ -959,14 +959,14 @@ var Flexie = (function (win, doc) {
 			},
 
 			boxDirection : function (target, children, params) {
-				if (params.direction === "reverse" && !params.reversed) {
+				if ((params.direction === "reverse" && !params.reversed) || (params.direction === "normal" && params.reversed)) {
 					children = children.reverse();
 
 					forEach(children, function (i, kid) {
 						target.appendChild(kid);
 					});
 
-					params.reversed = TRUE;
+					params.reversed = !params.reversed;
 				}
 			},
 
