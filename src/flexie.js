@@ -1313,7 +1313,10 @@ var Flexie = (function (win, doc) {
 			
 			if (SUPPORT && SUPPORT.partialSupport) {
 				self.properties.boxOrient.call(self, target, children, params);
-				self.properties.boxAlign.call(self, target, children, params);
+				
+				if ((params.align === "stretch") && !SUPPORT.boxAlignStretch) {
+					self.properties.boxAlign.call(self, target, children, params);
+				}
 				
 				if ((params.pack === "justify") && !SUPPORT.boxPackJustify) {
 					self.properties.boxPack.call(self, target, children, params);
@@ -1436,6 +1439,10 @@ var Flexie = (function (win, doc) {
 		childHeight = dummy.firstChild.offsetHeight;
 		
 		tests = {
+			boxAlignStretch : function () {
+				return (childHeight === 100);
+			},
+			
 			boxPackJustify : function () {
 				var totalOffset = 0,
 				    i, j, child;
