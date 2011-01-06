@@ -57,7 +57,10 @@ Requirements
 ============
 See the [Things you need to know](http://selectivizr.com/#things)
 
-Also, a caveat. As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. <strike>Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.</strike> As of version 0.7, Flexie normalizes the `box-align` property across Webkit browsers.
+Also, a caveat. As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. <strike>Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.</strike>
+
+* As of version 0.7, Flexie normalizes the `box-align` property across Webkit browsers.
+* As of version 0.8, Flexie normalizes the `box-pack` property in Gecko.
 
 
 Acknowledgements
