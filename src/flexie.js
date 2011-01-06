@@ -1159,8 +1159,8 @@ var Flexie = (function (win, doc) {
 						value = getComputedStyle(kid, self.props.pos, TRUE) + currentDimension;
 						appendPixelValue(kid, self.props.pos, value);
 						
-						// IE8 collapsing margin fix
-						if (params.orient === VERTICAL && children[i - 1]) {
+						// IE < 9 collapsing margin fix
+						if (params.orient === VERTICAL && BROWSER.IE < 9 && children[i - 1]) {
 							appendPixelValue(children[i - 1], self.props.opp, value);
 						}
 						
