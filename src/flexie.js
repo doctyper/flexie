@@ -1169,10 +1169,6 @@ var Flexie = (function (win, doc) {
 					
 					break;
 				}
-				
-				// Float drop fix
-				// Test offset values. If different, let's bring the widow back
-				floatDropFix(target, params, self);
 			},
 			
 			boxOrdinalGroup : function (target, children, params) {
