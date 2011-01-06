@@ -1411,22 +1411,28 @@ var Flexie = (function (win, doc) {
 	};
 
 	FLX.flexboxSupport = function () {
+		var partialSupportGrid = {};
+		
 		var height = 100, childHeight,
-		    dummy = doc.createElement("div");
-		
+		    dummy = doc.createElement("flxbox"),
+		    child = '<b style="margin: 0; padding: 0; display:block; width: 10px; height:' + (height / 2) + 'px"></b>',
+		    i, j, tests, key, result;
+
 		dummy.style.width = dummy.style.height = height + "px";
-		dummy.innerHTML = '<div style="height:' + (height / 2) + 'px"></div>';
 		
+		for (i = 0, j = 3; i < j; i++) {
+			dummy.innerHTML += child;
+		}
+
 		appendProperty(dummy, "display", "box");
 		appendProperty(dummy, "box-align", "stretch", TRUE);
 		
 		doc.body.appendChild(dummy);
 		childHeight = dummy.firstChild.offsetHeight;
-		doc.body.removeChild(dummy);
 		
-		return ((dummy.style.display).indexOf("box") !== -1) ? ((childHeight === 100) ? TRUE : {
-			partialSupport : "stretch"
-		}) : FALSE;
+		
+		doc.body.removeChild(dummy);
+		return ~ (dummy.style.display).indexOf("box") ? partialSupportGrid : FALSE;
 	};
 	
 	FLX.init = function () {
