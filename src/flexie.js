@@ -1314,6 +1314,10 @@ var Flexie = (function (win, doc) {
 			if (SUPPORT && SUPPORT.partialSupport) {
 				self.properties.boxOrient.call(self, target, children, params);
 				self.properties.boxAlign.call(self, target, children, params);
+				
+				if ((params.pack === "justify") && !SUPPORT.boxPackJustify) {
+					self.properties.boxPack.call(self, target, children, params);
+				}
 			} else if (!SUPPORT) {
 				forEach(self.properties, function (key, func) {
 					func.call(self, target, children, params);
@@ -1426,10 +1430,34 @@ var Flexie = (function (win, doc) {
 
 		appendProperty(dummy, "display", "box");
 		appendProperty(dummy, "box-align", "stretch", TRUE);
-		
+		appendProperty(dummy, "box-pack", "justify", TRUE);
+
 		doc.body.appendChild(dummy);
 		childHeight = dummy.firstChild.offsetHeight;
 		
+		tests = {
+			boxPackJustify : function () {
+				var totalOffset = 0,
+				    i, j, child;
+				
+				for (i = 0, j = dummy.childNodes.length; i < j; i++) {
+					child = dummy.childNodes[i];
+					totalOffset += child.offsetLeft;
+				}
+				
+				return (totalOffset === 135);
+			}
+		};
+		
+		for (key in tests) {
+			result = tests[key]();
+			
+			if (!result) {
+				partialSupportGrid.partialSupport = true;
+			}
+			
+			partialSupportGrid[key] = result;
+		}
 		
 		doc.body.removeChild(dummy);
 		return ~ (dummy.style.display).indexOf("box") ? partialSupportGrid : FALSE;
