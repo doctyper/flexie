@@ -1309,10 +1309,9 @@ var Flexie = (function (win, doc) {
 		},
 
 		setup : function (target, children, params) {
-			var self = this,
-			    stretch = "stretch";
+			var self = this;
 			
-			if (params.align === stretch && SUPPORT && SUPPORT.partialSupport === stretch) {
+			if (SUPPORT && SUPPORT.partialSupport) {
 				self.properties.boxOrient.call(self, target, children, params);
 				self.properties.boxAlign.call(self, target, children, params);
 			} else if (!SUPPORT) {
@@ -1434,7 +1433,7 @@ var Flexie = (function (win, doc) {
 		FLX.flexboxSupported = SUPPORT = FLX.flexboxSupport();
 		LIBRARY = determineSelectorMethod();
 
-		if ((!SUPPORT || (SUPPORT.partialSupport === "stretch")) && LIBRARY) {
+		if ((!SUPPORT || SUPPORT.partialSupport) && LIBRARY) {
 			selectivizrEngine();
 		}
 	};
