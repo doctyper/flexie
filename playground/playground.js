@@ -20,7 +20,8 @@ function applyFlexboxProperty (target, property, value) {
 	var domPrefixes = DOM_PREFIXES, box,
 	    propertyFragments = property.split("-"),
 	    domProperty = "", props, values,
-	    SUPPORT = Flexie.flexboxSupported;
+	    SUPPORT = Flexie.flexboxSupported,
+	    noStretchSupport, noJustifySupport;
 	
 	$.each(propertyFragments, function (i, fragment) {
 		domProperty += fragment.charAt(0).toUpperCase() + fragment.substr(1);
@@ -56,7 +57,11 @@ function applyFlexboxProperty (target, property, value) {
 		});
 	}
 	
-	if (!SUPPORT || (SUPPORT.partialSupport === "stretch" && (target.css("-webkit-box-align") === "stretch" || value === "stretch"))) {
+	// Partial Support
+	noStretchSupport = (!SUPPORT.boxAlignStretch && (target.css("-webkit-box-align") === "stretch" || value === "stretch"));
+	noJustifySupport = (!SUPPORT.boxPackJustify && (target.css("-moz-box-pack") === "justify" || value === "justify"));
+	
+	if (!SUPPORT || (SUPPORT.partialSupport && (noStretchSupport || noJustifySupport))) {
 		if (SUPPORT) {
 			target.children().attr("style", "");
 		}
