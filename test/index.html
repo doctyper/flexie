@@ -25,25 +25,35 @@
 				}
 				
 				return {
-					parseChildren : function (children) {
+					parseChildren : function (children, flexMatrix, ordinalMatrix) {
 						var matches = [];
 
-						children.each(function () {
+						children.each(function (i) {
 							var obj = {
 								selector : "#" + $(this).attr("id"),
 								properties : [],
 								match : this
 							};
+							
+							if (flexMatrix) {
+								obj.flex = flexMatrix[i];
+							}
+							
+							if (ordinalMatrix) {
+								obj["ordinal-group"] = ordinalMatrix[i];
+							}
 
 							matches.push(obj);
 						});
 
+						matches.childPropertiesApplied = true;
 						return matches;
 					},
 					
 					applyBoxModel : function(params) {
 						var element = params.target,
-						    support = Flexie.flexboxSupported;
+						    support = Flexie.flexboxSupported,
+						    _self = this;
 						
 						// Start fresh
 						// this.reset(element);
@@ -53,7 +63,26 @@
 							
 							for (var key in params) {
 								var uc_key = key.charAt(0).toUpperCase() + key.substr(1);
-								this.applyProp(element, "box" + uc_key, params[key]);
+								
+								if (key === "children") {
+									if (params.children.childPropertiesApplied) {
+										window.setTimeout(function() {
+											for (var i = 0, j = params.children.length; i < j; i++) {
+												var child = params.children[i];
+
+												if (child.flex !== undefined) {
+													_self.applyProp(child.match, "boxFlex", child.flex);
+												}
+
+												if (child["ordinal-group"] !== undefined) {
+													_self.applyProp(child.match, "boxOrdinalGroup", child["ordinal-group"]);
+												}
+											}
+										}, 0);
+									}
+								} else {
+									_self.applyProp(element, "box" + uc_key, params[key]);
+								}
 							}
 						}
 						
@@ -117,17 +146,25 @@
 				var withinThreshold = function (DOMOffset, expectedOffset) {
 					var threshold = false;
 					
-					$.each(DOMOffset, function (key, value) {
+					var calculate = function (num, value) {
 						var limit = 0;
-						
+
 						while (limit < THRESHOLD) {
-							if ((expectedOffset[key] + limit === value) || (expectedOffset[key] - limit === value)) {
+							if ((num + limit === value) || (num - limit === value)) {
 								threshold = true;
 								break;
 							}
 							limit++;
 						}
-					});
+					};
+					
+					if (typeof DOMOffset === "number") {
+						calculate(DOMOffset, expectedOffset);
+					} else {
+						$.each(DOMOffset, function (key, value) {
+							calculate(expectedOffset[key], value);
+						});
+					}
 					
 					return threshold;
 				};
