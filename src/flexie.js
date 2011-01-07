@@ -695,17 +695,46 @@ var Flexie = (function (win, doc) {
 		});
 	}
 	
+	function calculateSpecificity (selector) {
+		var selectorGrid, matrix, total;
+		
+		selectorGrid = selector.replace(/\s?(\#|\.|\[|\:(\:)?[^first\-(line|letter)|before|after]+)/g, function (e, f) {
+			return "%" + f;
+		}).replace(/\s/g, "%").split(/%/g);
+		
+		matrix = {
+			_id : 100,
+			_class : 10,
+			_tag : 1
+		};
+		
+		total = 0;
+		
+		forEach(selectorGrid, function (i, chunk) {
+			if ((/#/).test(chunk)) {
+				total += matrix._id;
+			} else if ((/\.|\[|\:/).test(chunk)) {
+				total += matrix._class;
+			} else {
+				total += matrix._tag;
+			}
+		});
+		
+		return total;
+	}
+	
 	function createMatchMatrix(matches, children, type) {
 		var groups = {}, keys = [], totalRatio = 0,
 		    group, order = "ordinal-group";
 
 		forEach(children, function (i, kid) {
-			forEach(matches, function (i, x) {
+			forEach(matches, function (j, x) {
 				if (type) {
 					// If no value declared, it's the default.
 					group = x[order] || "1";
 
 					if (x.match === kid) {
+						x.cssSpecificity = calculateSpecificity(x.selector);
 						groups[group] = groups[group] || [];
 						groups[group].push(x);
 					}
@@ -1202,13 +1231,18 @@ var Flexie = (function (win, doc) {
 				
 				organizeChildren = function (matrix) {
 					var keys = matrix.keys,
-					    ordinals = matrix.groups;
+					    ordinals = matrix.groups,
+					    group, specificity;
 					
-					forEach(keys, function (i, key) {
-						forEach(ordinals[key].reverse(), function (i, x) {
-							if (!x.match.ordered) {
-								target.insertBefore(x.match, target.firstChild);
-								x.match.ordered = true;
+					forEach(keys.reverse(), function (i, key) {
+						forEach(ordinals[key], function (i, x) {
+							group = x.match.getAttribute("data-ordinal-group");
+							specificity = x.match.getAttribute("data-specificity");
+							
+							if (!group || group && (specificity < x.cssSpecificity)) {
+								x.match.setAttribute("data-ordinal-group", key);
+								x.match.setAttribute("data-specificity", x.cssSpecificity);
+								target.appendChild(x.match);
 							}
 						});
 					});
