@@ -1202,7 +1202,10 @@ var Flexie = (function (win, doc) {
 					
 					forEach(keys, function (i, key) {
 						forEach(ordinals[key].reverse(), function (i, x) {
-							target.insertBefore(x.match, target.firstChild);
+							if (!x.match.ordered) {
+								target.insertBefore(x.match, target.firstChild);
+								x.match.ordered = true;
+							}
 						});
 					});
 				};
