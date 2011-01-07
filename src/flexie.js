@@ -63,6 +63,8 @@ var Flexie = (function (win, doc) {
 	WHITESPACE_CHARACTERS = /\t|\n|\r/g,
 	RESTRICTIVE_PROPERTIES = /^max\-([a-z]+)/,
 	PROTOCOL = /^https?:\/\//i,
+	LEADINGTRIM = /^\s\s*/,
+	TRAILINGTRIM = /\s\s*$/,
 	
 	// String constants
     EMPTY_STRING = "",
@@ -127,6 +129,10 @@ var Flexie = (function (win, doc) {
 	selectivizr.com
 	*/
 	selectivizrEngine;
+	
+	function trim (string) {
+		return string.replace(LEADINGTRIM, EMPTY_STRING).replace(TRAILINGTRIM, EMPTY_STRING);
+	}
 	
 	// Via jQuery 1.4.3
 	// http://github.com/jquery/jquery/blob/master/src/core.js#L593
@@ -277,16 +283,9 @@ var Flexie = (function (win, doc) {
 	function findFlexboxElements(rules) {
 		var selector, properties,
 		    property, value, shortProp,
-		    leadingTrim = /^\s\s*/,
-		    trailingTrim = /\s\s*$/,
 		    selectorSplit = /(\s)?,(\s)?/,
-		    trim, addRules,
-		    multiSelectors, updatedRule,
+		    addRules, multiSelectors, updatedRule,
 		    uniqueChildren = {}, uniqueBoxes = {};
-		
-		trim = function (string) {
-			return string.replace(leadingTrim, EMPTY_STRING).replace(trailingTrim, EMPTY_STRING);
-		};
 		
 		addRules = function (selector, rules) {
 			var element = uniqueBoxes[selector];
