@@ -131,7 +131,11 @@ var Flexie = (function (win, doc) {
 	selectivizrEngine;
 	
 	function trim (string) {
-		return string.replace(LEADINGTRIM, EMPTY_STRING).replace(TRAILINGTRIM, EMPTY_STRING);
+		if (string) {
+			string = string.replace(LEADINGTRIM, EMPTY_STRING).replace(TRAILINGTRIM, EMPTY_STRING);
+		}
+		
+		return string;
 	}
 	
 	// Via jQuery 1.4.3
