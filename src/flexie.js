@@ -421,9 +421,9 @@ var Flexie = (function (win, doc) {
 	
 	function buildFlexieCall(flexers) {
 		var selector, properties, property, value, shortProp,
-		    display, orient, align, direction, pack,
 		    lib, caller, children,
 		    box, params,
+		    definedProperties = {},
 		    flexboxes = {}, match, childMatch;
 		
 		// No boxflex? No dice.
@@ -432,10 +432,10 @@ var Flexie = (function (win, doc) {
 		}
 		
 		forEach(flexers.boxes, function (i, flex) {
-			selector = trim(flex.selector);
-			properties = flex.properties;
+			flex.selector = trim(flex.selector);
 			
-			display = orient = align = direction = pack = NULL;
+			selector = flex.selector;
+			properties = flex.properties;
 			
 			forEach(properties, function (i, prop) {
 				
@@ -448,24 +448,24 @@ var Flexie = (function (win, doc) {
 					switch (shortProp) {
 					case "display" :
 						if (value === "box") {
-							display = value;
+							definedProperties.display = value;
 						}
 						break;
 						
 					case "orient" :
-						orient = value;
+						definedProperties.orient = value;
 						break;
 
 					case "align" :
-						align = value;
+						definedProperties.align = value;
 						break;
 
 					case "direction" :
-						direction = value;
+						definedProperties.direction = value;
 						break;
 
 					case "pack" :
-						pack = value;
+						definedProperties.pack = value;
 						break;
 					}
 				}
@@ -494,14 +494,12 @@ var Flexie = (function (win, doc) {
 						target : target,
 						selector : selector,
 						children : children,
-						display : display,
-						orient : orient,
-						align : align,
-						direction: direction,
-						pack : pack
+						display : definedProperties.display,
+						orient : definedProperties.orient,
+						align : definedProperties.align,
+						direction: definedProperties.direction,
+						pack : definedProperties.pack
 					};
-
-					match = flexboxes[target.FLX_DOM_ID];
 
 					if (match) {
 						forEach(params, function (key, value) {
