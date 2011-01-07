@@ -298,12 +298,14 @@ var Flexie = (function (win, doc) {
 		};
 		
 		forEach(rules, function (i, rule) {
-			selector = rule.selector;
+			selector = trim(rule.selector);
 			properties = rule.properties;
 			
 			forEach(properties, function (i, prop) {
+			
 				property = trim(prop.property);
 				value = trim(prop.value);
+
 				
 				if (property) {
 					shortProp = property.replace("box-", EMPTY_STRING);
@@ -430,19 +432,19 @@ var Flexie = (function (win, doc) {
 		}
 		
 		forEach(flexers.boxes, function (i, flex) {
-			selector = flex.selector;
+			selector = trim(flex.selector);
 			properties = flex.properties;
 			
 			display = orient = align = direction = pack = NULL;
 			
 			forEach(properties, function (i, prop) {
 				
-				property = prop.property;
-				value = prop.value;
+				property = trim(prop.property);
+				value = trim(prop.value);
 				
 				if (property) {
 					shortProp = property.replace("box-", EMPTY_STRING);
-
+					
 					switch (shortProp) {
 					case "display" :
 						if (value === "box") {
