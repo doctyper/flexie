@@ -729,12 +729,13 @@ var Flexie = (function (win, doc) {
 
 		forEach(children, function (i, kid) {
 			forEach(matches, function (j, x) {
+				x.cssSpecificity = calculateSpecificity(x.selector);
+				
 				if (type) {
 					// If no value declared, it's the default.
 					group = x[order] || "1";
 
 					if (x.match === kid) {
-						x.cssSpecificity = calculateSpecificity(x.selector);
 						groups[group] = groups[group] || [];
 						groups[group].push(x);
 					}
@@ -1239,7 +1240,7 @@ var Flexie = (function (win, doc) {
 							group = x.match.getAttribute("data-ordinal-group");
 							specificity = x.match.getAttribute("data-specificity");
 							
-							if (!group || group && (specificity < x.cssSpecificity)) {
+							if (!group || (specificity < x.cssSpecificity)) {
 								x.match.setAttribute("data-ordinal-group", key);
 								x.match.setAttribute("data-specificity", x.cssSpecificity);
 								target.appendChild(x.match);
@@ -1325,6 +1326,7 @@ var Flexie = (function (win, doc) {
 				distributeRatio = function (matrix, whitespace) {
 					var flexers = matrix.groups,
 					    keys = matrix.keys,
+					    flex, specificity,
 					    ration = whitespace.ration,
 					    widthRation, trueDim, newWidth;
 
@@ -1333,9 +1335,17 @@ var Flexie = (function (win, doc) {
 
 						forEach(flexers[key], function (i, x) {
 							if (x.match) {
-								trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
-								newWidth = Math.max(0, (trueDim + widthRation));
-								appendPixelValue(x.match, self.props.dim, newWidth);
+								flex = x.match.getAttribute("data-flex");
+								specificity = x.match.getAttribute("data-specificity");
+
+								if (!flex || (specificity < x.cssSpecificity)) {
+									x.match.setAttribute("data-flex", key);
+									x.match.setAttribute("data-specificity", x.cssSpecificity);
+									
+									trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
+									newWidth = Math.max(0, (trueDim + widthRation));
+									appendPixelValue(x.match, self.props.dim, newWidth);
+								}
 							}
 						});
 						
