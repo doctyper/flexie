@@ -290,6 +290,13 @@ var Flexie = (function (win, doc) {
 		addRules = function (selector, rules) {
 			var element = uniqueBoxes[selector];
 			
+			rules.selector = trim(rules.selector);
+			
+			forEach(rules.properties, function (i, prop) {
+				prop.property = trim(prop.property);
+				prop.value = trim(prop.value);
+			});
+			
 			if (element) {
 				element.properties.push(rules);
 			} else {
