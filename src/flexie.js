@@ -1111,6 +1111,8 @@ var Flexie = (function (win, doc) {
 					if (BROWSER.IE < 8) {
 						targetPadding = getComputedStyle(target, self.props.pad[0], TRUE);
 					}
+				} else if (BROWSER.IE === 6) {
+					targetPadding -= getComputedStyle(children[0], self.props.pos, TRUE);
 				}
 
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
