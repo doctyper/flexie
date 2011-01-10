@@ -815,7 +815,8 @@ var Flexie = (function (win, doc) {
 	
 	selectivizrEngine = (function () {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
-		    RE_IMPORT = /@import\s*url\(\s*(["'])?(.*?)\1\s*\)[\w\W]*?;/g,
+		    RE_IMPORT = /@import\s*(?:url\(\s*?)?(["'])?(.*?)\1\s*\)?[\w\W]*?;/g,
+		    RE_ASSET_URL = /\surl\((["'])?([^"')]+)\1\)/g,
 		    RE_SELECTOR_GROUP = /(^|\})\s*([^\{]*?[\[:][^\{]+)/g,
 			
 		    // Whitespace normalization regexp's
@@ -920,9 +921,11 @@ var Flexie = (function (win, doc) {
 		// returning the full cssText.
 		function parseStyleSheet(url) {
 			if (url) {
-				var cssText = loadStyleSheet(url);
-				return cssText.replace(RE_COMMENT, EMPTY_STRING).replace(RE_IMPORT, function (match, quoteChar, importUrl) {
+				return loadStyleSheet(url).replace(RE_COMMENT, EMPTY_STRING).replace(RE_IMPORT, function( match, quoteChar, importUrl ) {
 					return parseStyleSheet(resolveUrl(importUrl, url));
+				}).replace(RE_ASSET_URL, function( match, quoteChar, assetUrl ) {
+					quoteChar = quoteChar || "";
+					return " url(" + quoteChar + resolveUrl(assetUrl, url) + quoteChar + ") ";
 				});
 			}
 			return EMPTY_STRING;
