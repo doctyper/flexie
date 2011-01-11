@@ -1397,7 +1397,8 @@ var Flexie = (function (win, doc) {
 		},
 
 		updateModel : function (params) {
-			var target = params.target,
+			var self = this,
+			    target = params.target,
 			    children = params.nodes;
 
 			// Null properties
@@ -1405,7 +1406,8 @@ var Flexie = (function (win, doc) {
 				kid.style.cssText = EMPTY_STRING;
 			});
 
-			this.setup(target, children, params);
+			self.setup(target, children, params);
+			self.bubbleUp(target, params);
 		},
 
 		renderModel : function (params) {
@@ -1451,6 +1453,26 @@ var Flexie = (function (win, doc) {
 			win.setTimeout(function () {
 				self.trackDOM(params);
 			}, 0);
+		},
+		
+		bubbleUp : function (target, params) {
+			var self = this,
+			    parent = params.target.parentNode;
+			
+			while (parent) {
+				if (parent.FLX_DOM_ID) {
+					forEach(FLEX_BOXES, function (i, flex) {
+						if (parent.FLX_DOM_ID === flex.target.FLX_DOM_ID) {
+							forEach(flex.nodes, function (i, kid) {
+								kid.style.cssText = "";
+							});
+							self.setup(flex.target, flex.nodes, flex);
+						}
+					});
+				}
+				
+				parent = parent.parentNode;
+			}
 		}
 	};
 	
