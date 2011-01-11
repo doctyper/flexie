@@ -651,7 +651,7 @@ var Flexie = (function (win, doc) {
 			value = win.getComputedStyle(element, NULL)[property];
 		} else {
 			if (SIZES.test(property)) {
-				value = getPixelValue(element, element.currentStyle ? element.currentStyle[property] : 0, property);
+				value = getPixelValue(element, (element && element.currentStyle) ? element.currentStyle[property] : 0, property);
 			} else {
 				value = element.currentStyle[property];
 			}
