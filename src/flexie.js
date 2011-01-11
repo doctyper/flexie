@@ -434,8 +434,8 @@ var Flexie = (function (win, doc) {
 		var selector, properties, property, value, shortProp,
 		    display, orient, align, direction, pack,
 		    lib, caller, children,
-		    box, params,
-		    flexboxes = {}, match, childMatch;
+		    box, params, flexboxes = {},
+		    match, childMatch;
 		
 		// No boxflex? No dice.
 		if (!flexers) {
@@ -555,8 +555,10 @@ var Flexie = (function (win, doc) {
 			});
 		});
 		
+		FLEX_BOXES = flexboxes;
+		
 		// Loop through each match, initialize constructor
-		forEach(flexboxes, function (key, flex) {
+		forEach(FLEX_BOXES, function (i, flex) {
 			// One final check to ensure each flexbox has a display property
 			if (flex.display === "box") {
 				// Constructor
