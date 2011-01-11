@@ -697,7 +697,7 @@ var Flexie = (function (win, doc) {
 		});
 	}
 	
-	function calculateSpecificity (selector) {
+	function calculateSpecificity (selector, index) {
 		var selectorGrid, matrix, total;
 		
 		selectorGrid = selector.replace(/\s?(\#|\.|\[|\:(\:)?[^first\-(line|letter)|before|after]+)/g, function (e, f) {
@@ -710,8 +710,10 @@ var Flexie = (function (win, doc) {
 			_tag : 1
 		};
 		
-		total = 0;
+		// Start with rule index position
+		total = index;
 		
+		// Add each selector value to total.
 		forEach(selectorGrid, function (i, chunk) {
 			if ((/#/).test(chunk)) {
 				total += matrix._id;
@@ -731,7 +733,7 @@ var Flexie = (function (win, doc) {
 
 		forEach(children, function (i, kid) {
 			forEach(matches, function (j, x) {
-				x.cssSpecificity = calculateSpecificity(x.selector);
+				x.cssSpecificity = calculateSpecificity(x.selector, j);
 				
 				if (type) {
 					// If no value declared, it's the default.
@@ -1245,7 +1247,7 @@ var Flexie = (function (win, doc) {
 							group = x.match.getAttribute("data-ordinal-group");
 							specificity = x.match.getAttribute("data-specificity");
 							
-							if (!group || (specificity < x.cssSpecificity)) {
+							if (!group || (specificity <= x.cssSpecificity)) {
 								x.match.setAttribute("data-ordinal-group", key);
 								x.match.setAttribute("data-specificity", x.cssSpecificity);
 								target.appendChild(x.match);
@@ -1343,7 +1345,7 @@ var Flexie = (function (win, doc) {
 								flex = x.match.getAttribute("data-flex");
 								specificity = x.match.getAttribute("data-specificity");
 
-								if (!flex || (specificity < x.cssSpecificity)) {
+								if (!flex || (specificity <= x.cssSpecificity)) {
 									x.match.setAttribute("data-flex", key);
 									x.match.setAttribute("data-specificity", x.cssSpecificity);
 									
