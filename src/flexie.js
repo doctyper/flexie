@@ -688,7 +688,7 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function appendPixelValue(target, prop, value) {
-		var targets = target[0] ? target : [target];
+		var targets = target && target[0] ? target : [target];
 		
 		forEach(targets, function (i, target) {
 			if (target && target.style) {
