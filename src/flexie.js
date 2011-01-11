@@ -1097,9 +1097,6 @@ var Flexie = (function (win, doc) {
 						kidDimension = targetDimension;
 						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
 
-						kidDimension -= getComputedStyle(target, self.anti.pad[0], TRUE);
-						kidDimension -= getComputedStyle(target, self.anti.pad[1], TRUE);
-
 						forEach(self.anti.pad, function (i, pad) {
 							kidDimension -= getComputedStyle(kid, pad, TRUE);
 						});
