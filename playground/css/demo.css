@@ -59,11 +59,6 @@ body, html {
 	width: 70%;
 	height: 40%;
 	border: 1px solid #8ec1da;
-}
-
-#box-wrap-inner {
-	padding: 1px 0 0;
-/*	overflow: hidden;*/
 	background: #d9ecf5;
 }
 
