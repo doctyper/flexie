@@ -1308,7 +1308,14 @@ var Flexie = (function (win, doc) {
 					    whitespace, ration;
 
 					forEach(children, function (i, kid) {
-						groupDimension += kid[self.props.out];
+						groupDimension += getComputedStyle(kid, self.props.dim, TRUE);
+						
+						forEach(self.props.pad, function (i, pad) {
+							groupDimension += getComputedStyle(kid, pad, TRUE);
+						});
+						
+						groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
+						groupDimension += getComputedStyle(kid, self.props.opp, TRUE);
 					});
 
 					whitespace = target[self.props.out] - groupDimension;
