@@ -31,14 +31,12 @@ In addition, Flexie attempts to normailze browser inconsistencies with the flexi
 * box-flex-group
 * box-ordinal-group
 
-
-### Not There Yet
+#### Not There Yet
 * box-lines (as far as I can tell, no browser currently supports this property)
 
 
 ### Why?
 I *really* wanted to use the CSS3 Flexible Box Model.
-
 
 ### How?
 It works like [Selectivizr](http://selectivizr.com). In fact, it uses Selectivizr's engine to traverse your style sheets and looks for `display: box` elements. After that, it looks for any of the currently supported properties.
@@ -50,7 +48,6 @@ No setup on your end, just stick Flexie in your markup after your [selector engi
 ### Requirements
 See the [Things you need to know](http://selectivizr.com/#things)
 
-
 ### Caveats
 As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. <strike>Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.</strike>
 
@@ -61,7 +58,6 @@ Be careful of pseudo-selectors (i.e., `:nth-child`, `:first-child`). While nativ
 
 ### Acknowledgements
 Selectivizr, for their fantastic CSS parsing engine.
-
 
 ### Copyright and Software License
 The MIT License
@@ -86,12 +82,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-
 ### Contact
 * rich {at} doctyper {dot} com
 * [@doctyper](http://twitter.com/doctyper) on Twitter
 * <http://doctyper.com>
-
 
 ### Links
 * Flexie on GitHub: <http://github.com/doctyper/flexie>
