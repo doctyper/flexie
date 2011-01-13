@@ -776,7 +776,7 @@ var Flexie = (function (win, doc) {
 	function floatDropFix(target, params, instance) {
 		// Float drop fix
 		// Test offset values. If different, let's bring the widow back
-		var offsetProp = "offset" + (params.orient === HORIZONTAL ? "Top" : "Left"),
+		var offsetProp = "offsetTop",
 		    offset, dim;
 		
 		forEach(target.childNodes, function (i, kid) {
@@ -1177,7 +1177,9 @@ var Flexie = (function (win, doc) {
 						
 						// Float drop fix
 						// Test offset values. If different, let's bring the widow back
-						floatDropFix(target, params, self);
+						if (params.orient === HORIZONTAL) {
+							floatDropFix(target, params, self);
+						}
 					});
 				};
 
