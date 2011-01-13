@@ -1352,7 +1352,7 @@ var Flexie = (function (win, doc) {
 					    ordinals = matrix.groups,
 					    group, specificity;
 					
-					forEach(keys.reverse(), function (i, key) {
+					forEach(params.reversed ? keys : keys.reverse(), function (i, key) {
 						forEach(ordinals[key], function (i, x) {
 							group = x.match.getAttribute("data-ordinal-group");
 							specificity = x.match.getAttribute("data-specificity");
@@ -1360,6 +1360,7 @@ var Flexie = (function (win, doc) {
 							if (!group || (specificity <= x.cssSpecificity)) {
 								x.match.setAttribute("data-ordinal-group", key);
 								x.match.setAttribute("data-specificity", x.cssSpecificity);
+								
 								target.appendChild(x.match);
 							}
 						});
