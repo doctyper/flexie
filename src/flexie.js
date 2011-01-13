@@ -1151,7 +1151,7 @@ var Flexie = (function (win, doc) {
 					    keys = matrix.keys,
 					    flex, specificity,
 					    ration = whitespace.ration,
-					    widthRation, trueDim, newWidth;
+					    widthRation, trueDim, newDimension;
 
 					forEach(keys, function (i, key) {
 						widthRation = (ration * key);
@@ -1169,8 +1169,8 @@ var Flexie = (function (win, doc) {
 									trueDim += getComputedStyle(target, self.props.pos, TRUE);
 									trueDim += getComputedStyle(target, self.props.opp, TRUE);
 									
-									newWidth = Math.max(0, (trueDim + widthRation));
-									appendPixelValue(x.match, self.props.dim, newWidth);
+									newDimension = Math.max(0, (trueDim + widthRation));
+									appendPixelValue(x.match, self.props.dim, newDimension);
 								}
 							}
 						});
