@@ -1008,7 +1008,7 @@ var Flexie = (function (win, doc) {
 					params.cleared = TRUE;
 				}
 			},
-
+			
 			boxDirection : function (target, children, params) {
 				if ((params.direction === "reverse" && !params.reversed) || (params.direction === "normal" && params.reversed)) {
 					children = children.reverse();
@@ -1020,7 +1020,7 @@ var Flexie = (function (win, doc) {
 					params.reversed = !params.reversed;
 				}
 			},
-
+			
 			boxOrient : function (target, children, params) {
 				var self = this, wide, high,
 				    targetPadding, firstComputedMargin, combinedMargin;
@@ -1080,7 +1080,117 @@ var Flexie = (function (win, doc) {
 					break;
 				}
 			},
+			
+			boxFlex : function (target, children, params) {
+				var self = this,
+				    testForRestrictiveProperties,
+				    findTotalWhitespace,
+				    distributeRatio,
+				    reBoxAlign,
+				    group = "flex-group",
+				    matrix, restrict, whitespace, distro, realign;
 
+				if (!children.length) {
+					return;
+				}
+				
+				testForRestrictiveProperties = function (matrix) {
+					var flexers = matrix.groups,
+					    keys = matrix.keys, max;
+					
+					forEach(keys, function (i, key) {
+						forEach(flexers[key], function (i, x) {
+							max = NULL;
+							
+							forEach(x.properties, function (i, rule) {
+								if ((RESTRICTIVE_PROPERTIES).test(rule.property)) {
+									max = parseFloat(rule.value);
+								}
+							});
+							
+							if (!max || x.match[self.props.out] > max) {
+								appendPixelValue(x.match, self.props.pos, NULL);
+							}
+							
+						});
+					});
+				};
+
+				findTotalWhitespace = function (matrix) {
+					var groupDimension = 0,
+					    whitespace, ration;
+
+					forEach(children, function (i, kid) {
+						groupDimension += getComputedStyle(kid, self.props.dim, TRUE);
+						
+						forEach(self.props.pad, function (i, pad) {
+							groupDimension += getComputedStyle(kid, pad, TRUE);
+						});
+						
+						groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
+						groupDimension += getComputedStyle(kid, self.props.opp, TRUE);
+					});
+
+					whitespace = target[self.props.out] - groupDimension;
+					
+					forEach(self.props.pad, function (i, pad) {
+						whitespace -= getComputedStyle(target, pad, TRUE);
+					});
+					
+					ration = (whitespace / matrix.total);
+
+					return {
+						whitespace : whitespace,
+						ration : ration
+					};
+				};
+
+				distributeRatio = function (matrix, whitespace) {
+					var flexers = matrix.groups,
+					    keys = matrix.keys,
+					    flex, specificity,
+					    ration = whitespace.ration,
+					    widthRation, trueDim, newWidth;
+
+					forEach(keys, function (i, key) {
+						widthRation = (ration * key);
+
+						forEach(flexers[key], function (i, x) {
+							if (x.match) {
+								flex = x.match.getAttribute("data-flex");
+								specificity = x.match.getAttribute("data-specificity");
+
+								if (!flex || (specificity <= x.cssSpecificity)) {
+									x.match.setAttribute("data-flex", key);
+									x.match.setAttribute("data-specificity", x.cssSpecificity);
+									
+									trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
+									trueDim += getComputedStyle(target, self.props.pos, TRUE);
+									trueDim += getComputedStyle(target, self.props.opp, TRUE);
+									
+									newWidth = Math.max(0, (trueDim + widthRation));
+									appendPixelValue(x.match, self.props.dim, newWidth);
+								}
+							}
+						});
+						
+						// Float drop fix
+						// Test offset values. If different, let's bring the widow back
+						floatDropFix(target, params, self);
+					});
+				};
+
+				matrix = createMatchMatrix(params.children, children);
+
+				if (matrix.total) {
+					restrict = testForRestrictiveProperties(matrix);
+					whitespace = findTotalWhitespace(matrix);
+				
+					// Distribute the calculated ratios among the children
+					distro = distributeRatio(matrix, whitespace);
+				}
+			},
+			
 			boxAlign : function (target, children, params) {
 				var self = this,
 				    targetDimension = target[self.anti.out],
@@ -1133,7 +1243,7 @@ var Flexie = (function (win, doc) {
 					break;
 				}
 			},
-
+			
 			boxPack : function (target, children, params) {
 				var self = this,
 				    groupDimension = 0,
@@ -1266,116 +1376,6 @@ var Flexie = (function (win, doc) {
 					organizeChildren(matrix);
 					resetMarginOffset(matrix, target.childNodes);
 				}
-			},
-
-			boxFlex : function (target, children, params) {
-				var self = this,
-				    testForRestrictiveProperties,
-				    findTotalWhitespace,
-				    distributeRatio,
-				    reBoxAlign,
-				    group = "flex-group",
-				    matrix, restrict, whitespace, distro, realign;
-
-				if (!children.length) {
-					return;
-				}
-				
-				testForRestrictiveProperties = function (matrix) {
-					var flexers = matrix.groups,
-					    keys = matrix.keys, max;
-					
-					forEach(keys, function (i, key) {
-						forEach(flexers[key], function (i, x) {
-							max = NULL;
-							
-							forEach(x.properties, function (i, rule) {
-								if ((RESTRICTIVE_PROPERTIES).test(rule.property)) {
-									max = parseFloat(rule.value);
-								}
-							});
-							
-							if (!max || x.match[self.props.out] > max) {
-								appendPixelValue(x.match, self.props.pos, NULL);
-							}
-							
-						});
-					});
-				};
-
-				findTotalWhitespace = function (matrix) {
-					var groupDimension = 0,
-					    whitespace, ration;
-
-					forEach(children, function (i, kid) {
-						groupDimension += getComputedStyle(kid, self.props.dim, TRUE);
-						
-						forEach(self.props.pad, function (i, pad) {
-							groupDimension += getComputedStyle(kid, pad, TRUE);
-						});
-						
-						groupDimension += getComputedStyle(kid, self.props.pos, TRUE);
-						groupDimension += getComputedStyle(kid, self.props.opp, TRUE);
-					});
-
-					whitespace = target[self.props.out] - groupDimension;
-					
-					forEach(self.props.pad, function (i, pad) {
-						whitespace -= getComputedStyle(target, pad, TRUE);
-					});
-					
-					ration = (whitespace / matrix.total);
-
-					return {
-						whitespace : whitespace,
-						ration : ration
-					};
-				};
-
-				distributeRatio = function (matrix, whitespace) {
-					var flexers = matrix.groups,
-					    keys = matrix.keys,
-					    flex, specificity,
-					    ration = whitespace.ration,
-					    widthRation, trueDim, newWidth;
-
-					forEach(keys, function (i, key) {
-						widthRation = (ration * key);
-
-						forEach(flexers[key], function (i, x) {
-							if (x.match) {
-								flex = x.match.getAttribute("data-flex");
-								specificity = x.match.getAttribute("data-specificity");
-
-								if (!flex || (specificity <= x.cssSpecificity)) {
-									x.match.setAttribute("data-flex", key);
-									x.match.setAttribute("data-specificity", x.cssSpecificity);
-									
-									trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
-									trueDim += getComputedStyle(target, self.props.pos, TRUE);
-									trueDim += getComputedStyle(target, self.props.opp, TRUE);
-									
-									newWidth = Math.max(0, (trueDim + widthRation));
-									appendPixelValue(x.match, self.props.dim, newWidth);
-								}
-							}
-						});
-						
-						// Float drop fix
-						// Test offset values. If different, let's bring the widow back
-						floatDropFix(target, params, self);
-					});
-				};
-
-				matrix = createMatchMatrix(params.children, children);
-
-				if (matrix.total) {
-					restrict = testForRestrictiveProperties(matrix);
-					whitespace = findTotalWhitespace(matrix);
-				
-					// Distribute the calculated ratios among the children
-					distro = distributeRatio(matrix, whitespace);
-				}
 			}
 		},
 
@@ -1414,7 +1414,6 @@ var Flexie = (function (win, doc) {
 			});
 
 			self.setup(target, children, params);
-			self.bubbleUp(target, params);
 		},
 
 		renderModel : function (params) {
@@ -1460,26 +1459,6 @@ var Flexie = (function (win, doc) {
 			win.setTimeout(function () {
 				self.trackDOM(params);
 			}, 0);
-		},
-		
-		bubbleUp : function (target, params) {
-			var self = this,
-			    parent = params.target.parentNode;
-			
-			while (parent) {
-				if (parent.FLX_DOM_ID) {
-					forEach(FLEX_BOXES, function (i, flex) {
-						if (parent.FLX_DOM_ID === flex.target.FLX_DOM_ID) {
-							forEach(flex.nodes, function (i, kid) {
-								kid.style.cssText = "";
-							});
-							self.setup(flex.target, flex.nodes, flex);
-						}
-					});
-				}
-				
-				parent = parent.parentNode;
-			}
 		}
 	};
 	
