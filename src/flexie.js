@@ -65,6 +65,7 @@ var Flexie = (function (win, doc) {
 	PROTOCOL = /^https?:\/\//i,
 	LEADINGTRIM = /^\s\s*/,
 	TRAILINGTRIM = /\s\s*$/,
+	ONLY_WHITESPACE = /^\s*$/,
 	
 	// String constants
     EMPTY_STRING = "",
@@ -1440,7 +1441,7 @@ var Flexie = (function (win, doc) {
 					default :
 						if (node.nodeType === 1) {
 							children.push(node);
-						} else {
+						} else if ((node.nodeType === 3) && (node.isElementContentWhitespace || (ONLY_WHITESPACE).test(node.data))) {
 							target.removeChild(node);
 							i--;
 						}
