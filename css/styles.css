@@ -49,6 +49,7 @@ header h1 span {
 	position: relative;
 	z-index: 2;
 	color: #ddd;
+	opacity: 0.9;
 }
 
 header h1 span:after {
