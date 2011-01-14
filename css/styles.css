@@ -1,0 +1,142 @@
+@font-face {
+	font-family: "Chunk Five";
+	src: url("../fonts/chunk-webfont.eot");
+	src: local("☺"),
+	     url("../fonts/chunk-webfont.woff") format("woff"),
+	     url("../fonts/chunk-webfont.ttf") format("truetype");
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	padding: 1px 0 0;
+	font: 11px/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif;
+	text-align: right;
+	background: #eee url("../images/bg-body-texture.png") center top;
+	color: #fefefe;
+	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.8);
+	font-weight: normal;
+}
+
+body > * {
+	padding: 20px;
+	
+	-webkit-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+	font-size: 24px;
+	font-family: "Chunk Five";
+}
+
+section, footer {
+	border-top: 1px solid #3a3a3a;
+	background: #2a2a2a url("../images/bg-texture.png") center;
+}
+
+header h1 {
+	position: relative;
+	line-height: 1;
+	text-shadow: none;
+}
+
+header h1 span {
+	top: 25px;
+	left: -215px;
+	position: relative;
+	z-index: 2;
+	color: #39b2e2;
+}
+
+header h1 em {
+	margin-top: -20px;
+	top: 0;
+	right: 0;
+	position: absolute;
+	font-size: 80px;
+	z-index: 1;
+	letter-spacing: -0.02em;
+	color: #343642;
+}
+
+h2 {
+	padding: 0 5px;
+	display: inline-block;
+	background: #962d3e;
+	font-size: 20px;
+	border-radius: 3px;
+	color: #fefefe;
+}
+
+h3 {
+	margin-bottom: 5px;
+	font-size: 16px;
+}
+
+a {
+	padding: 1px;
+	color: #fefefe;
+	text-decoration: none;
+	
+	-webkit-transition: all 350ms ease-in-out;
+	-moz-transition: all 350ms ease-in-out;
+	transition: all 350ms ease-in-out;
+}
+
+a:hover {
+	background: #348899;
+}
+
+#examples > ul {
+	margin-top: 20px;
+}
+
+#examples > ul:after {
+	content: "\0020";
+	display: block;
+	height: 0;
+	clear: both;
+	overflow: hidden;
+	visibility: hidden;
+}
+
+#examples > ul {
+	display: inline-block;
+	display: block;
+}
+
+#examples > ul > li {
+	margin-bottom: 20px;
+	min-width: 150px;
+}
+
+#examples li li {
+	margin-left: 10px;
+	display: inline;
+	position: relative;
+}
+
+#examples li ul + h3 {
+	margin-top: 20px;
+}
+
+#examples li li ul {
+	position: absolute;
+	margin-left: -30px;
+	top: 15px;
+	left: 50%;
+	width: 60px;
+	line-height: 1.2;
+	text-align: center;
+}
+
+#examples li li li {
+	margin: 0;
+	padding: 0;
+	white-space: nowrap;
+	font-size: 10px;
+}
