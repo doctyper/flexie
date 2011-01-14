@@ -828,6 +828,20 @@ var Flexie = (function (win, doc) {
 		}
 	}
 	
+	function cleanPositioningProperties (children) {
+		var w, h;
+		
+		forEach(children, function (i, kid) {
+			w = kid.style.width;
+			h = kid.style.height;
+			
+			kid.style.cssText = EMPTY_STRING;
+			
+			kid.style.width = w;
+			kid.style.height = h;
+		});
+	}
+	
 	selectivizrEngine = (function () {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
 		    RE_IMPORT = /@import\s*(?:url\(\s*?)?(["'])?(.*?)\1\s*\)?[\w\W]*?;/g,
@@ -1432,11 +1446,9 @@ var Flexie = (function (win, doc) {
 			var self = this,
 			    target = params.target,
 			    children = params.nodes;
-
+			
 			// Null properties
-			forEach(children, function (i, kid) {
-				kid.style.cssText = EMPTY_STRING;
-			});
+			cleanPositioningProperties(children);
 
 			self.setup(target, children, params);
 			self.bubbleUp(target, params);
@@ -1495,10 +1507,9 @@ var Flexie = (function (win, doc) {
 				if (parent.FLX_DOM_ID) {
 					forEach(FLEX_BOXES, function (i, flex) {
 						if (parent.FLX_DOM_ID === flex.target.FLX_DOM_ID) {
-							forEach(flex.nodes, function (i, kid) {
-								kid.style.cssText = "";
-							});
+							cleanPositioningProperties(flex.nodes);
 							self.setup(flex.target, flex.nodes, flex);
+							return false;
 						}
 					});
 				}
