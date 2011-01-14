@@ -33,7 +33,7 @@ h1 {
 }
 
 section, footer {
-	border-top: 1px solid #3a3a3a;
+	border-top: 1px solid #2a2a2a;
 	background: #2a2a2a url("../images/bg-texture.jpg") center;
 }
 
@@ -64,7 +64,7 @@ header h1 em {
 	font-size: 80px;
 	z-index: 1;
 	letter-spacing: -0.02em;
-	color: #343642;
+	color: #2a2a2a;
 }
 
 h2 {
@@ -81,6 +81,11 @@ h3 {
 	font-size: 16px;
 }
 
+h4 {
+	margin-top: 5px;
+	font-size: 13px;
+}
+
 a {
 	padding: 1px;
 	color: #fefefe;
@@ -92,7 +97,7 @@ a {
 }
 
 img {
-	border: 3px solid #9e9e9e;
+	border: 3px solid #8e8e8e;
 }
 
 a:hover {
@@ -132,6 +137,10 @@ a:hover {
 	position: relative;
 }
 
+#examples li li:last-child {
+	font-weight: bold;
+}
+
 #examples li ul + h3 {
 	margin-top: 20px;
 }
@@ -151,4 +160,9 @@ a:hover {
 	padding: 0;
 	white-space: nowrap;
 	font-size: 10px;
+	font-weight: normal;
+}
+
+#examples li li li:last-child {
+	font-weight: normal;
 }
