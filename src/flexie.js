@@ -66,6 +66,7 @@ var Flexie = (function (win, doc) {
 	LEADINGTRIM = /^\s\s*/,
 	TRAILINGTRIM = /\s\s*$/,
 	ONLY_WHITESPACE = /^\s*$/,
+	CSS_SELECTOR = /\s?(\#|\.|\[|\:(\:)?[^first\-(line|letter)|before|after]+)/g,
 	
 	// String constants
     EMPTY_STRING = "",
@@ -711,7 +712,7 @@ var Flexie = (function (win, doc) {
 	function calculateSpecificity (selector, index) {
 		var selectorGrid, matrix, total;
 		
-		selectorGrid = selector.replace(/\s?(\#|\.|\[|\:(\:)?[^first\-(line|letter)|before|after]+)/g, function (e, f) {
+		selectorGrid = selector.replace(CSS_SELECTOR, function (e, f) {
 			return "%" + f;
 		}).replace(/\s/g, "%").split(/%/g);
 		
