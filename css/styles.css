@@ -29,8 +29,7 @@ body > * {
 }
 
 h1 {
-	font-size: 24px;
-	font-family: "Chunk Five";
+	font: 24px "Chunk Five" serif;
 }
 
 section, footer {
@@ -86,9 +85,9 @@ a {
 	color: #fefefe;
 	text-decoration: none;
 	
-	-webkit-transition: all 350ms ease-in-out;
-	-moz-transition: all 350ms ease-in-out;
-	transition: all 350ms ease-in-out;
+	-webkit-transition: all 250ms ease-in-out;
+	-moz-transition: all 250ms ease-in-out;
+	transition: all 250ms ease-in-out;
 }
 
 img {
