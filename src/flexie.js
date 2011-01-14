@@ -723,7 +723,7 @@ var Flexie = (function (win, doc) {
 		};
 		
 		// Start with rule index position
-		total = index;
+		total = index || 0;
 		
 		// Add each selector value to total.
 		forEach(selectorGrid, function (i, chunk) {
@@ -785,7 +785,7 @@ var Flexie = (function (win, doc) {
 				} else {
 					// If no value declared, it's the default.
 					group = x.flex || "0";
-
+					
 					if (x.match === kid && (!x[group] || (x[group] && parseInt(x[group], 10) <= 1))) {
 						totalRatio += parseInt(group, 10);
 
