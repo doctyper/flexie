@@ -499,7 +499,10 @@ var Flexie = (function (win, doc) {
 				// If is DOM object
 				if (target.nodeType) {
 					// Flag each unique node with FLX_DOM_ID
-					target.FLX_DOM_ID = target.FLX_DOM_ID || (++FLX_DOM_ID);
+					if (!target.FLX_DOM_ID) {
+						FLX_DOM_ID++;
+						target.FLX_DOM_ID = FLX_DOM_ID;
+					}
 					
 					// Find possible child node matches
 					children = matchFlexChildren(target, lib, flexers.children);
