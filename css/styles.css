@@ -91,6 +91,10 @@ a {
 	transition: all 350ms ease-in-out;
 }
 
+img {
+	border: 3px solid #9e9e9e;
+}
+
 a:hover {
 	background: #348899;
 }
