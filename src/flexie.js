@@ -1387,17 +1387,25 @@ var Flexie = (function (win, doc) {
 		},
 
 		setup : function (target, children, params) {
-			var self = this;
+			var self = this, matrix;
+			
+			if (!target || !children || !params) {
+				return;
+			}
 			
 			if (SUPPORT && SUPPORT.partialSupport) {
+				matrix = createMatchMatrix(params.children, children);
+				
 				self.properties.boxOrient.call(self, target, children, params);
 				
-				if ((params.align === "stretch") && !SUPPORT.boxAlignStretch) {
-					self.properties.boxAlign.call(self, target, children, params);
-				}
-				
-				if ((params.pack === "justify") && !SUPPORT.boxPackJustify) {
-					self.properties.boxPack.call(self, target, children, params);
+				if (!matrix.total) {
+					if ((params.align === "stretch") && !SUPPORT.boxAlignStretch) {
+						self.properties.boxAlign.call(self, target, children, params);
+					}
+
+					if ((params.pack === "justify") && !SUPPORT.boxPackJustify) {
+						self.properties.boxPack.call(self, target, children, params);
+					}
 				}
 			} else if (!SUPPORT) {
 				forEach(self.properties, function (key, func) {
