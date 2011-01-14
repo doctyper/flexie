@@ -1316,6 +1316,11 @@ var Flexie = (function (win, doc) {
 				if (params.orient === HORIZONTAL && BROWSER.IE === 6) {
 					totalDimension /= 2;
 				}
+				
+				// If totalDimension is less than 0, we have a problem...
+				if (totalDimension < 0) {
+					totalDimension = Math.max(0, totalDimension);
+				}
 
 				switch (params.pack) {
 				case "end" :
