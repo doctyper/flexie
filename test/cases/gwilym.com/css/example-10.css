@@ -1,0 +1,48 @@
+.flexbox {
+    display:-moz-box;
+    display:-webkit-box;
+    display: box;
+    text-align: left;
+ }
+ #main,
+ HEADER,
+ FOOTER { 
+     min-width: 640px; /* prevents overflow */
+ }
+ H1 {
+     width: auto;
+ }
+ #box-1 {
+	padding: 17px;
+     height: auto;
+     min-width: 180px; /* prevents overflow */
+     -moz-box-orient: vertical;
+     -webkit-box-orient: vertical;
+     box-orient: vertical;
+/*     -moz-box-ordinal-group: 2;
+     -webkit-box-ordinal-group: 2;
+     box-ordinal-group: 2;
+*/     -moz-box-flex: 1;
+     -webkit-box-flex: 1;
+     box-flex: 1;
+ }
+ #box-2 {
+     height: auto;
+     width: 180px;
+     -moz-box-orient: vertical;
+     -webkit-box-orient: vertical;
+     box-orient: vertical;
+/*     -moz-box-ordinal-group: 3;
+     -webkit-box-ordinal-group: 3;
+     box-ordinal-group: 3;
+*/ }
+ #box-3 {
+     height: auto;
+     width: 130px;
+     -moz-box-orient: vertical;
+     -webkit-box-orient: vertical;
+     box-orient: vertical;
+/*     -moz-box-ordinal-group: 1;
+     -webkit-box-ordinal-group: 1;
+     box-ordinal-group: 1;   
+*/ }

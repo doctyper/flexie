@@ -1,0 +1,22 @@
+.flexbox {
+    display:-moz-box;
+    display:-webkit-box;
+    display: box;
+ }
+ #main { 
+     width: 600px; 
+
+     -moz-box-direction: reverse;
+     -webkit-box-direction: reverse;
+     box-direction: reverse;
+ }
+ #box-1 {
+
+ }
+ #box-2 {
+
+
+ }
+ #box-3 {     
+
+ }

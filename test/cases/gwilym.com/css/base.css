@@ -1,0 +1,63 @@
+/* COMPATIBILITY EDITS */
+H1 {
+    background: #fff;
+}
+
+P {
+    background: #fff;
+}
+
+HEADER, SECTION, FOOTER {
+    display: block;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+}
+H1 {
+    display: block;
+    font-size: 40px;
+    padding: 8px 0;
+    margin: 4px 0;
+    width: 50px;
+    background: rgba(255, 255, 255, 0.6);
+}
+P {
+    padding: 4px;
+    margin: 4px;
+    background: rgba(255, 255, 255, 0.3);
+}
+.flexbox {
+    margin: 10px;
+    padding: 10px; 
+    text-align: center;
+}
+#box-1 {
+    width: 100px;
+    height: 100px;
+    background-color: #E8B15B;
+    
+}
+#box-2 {
+    width: 100px;
+    height: 100px;
+    background-color: #C1D652;
+}
+#box-3 {
+    width: 100px;
+    height: 100px;
+    background-color: #CDFCA9;
+}
+#main {
+    border: 8px solid #eee;
+}
+HEADER {
+	margin: 10px;
+	padding: 10px;
+	border: 8px solid #eee;
+}
+FOOTER {
+	margin: 10px;
+	padding: 10px;
+	border: 8px solid #eee;
+}

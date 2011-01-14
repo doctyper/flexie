@@ -1,0 +1,23 @@
+ /* flex box styles */
+.flexbox {
+    display:-moz-box;
+    display:-webkit-box;
+    display: box;
+ }
+ #main {         
+ }
+ #box-1 {
+     -moz-box-ordinal-group: 2;
+     -webkit-box-ordinal-group: 2;  
+     box-ordinal-group: 2;
+ }
+ #box-2 {
+     -moz-box-ordinal-group: 1;
+      -webkit-box-ordinal-group: 1;  
+     box-ordinal-group: 1;
+ }
+ #box-3 {   
+     -moz-box-ordinal-group: 3;
+     -webkit-box-ordinal-group: 3;  
+     box-ordinal-group: 3;  
+ }

@@ -1,0 +1,61 @@
+body, html { width: 100%; height: 100%; padding: 0; margin: 0; }
+/* First, we create a box with header and footer, content area in between. */
+#doc { 
+	display: -webkit-box; 
+	-webkit-box-orient: vertical;
+	display: -moz-box; 
+	-moz-box-orient: vertical;
+	display: box; 
+	box-orient: vertical;
+	height: 100%; 
+	width: 100%;
+	}
+#header,
+#footer {
+	background-color: gray;
+	height: 100px;
+	width: 100%;
+	margin: 0;
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	box-flex: 1;
+	}
+	p { width: 200px; }
+/* Since #container is the second child element of a vertically oriented box,
+ * we could give it flex, which would fill up the viewport vertically. Try it! */
+#products {
+	background-color: silver;
+	width: 100%;
+	height: 400px;
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	/* -webkit-box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
+	display: -moz-box;
+	-moz-box-orient: horizontal;
+	/* -moz-box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
+	display: box;
+	box-orient: horizontal;
+	/* box-flex: 1; */ /* <-- Uncomment this rule and see what happens! --> */
+	margin: 0;
+	}
+	#phones {
+		background-color: orange;
+		padding: 1em;
+		margin: 0;
+		}
+	#computers {
+		background-color: lightgreen;
+		padding: 1em;
+		margin: 0;
+		-webkit-box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
+		-moz-box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
+		box-flex: 1; /* Activating this rule and removing box-flex from #fast-cars will give you a classic 3-column layout with flexible center column. */
+		}
+	#fast-cars {
+		background-color: lightblue;
+		padding: 1em;
+		margin: 0;
+		-webkit-box-flex: 1; /* Change this value to 3 and see what happens */
+		-moz-box-flex: 1; /* Change this value to 3 and see what happens */
+		box-flex: 1; /* Change this value to 3 and see what happens */
+		}

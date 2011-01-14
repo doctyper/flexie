@@ -1,0 +1,32 @@
+.example {
+  display: -moz-box;
+  display: -webkit-box;
+  display: box;
+  -moz-box-orient: horizontal;
+  -webkit-box-orient: horizontal;
+  box-orient: horizontal;
+  -moz-box-align: stretch;
+  -webkit-box-align: stretch;
+  box-align: stretch;
+  -moz-box-direction: reverse;
+  -webkit-box-direction: reverse;
+  box-direction: reverse;
+  height: 200px;
+  width: 100%;
+}
+.example .content, .example .sidebar {
+  padding: 20px;
+}
+.example .content {
+  -moz-box-flex: 4;
+  -webkit-box-flex: 4;
+  box-flex: 4;
+  background-color: #c5c1b4;
+}
+.example .sidebar {
+  -moz-box-flex: 1;
+  -webkit-box-flex: 1;
+  box-flex: 1;
+  background-color: #375f99;
+  margin-right: 1px;
+}

@@ -1,0 +1,30 @@
+.flexbox {
+    display:-moz-box;
+    display:-webkit-box;
+    display: box;
+ }
+ #main { 
+     width: 600px; 
+     height: 600px;
+     -moz-box-pack: justify;
+     -webkit-box-pack: justify;
+     box-pack: justify;
+ }
+ #box-1 {
+     height: auto;
+     -moz-box-pack: center;
+     -webkit-box-pack:  center;
+     box-pack:  center;
+ }
+ #box-2 {
+     height: auto;
+     -moz-box-pack: start;
+     -webkit-box-pack: start;
+     box-pack: start;
+ }
+ #box-3 {     
+     height: auto;
+     -moz-box-pack: end;
+     -webkit-box-pack: end;
+     box-pack: end;
+ }

@@ -1,0 +1,145 @@
+.flex-container {
+	width: 100%;
+	display: -moz-box;
+	display: -webkit-box;
+	display: box;
+	-moz-box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	box-orient: horizontal;
+	outline: 1px solid #f00;
+	margin-bottom: 20px;
+}
+
+.flex-container div {
+	padding: 10px;
+}
+
+.col-1 {
+	color: #fff;
+	background: #f00;
+}
+
+.col-2 {
+	color: #fff;
+	background: #00f;
+	height: 200px;
+}
+
+.col-3 {
+	background: #0f0;
+}
+
+
+.col-1-flex {
+	-moz-box-flex: 1;
+	-webkit-box-flex: 1;
+	box-flex: 1;
+}
+
+.col-2-flex {
+	-moz-box-flex: 1;
+	-webkit-box-flex: 1;
+	box-flex: 1;
+}
+
+.col-3-flex {
+	-moz-box-flex: 2;
+	-webkit-box-flex: 2;
+	box-flex: 2;
+	
+}
+
+
+.flex-container-vertical {
+	display: -moz-box;
+	display: -webkit-box;
+	display: box;
+	-moz-box-orient: vertical;
+	-webkit-box-orient: vertical;
+	box-orient: vertical;
+	outline: 1px solid #f00;
+	margin-bottom: 20px;
+}
+
+.row-1 {
+	color: #fff;
+	background: #f00;
+	
+}
+
+.row-2 {
+	color: #fff;
+	background: #00f;
+	height: 200px;
+	
+}
+
+.row-3 {
+	background: #0f0;
+	
+	
+}
+
+
+.flex-container-reverse {
+	width: 100%;
+	display: -moz-box;
+	display: -webkit-box;
+	display: box;
+	-moz-box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	box-orient: horizontal;
+	-moz-box-direction: reverse;
+	-webkit-box-direction: reverse;
+	box-direction: reverse;
+	outline: 1px solid #f00;
+	margin-bottom: 20px;
+}
+
+.col-1-ordinal {
+	-moz-box-ordinal-group: 2;
+	-webkit-box-ordinal-group: 2;
+	box-ordinal-group: 2;
+}
+
+.col-2-ordinal {
+	-moz-box-ordinal-group: 3;
+	-webkit-box-ordinal-group: 3;
+	box-ordinal-group: 3;
+}
+
+.col-3-ordinal {
+	-moz-box-ordinal-group: 1;
+	-webkit-box-ordinal-group: 1;
+	box-ordinal-group: 1;
+}
+
+.flex-container-center {
+	width: 100%;
+	display: -moz-box;
+	display: -webkit-box;
+	display: box; /* ONLY EDIT. Flexie requires display: box; to function. */
+	-moz-box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	box-orient: horizontal;
+	-moz-box-pack: center;
+	-webkit-box-pack: center;
+	box-pack: center;
+	outline: 1px solid #f00;
+	margin-bottom: 20px;
+}
+
+.flex-container-justify {
+	width: 100%;
+	display: -moz-box;
+	display: -webkit-box;
+	display: box;
+	-moz-box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	box-orient: horizontal;
+	-moz-box-pack: justify;
+	-webkit-box-pack: justify;
+	box-pack: justify;
+	outline: 1px solid #f00;
+	margin-bottom: 20px;
+}

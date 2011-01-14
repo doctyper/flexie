@@ -1,0 +1,17 @@
+ /* flex box styles */
+.flexbox {
+    display:-moz-box;
+    display:-webkit-box;
+    display: box;  
+ }
+ #main {
+    
+ }
+ #box-1 {
+     
+ }
+ #box-2 {
+   
+ }
+ #box-3 {     
+ }

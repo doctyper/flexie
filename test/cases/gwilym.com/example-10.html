@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>flexbox example - 3 column layout</title>
+    <meta name="author" content="Gwilym Johnston">
+	
+	<!-- Flexie -->
+ 	<!--[if lte IE 8]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<link rel="stylesheet" href="../../../css/reset.css" type="text/css" />
+	
+   <link rel="stylesheet" href="css/base.css" type="text/css" media="screen">
+   <link rel="stylesheet" href="css/example-10.css" type="text/css" media="screen">
+</head>
+<body>
+    <header>
+        <h1>Header</h1>
+    </header>
+    <section id="main" class="flexbox">
+        <section id="box-1" class="flexbox">
+           <h1>1 Content</h1> 
+           <p>
+               Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+        </section>
+        <aside id="box-2" class="flexbox"> 
+            <h1>2 Sidebar</h1>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+            </p>
+        </aside>
+        <nav id="box-3" class="flexbox">
+            <h1>3 Nav</h1>
+              
+            <ul>
+                <li><a href="#nowhere" title="Lorum ipsum dolor sit amet">Lorem</a></li>
+                <li><a href="#nowhere" title="Aliquam tincidunt mauris eu risus">Aliquam</a></li>
+                <li><a href="#nowhere" title="Morbi in sem quis dui placerat ornare">Morbi</a></li>
+                <li><a href="#nowhere" title="Praesent dapibus, neque id cursus faucibus">Praesent</a></li>
+                <li><a href="#nowhere" title="Pellentesque fermentum dolor">Pellentesque</a></li>
+            </ul>
+        </nav>
+    </section>
+    
+    <footer>
+        <h1>Footer</h1>
+    </footer>
+	
+	<!-- Flexie -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
+	<script src="http://github.com/doctyper/flexie/raw/master/src/flexie.js" type="text/javascript"></script>
+		
+	<!-- Google Analytics -->
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-19654083-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+</body>
+</html>
