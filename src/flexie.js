@@ -100,6 +100,7 @@ var Flexie = (function (win, doc) {
 	FLEX_BOXES = [],
 	POSSIBLE_FLEX_CHILDREN = [],
 	FLEX_INSTANCES = [],
+	DOM_ORDERED,
 	
 	RESIZE_LISTENER,
 	
@@ -551,12 +552,18 @@ var Flexie = (function (win, doc) {
 						});
 					} else {
 						flexboxes[target.FLX_DOM_ID] = getParams(params);
+						flexboxes[target.FLX_DOM_ID].target.setAttribute("flexie-parent", true);
 					}
 				}
 			});
 		});
 		
-		FLEX_BOXES = flexboxes;
+		DOM_ORDERED = LIBRARY("[flexie-parent]");
+		FLEX_BOXES = [];
+		
+		forEach(DOM_ORDERED, function (i, target) {
+			FLEX_BOXES.push(flexboxes[target.FLX_DOM_ID]);
+		});
 		
 		// Loop through each match, initialize constructor
 		forEach(FLEX_BOXES, function (i, flex) {
