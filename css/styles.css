@@ -45,11 +45,15 @@ header h1 {
 }
 
 header h1 span {
-	top: 25px;
-	left: -215px;
+	top: 43px;
+	left: -204px;
 	position: relative;
 	z-index: 2;
-	color: #39b2e2;
+	color: #ddd;
+}
+
+header h1 span:after {
+	content: ".";
 }
 
 header h1 em {
@@ -89,6 +93,10 @@ a {
 
 a:hover {
 	background: #348899;
+}
+
+#playground {
+	padding-top: 50px;
 }
 
 #examples > ul {
