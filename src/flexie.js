@@ -144,7 +144,7 @@ var Flexie = (function (win, doc) {
 	// http://github.com/jquery/jquery/blob/master/src/core.js#L593
 	function forEach(object, callback, reverse) {
 		var name, i = 0, value,
-			length = object.length,
+			length = object ? object.length : UNDEFINED,
 			isObj = length === UNDEFINED;
 
 		if (isObj) {
