@@ -739,14 +739,41 @@ var Flexie = (function (win, doc) {
 		return total;
 	}
 	
+	function filterDuplicates (matches) {
+		var filteredMatches = [], exists;
+		
+		forEach(matches, function (i, x) {
+			x.cssSpecificity = x.cssSpecificity || calculateSpecificity(x.selector);
+			exists = false;
+			
+			forEach(filteredMatches, function (j, f) {
+				if (f.match === x.match) {
+					if (f.cssSpecificity < x.cssSpecificity) {
+						filteredMatches[j] = x;
+					}
+					
+					exists = true;
+					return false;
+				}
+			});
+			
+			if (!exists) {
+				filteredMatches.push(x);
+			}
+		});
+		
+		return filteredMatches;
+	}
+	
 	function createMatchMatrix(matches, children, type) {
 		var groups = {}, keys = [], totalRatio = 0,
 		    group, order = "ordinal-group";
+		
+		// Filter dupes
+		matches = filterDuplicates(matches);
 
 		forEach(children, function (i, kid) {
 			forEach(matches, function (j, x) {
-				x.cssSpecificity = calculateSpecificity(x.selector, j);
-				
 				if (type) {
 					// If no value declared, it's the default.
 					group = x[order] || "1";
