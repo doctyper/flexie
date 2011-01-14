@@ -14,7 +14,7 @@ body {
 	padding: 1px 0 0;
 	font: 11px/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-align: right;
-	background: #eee url("../images/bg-body-texture.png") center top;
+	background: #eee url("../images/bg-body-texture.jpg") center top;
 	color: #fefefe;
 	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.8);
 	font-weight: normal;
@@ -34,7 +34,7 @@ h1 {
 
 section, footer {
 	border-top: 1px solid #3a3a3a;
-	background: #2a2a2a url("../images/bg-texture.png") center;
+	background: #2a2a2a url("../images/bg-texture.jpg") center;
 }
 
 header h1 {
