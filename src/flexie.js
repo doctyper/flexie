@@ -1057,7 +1057,7 @@ var Flexie = (function (win, doc) {
 	FLX.box.prototype = {
 		properties : {
 			boxModel : function (target, children, params) {
-				var selector, stylesheet, generatedRules;
+				var selector, stylesheet, paddingFix, generatedRules;
 
 				target.style.display = "block";
 
@@ -1067,6 +1067,8 @@ var Flexie = (function (win, doc) {
 					selector = params.selector;
 					stylesheet = doc.styleSheets;
 					stylesheet = stylesheet[stylesheet.length - 1];
+					
+					paddingFix = "padding:0.1px 0 0";
 				
 					generatedRules = [
 						"content:' '",
@@ -1082,6 +1084,7 @@ var Flexie = (function (win, doc) {
 					].join(";");
 				
 					if (stylesheet.addRule) {
+						stylesheet.addRule(selector, paddingFix, 0);
 						if (BROWSER.IE === 6) {
 							stylesheet.addRule(selector, "zoom:1;", 0);
 						} else if (BROWSER.IE === 7) {
@@ -1090,6 +1093,7 @@ var Flexie = (function (win, doc) {
 							stylesheet.addRule(selector + ":after", generatedRules, 0);
 						}
 					} else if (stylesheet.insertRule) {
+						stylesheet.insertRule(selector, paddingFix, 0);
 						stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
 					}
 
