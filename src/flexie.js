@@ -870,6 +870,34 @@ var Flexie = (function (win, doc) {
 		});
 	}
 	
+	function sanitizeChildren (target, nodes) {
+		var children = [], node;
+		
+		for (i = 0, j = nodes.length; i < j; i++) {
+			node = nodes[i];
+			
+			if (node) {
+				switch (node.nodeName.toLowerCase()) {
+				case "script" :
+				case "style" :
+				case "link" :
+					break;
+
+				default :
+					if (node.nodeType === 1) {
+						children.push(node);
+					} else if ((node.nodeType === 3) && (node.isElementContentWhitespace || (ONLY_WHITESPACE).test(node.data))) {
+						target.removeChild(node);
+						i--;
+					}
+					break;
+				}
+			}
+		}
+		
+		return children;
+	}
+	
 	selectivizrEngine = (function () {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
 		    RE_IMPORT = /@import\s*(?:url\(\s*?)?(["'])?(.*?)\1\s*\)?[\w\W]*?;/g,
@@ -1490,37 +1518,14 @@ var Flexie = (function (win, doc) {
 		renderModel : function (params) {
 			var self = this,
 			    target = params.target, i, j,
-			    nodes = target.childNodes, node,
-			    children = [];
+			    nodes = target.childNodes;
 			
 			// Sanity check.
 			if (!target.length && !nodes) {
 				return;
 			}
 			
-			for (i = 0, j = nodes.length; i < j; i++) {
-				node = nodes[i];
-				
-				if (node) {
-					switch (node.nodeName.toLowerCase()) {
-					case "script" :
-					case "style" :
-					case "link" :
-						break;
-
-					default :
-						if (node.nodeType === 1) {
-							children.push(node);
-						} else if ((node.nodeType === 3) && (node.isElementContentWhitespace || (ONLY_WHITESPACE).test(node.data))) {
-							target.removeChild(node);
-							i--;
-						}
-						break;
-					}
-				}
-			}
-			
-			params.nodes = children;
+			params.nodes = sanitizeChildren(target, nodes);
 			
 			// Setup properties
 			self.updateModel(params);
