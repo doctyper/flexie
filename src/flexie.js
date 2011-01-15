@@ -85,6 +85,7 @@ var Flexie = (function (win, doc) {
 	
 	HORIZONTAL = "horizontal",
 	VERTICAL = "vertical",
+	INHERIT = "inherit",
 	
 	END_MUSTACHE = "}",
 	
@@ -93,7 +94,7 @@ var Flexie = (function (win, doc) {
 	DEFAULTS = {
 		orient : HORIZONTAL,
 		align : "stretch",
-		direction : "normal",
+		direction : INHERIT,
 		pack : "start"
 	},
 	
