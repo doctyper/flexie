@@ -1169,7 +1169,10 @@ var Flexie = (function (win, doc) {
 								appendPixelValue(kid, high.pos, firstComputedMargin);
 							}
 
-							kid.style[floatType] = EMPTY_STRING;
+							forEach(children, function (i, kid) {
+								kid.style[floatType] = "left";
+								kid.style.clear = "left";
+							});
 						}
 					});
 				}
@@ -1306,6 +1309,7 @@ var Flexie = (function (win, doc) {
 			
 			boxAlign : function (target, children, params) {
 				var self = this,
+				var self = this, floatType,
 				    targetDimension = target[self.anti.out],
 				    kidDimension;
 				
@@ -1316,6 +1320,12 @@ var Flexie = (function (win, doc) {
 
 				switch (params.align) {
 				case "stretch" :
+					if (params.orient === VERTICAL) {
+						floatType = (BROWSER.IE >= 9) ? "cssFloat" : "styleFloat";
+						forEach(children, function (i, kid) {
+							kid.style[floatType] = kid.style.clear = "";
+						});
+					}
 					forEach(children, function (i, kid) {
 						kidDimension = targetDimension;
 						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
