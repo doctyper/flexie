@@ -1124,7 +1124,7 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxOrient : function (target, children, params) {
-				var self = this, wide, high,
+				var self = this, wide, high, floatType,
 				    targetPadding, firstComputedMargin, combinedMargin;
 
 				wide = {
@@ -1147,7 +1147,9 @@ var Flexie = (function (win, doc) {
 
 				if (!SUPPORT) {
 					forEach(children, function (i, kid) {
-						kid.style.cssFloat = kid.style.styleFloat = "left";
+						floatType = (BROWSER.IE >= 9) ? "cssFloat" : "styleFloat";
+						
+						kid.style[floatType] = "left";
 
 						if (params.orient === VERTICAL) {
 							// Margins collapse on a normal box
@@ -1163,7 +1165,7 @@ var Flexie = (function (win, doc) {
 								appendPixelValue(kid, high.pos, firstComputedMargin);
 							}
 
-							kid.style.cssFloat = kid.style.styleFloat = EMPTY_STRING;
+							kid.style[floatType] = EMPTY_STRING;
 						}
 					});
 				}
