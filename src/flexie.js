@@ -1098,11 +1098,25 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxDirection : function (target, children, params) {
+				var nestedSelector, nested;
+				
 				if ((params.direction === "reverse" && !params.reversed) || (params.direction === "normal" && params.reversed)) {
 					children = children.reverse();
 
 					forEach(children, function (i, kid) {
 						target.appendChild(kid);
+					});
+					
+					// box-direction is inheritable.
+					// We need to see if there are any nested flexbox elements
+					nestedSelector = LIBRARY(params.nested);
+					
+					forEach(nestedSelector, function (i, node) {
+						nested = FLEX_BOXES[node.FLX_DOM_ID];
+						
+						if (nested && nested.direction === INHERIT) {
+							nested.direction = params.direction;
+						}
 					});
 
 					params.reversed = !params.reversed;
