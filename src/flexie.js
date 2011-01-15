@@ -1178,16 +1178,17 @@ var Flexie = (function (win, doc) {
 				}
 
 				switch (params.orient) {
-				case HORIZONTAL :
-				case "inline-axis" :
-					self.props = wide;
-					self.anti = high;
-					break;
-
 				case VERTICAL :
 				case "block-axis":
 					self.props = high;
 					self.anti = wide;
+					break;
+				
+				case HORIZONTAL :
+				case "inline-axis" :
+				default :
+					self.props = wide;
+					self.anti = high;
 					break;
 				}
 			},
@@ -1319,13 +1320,30 @@ var Flexie = (function (win, doc) {
 				});
 
 				switch (params.align) {
+				case "end" :
+					forEach(children, function (i, kid) {
+						kidDimension = targetDimension - kid[self.anti.out];
+						kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
+						appendPixelValue(kid, self.anti.pos, kidDimension);
+					});
+					break;
+
+				case "center" :
+					forEach(children, function (i, kid) {
+						kidDimension = (targetDimension - kid[self.anti.out]) / 2;
+						appendPixelValue(kid, self.anti.pos, kidDimension);
+					});
+					break;
+				
 				case "stretch" :
+				default :
 					if (params.orient === VERTICAL) {
 						floatType = (BROWSER.IE >= 9) ? "cssFloat" : "styleFloat";
 						forEach(children, function (i, kid) {
 							kid.style[floatType] = kid.style.clear = "";
 						});
 					}
+
 					forEach(children, function (i, kid) {
 						kidDimension = targetDimension;
 						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
@@ -1336,7 +1354,7 @@ var Flexie = (function (win, doc) {
 
 						kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
 						kidDimension = Math.max(0, kidDimension);
-						
+
 						switch (kid.nodeName.toLowerCase()) {
 						case "button" :
 						case "input" :
@@ -1347,21 +1365,6 @@ var Flexie = (function (win, doc) {
 							appendPixelValue(kid, self.anti.dim, kidDimension);
 							break;
 						}
-					});
-					break;
-
-				case "end" :
-					forEach(children, function (i, kid) {
-						kidDimension = targetDimension - kid[self.anti.out];
-						kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
-						appendPixelValue(kid, self.anti.pos, kidDimension);
-					});
-					break;
-
-				case "center":
-					forEach(children, function (i, kid) {
-						kidDimension = (targetDimension - kid[self.anti.out]) / 2;
-						appendPixelValue(kid, self.anti.pos, kidDimension);
 					});
 					break;
 				}
