@@ -87,6 +87,8 @@ var Flexie = (function (win, doc) {
 	VERTICAL = "vertical",
 	INHERIT = "inherit",
 	
+	LEFT = "left",
+	
 	END_MUSTACHE = "}",
 	
 	PREFIXES = " -o- -moz- -ms- -webkit- -khtml- ".split(SPACE_STRING),
@@ -699,7 +701,7 @@ var Flexie = (function (win, doc) {
 		var cssText = [];
 
 		forEach(PREFIXES, function (i, prefix) {
-			cssText.push((prefixName ? prefix : "") + prop + ":" + (!prefixName ? prefix : "") + value);
+			cssText.push((prefixName ? prefix : EMPTY_STRING) + prop + ":" + (!prefixName ? prefix : EMPTY_STRING) + value);
 		});
 
 		target.style.cssText += cssText.join(";");
@@ -1016,7 +1018,7 @@ var Flexie = (function (win, doc) {
 				return loadStyleSheet(url).replace(RE_COMMENT, EMPTY_STRING).replace(RE_IMPORT, function( match, quoteChar, importUrl ) {
 					return parseStyleSheet(resolveUrl(importUrl, url));
 				}).replace(RE_ASSET_URL, function( match, quoteChar, assetUrl ) {
-					quoteChar = quoteChar || "";
+					quoteChar = quoteChar || EMPTY_STRING;
 					return " url(" + quoteChar + resolveUrl(assetUrl, url) + quoteChar + ") ";
 				});
 			}
@@ -1153,7 +1155,7 @@ var Flexie = (function (win, doc) {
 					forEach(children, function (i, kid) {
 						floatType = (BROWSER.IE >= 9) ? "cssFloat" : "styleFloat";
 						
-						kid.style[floatType] = "left";
+						kid.style[floatType] = LEFT;
 
 						if (params.orient === VERTICAL) {
 							// Margins collapse on a normal box
@@ -1170,8 +1172,7 @@ var Flexie = (function (win, doc) {
 							}
 
 							forEach(children, function (i, kid) {
-								kid.style[floatType] = "left";
-								kid.style.clear = "left";
+								kid.style.clear = LEFT;
 							});
 						}
 					});
@@ -1610,10 +1611,10 @@ var Flexie = (function (win, doc) {
 		forEach(FLEX_INSTANCES, function (i, instance) {
 			if (instance && instance.params && instance.params.target === target) {
 				instance.params.target.FLX_DOM_ID = null;
-				instance.params.target.style.cssText = "";
+				instance.params.target.style.cssText = EMPTY_STRING;
 				
 				forEach(instance.params.children, function (i, x) {
-					x.match.style.cssText = "";
+					x.match.style.cssText = EMPTY_STRING;
 				});
 				
 				instances = FLEX_INSTANCES.splice(i, 1);
