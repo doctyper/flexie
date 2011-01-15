@@ -570,13 +570,14 @@ var Flexie = (function (win, doc) {
 		});
 		
 		DOM_ORDERED = LIBRARY(flexieParentSelector);
+		FLEX_BOXES = {};
 		
 		forEach(DOM_ORDERED, function (i, target) {
-			FLEX_BOXES.push(flexboxes[target.FLX_DOM_ID]);
+			FLEX_BOXES[target.FLX_DOM_ID] = flexboxes[target.FLX_DOM_ID];
 		});
 		
 		// Loop through each match, initialize constructor
-		forEach(FLEX_BOXES, function (i, flex) {
+		forEach(FLEX_BOXES, function (key, flex) {
 			// One final check to ensure each flexbox has a display property
 			if (flex.display === "box") {
 				// Constructor
@@ -1544,18 +1545,17 @@ var Flexie = (function (win, doc) {
 		},
 		
 		bubbleUp : function (target, params) {
-			var self = this,
+			var self = this, flex,
 			    parent = params.target.parentNode;
 			
 			while (parent) {
 				if (parent.FLX_DOM_ID) {
-					forEach(FLEX_BOXES, function (i, flex) {
-						if (parent.FLX_DOM_ID === flex.target.FLX_DOM_ID) {
-							cleanPositioningProperties(flex.nodes);
-							self.setup(flex.target, flex.nodes, flex);
-							return false;
-						}
-					});
+					flex = FLEX_BOXES[parent.FLX_DOM_ID];
+					
+					if (flex) {
+						cleanPositioningProperties(flex.nodes);
+						self.setup(flex.target, flex.nodes, flex);
+					}
 				}
 				
 				parent = parent.parentNode;
