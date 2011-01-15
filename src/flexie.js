@@ -439,7 +439,9 @@ var Flexie = (function (win, doc) {
 		    display, orient, align, direction, pack,
 		    lib, caller, children,
 		    box, params, flexboxes = {},
-		    match, childMatch;
+		    match, childMatch, nestedFlexboxes,
+		    flexieParentAttribute = "flexie-parent",
+		    flexieParentSelector = "[" + flexieParentAttribute + "]";
 		
 		// No boxflex? No dice.
 		if (!flexers) {
@@ -508,6 +510,9 @@ var Flexie = (function (win, doc) {
 					
 					// Find possible child node matches
 					children = matchFlexChildren(target, lib, flexers.children);
+					
+					// Find any nested flexbox elements
+					nestedFlexboxes = selector + " " + flexieParentSelector;
 
 					// Make sure there is some value associated with box properties
 					params = {
@@ -518,7 +523,8 @@ var Flexie = (function (win, doc) {
 						orient : orient,
 						align : align,
 						direction: direction,
-						pack : pack
+						pack : pack,
+						nested : nestedFlexboxes
 					};
 
 					match = flexboxes[target.FLX_DOM_ID];
@@ -557,14 +563,13 @@ var Flexie = (function (win, doc) {
 						});
 					} else {
 						flexboxes[target.FLX_DOM_ID] = getParams(params);
-						flexboxes[target.FLX_DOM_ID].target.setAttribute("flexie-parent", true);
+						flexboxes[target.FLX_DOM_ID].target.setAttribute(flexieParentAttribute, true);
 					}
 				}
 			});
 		});
 		
-		DOM_ORDERED = LIBRARY("[flexie-parent]");
-		FLEX_BOXES = [];
+		DOM_ORDERED = LIBRARY(flexieParentSelector);
 		
 		forEach(DOM_ORDERED, function (i, target) {
 			FLEX_BOXES.push(flexboxes[target.FLX_DOM_ID]);
