@@ -748,26 +748,30 @@ var Flexie = (function (win, doc) {
 		return total;
 	}
 	
-	function filterDuplicates (matches) {
-		var filteredMatches = [], exists;
+	function filterDuplicates (matches, children, type) {
+		var filteredMatches = [], exists,
+		    spec = (type ? "ordinal" : "flex") + "Specificity";
 		
 		forEach(matches, function (i, x) {
-			x.cssSpecificity = x.cssSpecificity || calculateSpecificity(x.selector);
-			exists = false;
+			if ((!type && x.flex) || (type && x["ordinal-group"])) {
+				x[spec] = x[spec] || calculateSpecificity(x.selector);
+				
+				exists = false;
 			
-			forEach(filteredMatches, function (j, f) {
-				if (f.match.FLX_DOM_ID === x.match.FLX_DOM_ID) {
-					if (f.cssSpecificity < x.cssSpecificity) {
-						filteredMatches[j] = x;
-					}
+				forEach(filteredMatches, function (j, f) {
+					if (f.match.FLX_DOM_ID === x.match.FLX_DOM_ID) {
+						if (f[spec] < x[spec]) {
+							filteredMatches[j] = x;
+						}
 					
-					exists = true;
-					return false;
-				}
-			});
+						exists = true;
+						return false;
+					}
+				});
 			
-			if (!exists) {
-				filteredMatches.push(x);
+				if (!exists) {
+					filteredMatches.push(x);
+				}
 			}
 		});
 		
@@ -780,7 +784,7 @@ var Flexie = (function (win, doc) {
 		    BoxOrdinalAttr = "data-" + order;
 		
 		// Filter dupes
-		matches = filterDuplicates(matches);
+		matches = filterDuplicates(matches, children, type);
 
 		forEach(children, function (i, kid) {
 			forEach(matches, function (j, x) {
@@ -1312,9 +1316,9 @@ var Flexie = (function (win, doc) {
 								flex = x.match.getAttribute("data-flex");
 								specificity = x.match.getAttribute("data-specificity");
 
-								if (!flex || (specificity <= x.cssSpecificity)) {
+								if (!flex || (specificity <= x.flexSpecificity)) {
 									x.match.setAttribute("data-flex", key);
-									x.match.setAttribute("data-specificity", x.cssSpecificity);
+									x.match.setAttribute("data-specificity", x.flexSpecificity);
 									
 									trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
 									
