@@ -723,7 +723,7 @@ var Flexie = (function (win, doc) {
 		
 		selectorGrid = selector.replace(CSS_SELECTOR, function (e, f) {
 			return "%" + f;
-		}).replace(/\s/g, "%").split(/%/g);
+		}).replace(/\s|\>|\+|\~/g, "%").split(/%/g);
 		
 		matrix = {
 			_id : 100,
@@ -740,7 +740,7 @@ var Flexie = (function (win, doc) {
 				total += matrix._id;
 			} else if ((/\.|\[|\:/).test(chunk)) {
 				total += matrix._class;
-			} else {
+			} else if ((/[a-zA-Z]+/).test(chunk)) {
 				total += matrix._tag;
 			}
 		});
