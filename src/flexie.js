@@ -1338,13 +1338,6 @@ var Flexie = (function (win, doc) {
 				
 				case "stretch" :
 				default :
-					if (params.orient === VERTICAL) {
-						floatType = (BROWSER.IE >= 9) ? "cssFloat" : "styleFloat";
-						forEach(children, function (i, kid) {
-							kid.style[floatType] = kid.style.clear = "";
-						});
-					}
-
 					forEach(children, function (i, kid) {
 						kidDimension = targetDimension;
 						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
