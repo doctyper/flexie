@@ -776,7 +776,8 @@ var Flexie = (function (win, doc) {
 	
 	function createMatchMatrix(matches, children, type) {
 		var groups = {}, keys = [], totalRatio = 0,
-		    group, order = "ordinal-group";
+		    group, order = "ordinal-group",
+		    BoxOrdinalAttr = "data-" + order;
 		
 		// Filter dupes
 		matches = filterDuplicates(matches);
@@ -788,6 +789,8 @@ var Flexie = (function (win, doc) {
 					group = x[order] || "1";
 					
 					if (x.match.FLX_DOM_ID === kid.FLX_DOM_ID) {
+						x.match.setAttribute(BoxOrdinalAttr, group);
+						
 						groups[group] = groups[group] || [];
 						groups[group].push(x);
 					}
@@ -803,6 +806,16 @@ var Flexie = (function (win, doc) {
 					}
 				}
 			});
+			
+			if (type && !kid.getAttribute(BoxOrdinalAttr)) {
+				group = "1";
+				kid.setAttribute(BoxOrdinalAttr, group);
+				
+				groups[group] = groups[group] || [];
+				groups[group].push({
+					match : kid
+				});
+			}
 		});
 
 		forEach(groups, function (key) {
