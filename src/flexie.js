@@ -1496,7 +1496,7 @@ var Flexie = (function (win, doc) {
 		},
 
 		setup : function (target, children, params) {
-			var self = this;
+			var self = this, matrix;
 			
 			if (!target || !children || !params) {
 				return;
@@ -1504,6 +1504,7 @@ var Flexie = (function (win, doc) {
 			
 			if (SUPPORT && SUPPORT.partialSupport) {
 				matrix = createMatchMatrix(params.children, children);
+				children = sanitizeChildren(target, target.childNodes);
 				
 				self.properties.boxOrient.call(self, target, children, params);
 				
@@ -1518,7 +1519,7 @@ var Flexie = (function (win, doc) {
 				}
 			} else if (!SUPPORT) {
 				forEach(self.properties, function (key, func) {
-					func.call(self, target, children, params);
+					func.call(self, target, sanitizeChildren(target, target.childNodes), params);
 				});
 			}
 		},
