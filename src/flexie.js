@@ -1575,14 +1575,12 @@ var Flexie = (function (win, doc) {
 			var self = this, flex,
 			    parent = params.target.parentNode;
 			
-			while (parent) {
-				if (parent.FLX_DOM_ID) {
-					flex = FLEX_BOXES[parent.FLX_DOM_ID];
-					
-					if (flex) {
-						cleanPositioningProperties(flex.nodes);
-						self.setup(flex.target, flex.nodes, flex);
-					}
+			while (parent.FLX_DOM_ID) {
+				flex = FLEX_BOXES[parent.FLX_DOM_ID];
+				
+				if (flex) {
+					cleanPositioningProperties(flex.nodes);
+					self.setup(flex.target, flex.nodes, flex);
 				}
 				
 				parent = parent.parentNode;
