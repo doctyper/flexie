@@ -442,7 +442,7 @@ var Flexie = (function (win, doc) {
 		    lib, caller, children,
 		    box, params, flexboxes = {},
 		    match, childMatch, nestedFlexboxes,
-		    flexieParentAttribute = "flexie-parent",
+		    flexieParentAttribute = "data-flexie-parent",
 		    flexieParentSelector = "[" + flexieParentAttribute + "]";
 		
 		// No boxflex? No dice.
