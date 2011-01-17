@@ -520,6 +520,7 @@ var Flexie = (function (win, doc) {
 					params = {
 						target : target,
 						selector : selector,
+						properties : properties,
 						children : children,
 						display : display,
 						orient : orient,
