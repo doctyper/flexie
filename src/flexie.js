@@ -1207,6 +1207,33 @@ var Flexie = (function (win, doc) {
 				}
 			},
 			
+			boxOrdinalGroup : function (target, children, params) {
+				var self = this, organizeChildren,
+				    matrix;
+
+				if (!children.length) {
+					return;
+				}
+				
+				organizeChildren = function (matrix) {
+					var keys = matrix.keys;
+					
+					forEach(params.reversed ? keys : keys.reverse(), function (i, key) {
+						forEach(children, function (i, kid) {
+							if (key === kid.getAttribute("data-ordinal-group")) {
+								target.appendChild(kid);
+							}
+						});
+					});
+				};
+
+				matrix = createMatchMatrix(params.children, children, true);
+
+				if (matrix.keys.length) {
+					organizeChildren(matrix);
+				}
+			},
+			
 			boxFlex : function (target, children, params) {
 				var self = this,
 				    testForRestrictiveProperties,
@@ -1466,54 +1493,6 @@ var Flexie = (function (win, doc) {
 					}
 					
 					break;
-				}
-			},
-			
-			boxOrdinalGroup : function (target, children, params) {
-				var self = this,
-				    saveMarginOffset, organizeChildren, resetMarginOffset,
-				    matrix, first, firstComputedMargin;
-
-				if (!children.length) {
-					return;
-				}
-				
-				saveMarginOffset = function (matrix, children) {
-					firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
-				};
-				
-				organizeChildren = function (matrix) {
-					var keys = matrix.keys,
-					    ordinals = matrix.groups,
-					    group, specificity;
-					
-					forEach(params.reversed ? keys : keys.reverse(), function (i, key) {
-						forEach(ordinals[key], function (i, x) {
-							group = x.match.getAttribute("data-ordinal-group");
-							specificity = x.match.getAttribute("data-specificity");
-							
-							if (!group || (specificity <= x.cssSpecificity)) {
-								x.match.setAttribute("data-ordinal-group", key);
-								x.match.setAttribute("data-specificity", x.cssSpecificity);
-								
-								target.appendChild(x.match);
-							}
-						});
-					});
-				};
-				
-				resetMarginOffset = function (matrix, children) {
-					appendPixelValue(children, self.props.pos, NULL);
-					appendPixelValue(children[0], self.props.pos, firstComputedMargin);
-					firstComputedMargin = NULL;
-				};
-
-				matrix = createMatchMatrix(params.children, children, true);
-
-				if (matrix.keys.length > 1) {
-					saveMarginOffset(matrix, target.childNodes);
-					organizeChildren(matrix);
-					resetMarginOffset(matrix, target.childNodes);
 				}
 			}
 		},
