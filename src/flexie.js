@@ -1350,15 +1350,18 @@ var Flexie = (function (win, doc) {
 			
 			boxAlign : function (target, children, params) {
 				var self = this, floatType,
-				    targetDimension = target[self.anti.out],
-				    kidDimension;
+				    targetDimension, kidDimension;
 				
 				// Remove padding / border from target dimension
+				targetDimension = target[self.anti.out];
 				forEach(self.anti.pad, function (i, pad) {
 					targetDimension -= getComputedStyle(target, pad, TRUE);
 				});
 
 				switch (params.align) {
+				case "start" :
+					break;
+				
 				case "end" :
 					forEach(children, function (i, kid) {
 						kidDimension = targetDimension - kid[self.anti.out];
@@ -1377,16 +1380,6 @@ var Flexie = (function (win, doc) {
 				case "stretch" :
 				default :
 					forEach(children, function (i, kid) {
-						kidDimension = targetDimension;
-						kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
-
-						forEach(self.anti.pad, function (i, pad) {
-							kidDimension -= getComputedStyle(kid, pad, TRUE);
-						});
-
-						kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
-						kidDimension = Math.max(0, kidDimension);
-
 						switch (kid.nodeName.toLowerCase()) {
 						case "button" :
 						case "input" :
@@ -1394,6 +1387,27 @@ var Flexie = (function (win, doc) {
 							break;
 
 						default :
+							var subtract = 0;
+
+							forEach(self.anti.pad, function (i, pad) {
+								subtract += getComputedStyle(kid, pad, TRUE);
+								subtract += getComputedStyle(target, pad, TRUE);
+							});
+
+							kid.style[self.anti.dim] = "100%";
+							kidDimension = kid[self.anti.out] - subtract;
+							appendPixelValue(kid, self.anti.dim, NULL);
+
+							kidDimension = targetDimension;
+							kidDimension -= getComputedStyle(kid, self.anti.pos, TRUE);
+
+							forEach(self.anti.pad, function (i, pad) {
+								kidDimension -= getComputedStyle(kid, pad, TRUE);
+							});
+
+							kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
+							kidDimension = Math.max(0, kidDimension);
+						
 							appendPixelValue(kid, self.anti.dim, kidDimension);
 							break;
 						}
