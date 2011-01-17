@@ -924,6 +924,23 @@ var Flexie = (function (win, doc) {
 		return children;
 	}
 	
+	function parentFlex (target) {
+		var totalFlex = 0,
+		    parent = target.parentNode,
+		    obj, matrix;
+		
+		while (parent.FLX_DOM_ID) {
+			obj = FLEX_BOXES[parent.FLX_DOM_ID];
+			matrix = createMatchMatrix(obj.children, sanitizeChildren(parent, parent.childNodes));
+			
+			totalFlex += matrix.total;
+			
+			parent = parent.parentNode;
+		}
+		
+		return totalFlex;
+	}
+	
 	selectivizrEngine = (function () {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
 		    RE_IMPORT = /@import\s*(?:url\(\s*?)?(["'])?(.*?)\1\s*\)?[\w\W]*?;/g,
@@ -1521,7 +1538,7 @@ var Flexie = (function (win, doc) {
 				
 				self.properties.boxOrient.call(self, target, children, params);
 				
-				if (!matrix.total) {
+				if (!matrix.total && !parentFlex(target)) {
 					if ((params.align === "stretch") && !SUPPORT.boxAlignStretch) {
 						self.properties.boxAlign.call(self, target, children, params);
 					}
