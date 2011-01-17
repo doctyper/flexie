@@ -942,6 +942,24 @@ var Flexie = (function (win, doc) {
 		return totalFlex;
 	}
 	
+	function dimensionValues (target, prop) {
+		var parent = target.parentNode,
+		    obj, dimension;
+		
+		if (parent.FLX_DOM_ID) {
+			obj = FLEX_BOXES[parent.FLX_DOM_ID];
+			
+			forEach(obj.properties, function (i, rule) {
+				if ((new RegExp(prop)).test(rule.property)) {
+					dimension = true;
+					return false;
+				}
+			});
+		}
+		
+		return dimension;
+	}
+	
 	selectivizrEngine = (function () {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
 		    RE_IMPORT = /@import\s*(?:url\(\s*?)?(["'])?(.*?)\1\s*\)?[\w\W]*?;/g,
@@ -1373,6 +1391,13 @@ var Flexie = (function (win, doc) {
 			boxAlign : function (target, children, params) {
 				var self = this, floatType,
 				    targetDimension, kidDimension;
+				
+				if (!SUPPORT && !parentFlex(target)) {
+					if (!dimensionValues(target, self.anti.dim)) {
+						appendPixelValue(target, self.anti.dim, NULL);
+					}
+					appendPixelValue(children, self.anti.dim, NULL);
+				}
 				
 				// Remove padding / border from target dimension
 				targetDimension = target[self.anti.out];
