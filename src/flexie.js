@@ -756,7 +756,7 @@ var Flexie = (function (win, doc) {
 			exists = false;
 			
 			forEach(filteredMatches, function (j, f) {
-				if (f.match === x.match) {
+				if (f.match.FLX_DOM_ID === x.match.FLX_DOM_ID) {
 					if (f.cssSpecificity < x.cssSpecificity) {
 						filteredMatches[j] = x;
 					}
@@ -786,8 +786,8 @@ var Flexie = (function (win, doc) {
 				if (type) {
 					// If no value declared, it's the default.
 					group = x[order] || "1";
-
-					if (x.match === kid) {
+					
+					if (x.match.FLX_DOM_ID === kid.FLX_DOM_ID) {
 						groups[group] = groups[group] || [];
 						groups[group].push(x);
 					}
@@ -795,7 +795,7 @@ var Flexie = (function (win, doc) {
 					// If no value declared, it's the default.
 					group = x.flex || "0";
 					
-					if (x.match === kid && (!x[group] || (x[group] && parseInt(x[group], 10) <= 1))) {
+					if (x.match.FLX_DOM_ID === kid.FLX_DOM_ID && (!x[group] || (x[group] && parseInt(x[group], 10) <= 1))) {
 						totalRatio += parseInt(group, 10);
 
 						groups[group] = groups[group] || [];
