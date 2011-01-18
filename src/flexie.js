@@ -1268,7 +1268,7 @@ var Flexie = (function (win, doc) {
 
 				matrix = createMatchMatrix(params.children, children, true);
 
-				if (matrix.keys.length) {
+				if (matrix.keys.length > 1) {
 					organizeChildren(matrix);
 				}
 			},
