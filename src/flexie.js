@@ -1622,7 +1622,7 @@ var Flexie = (function (win, doc) {
 			var self = this, flex,
 			    parent = params.target.parentNode;
 			
-			while (parent.FLX_DOM_ID) {
+			while (parent) {
 				flex = FLEX_BOXES[parent.FLX_DOM_ID];
 				
 				if (flex) {
