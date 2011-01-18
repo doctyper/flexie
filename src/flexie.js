@@ -1308,7 +1308,6 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxAlign : function (target, children, params) {
-				var self = this,
 				var self = this, floatType,
 				    targetDimension = target[self.anti.out],
 				    kidDimension;
