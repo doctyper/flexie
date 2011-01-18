@@ -1122,7 +1122,7 @@ var Flexie = (function (win, doc) {
 					selector = params.selector;
 					stylesheet = doc.styleSheets;
 					stylesheet = stylesheet[stylesheet.length - 1];
-					paddingFix = "padding:0.1px 0 0";
+					paddingFix = "padding-top:" + (getComputedStyle(target, PADDING_TOP, NULL) || "0.1px");
 				
 					generatedRules = [
 						"content:' '",
