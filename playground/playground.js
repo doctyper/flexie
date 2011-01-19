@@ -72,8 +72,13 @@ function applyFlexboxProperties (target) {
 				target.children().each(function (i) {
 					var child = $(this);
 					
-					child.css("-webkit-box-ordinal-group", values.ordinalMatrix[i]);
-					child.css(prefix + "BoxFlex", values.flexMatrix[i]);
+					if (values.ordinalMatrix) {
+						child.get(0).style[prefix + "BoxOrdinalGroup"] = values.ordinalMatrix[i];
+					}
+					
+					if (values.flexMatrix) {
+						child.get(0).style[prefix + "BoxFlex"] = values.flexMatrix[i];
+					}
 				});
 			}, 0);
 		}
