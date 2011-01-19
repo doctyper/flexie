@@ -35,12 +35,14 @@
 								match : this
 							};
 							
-							if (flexMatrix) {
+							if (flexMatrix && flexMatrix[i]) {
 								obj.flex = flexMatrix[i];
+								obj.flexSpecificity = 101;
 							}
 							
-							if (ordinalMatrix) {
+							if (ordinalMatrix && ordinalMatrix[i]) {
 								obj["ordinal-group"] = ordinalMatrix[i];
+								obj.ordinalSpecificity = 101;
 							}
 
 							matches.push(obj);
