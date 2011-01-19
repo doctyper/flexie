@@ -974,8 +974,6 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function updateChildValues (params) {
-		var children = params.children;
-		
 		if (params.flexMatrix) {
 			forEach(params.children, function (i, x) {
 				x.flex = params.flexMatrix[i];
