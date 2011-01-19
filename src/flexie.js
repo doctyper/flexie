@@ -243,6 +243,18 @@ var Flexie = (function (win, doc) {
 		});
 	}
 	
+	function buildSelector (node) {
+		var selector = node.nodeName.toLowerCase();
+		
+		if (node.id) {
+			selector += "#" + node.id;
+		} else if (node.FLX_DOM_ID) {
+			selector += "[FLX_DOM_ID='" + node.FLX_DOM_ID + "']";
+		}
+		
+		return selector;
+	}
+	
 	function buildSelectorTree(text) {
 		var rules = [], ruletext, rule,
 		    match, selector, proptext, splitprop, properties;
