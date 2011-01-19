@@ -1556,7 +1556,7 @@ var Flexie = (function (win, doc) {
 		},
 
 		setup : function (target, children, params) {
-			var self = this, matrix;
+			var self = this, matrix, flexCheck;
 			
 			if (!target || !children || !params) {
 				return;
@@ -1564,11 +1564,12 @@ var Flexie = (function (win, doc) {
 			
 			if (SUPPORT && SUPPORT.partialSupport) {
 				matrix = createMatchMatrix(params.children, children);
+				flexCheck = parentFlex(target);
 				children = sanitizeChildren(target, target.childNodes);
 				
 				self.properties.boxOrient.call(self, target, children, params);
 				
-				if (!matrix.total && !parentFlex(target)) {
+				if ((!matrix.total || !LIBRARY(params.nested).length) && (!flexCheck.nested || !flexCheck.flex)) {
 					if ((params.align === "stretch") && !SUPPORT.boxAlignStretch) {
 						self.properties.boxAlign.call(self, target, children, params);
 					}
