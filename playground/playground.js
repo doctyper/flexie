@@ -38,11 +38,6 @@ function applyFlexboxProperties (target) {
 		}
 	});
 	
-	$.each(instance.children, function (i, child) {
-		child["ordinal-group"] = values.ordinalMatrix[i];
-		child.flex = values.flexMatrix[i];
-	});
-	
 	target.children().andSelf().removeAttr("style").css("opacity", 0);
 	
 	window.setTimeout(function() {
