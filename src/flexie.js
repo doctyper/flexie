@@ -1215,6 +1215,9 @@ var Flexie = (function (win, doc) {
 							forEach(children, function (i, kid) {
 								kid.style.clear = LEFT;
 							});
+						
+						if (BROWSER.IE === 6) {
+							kid.style.display = "inline";
 						}
 					});
 				}
