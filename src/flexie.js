@@ -395,32 +395,40 @@ var Flexie = (function (win, doc) {
 		var caller, unique, matches = [];
 		
 		forEach(possibleChildren, function (i, child) {
-			caller = lib(child.selector);
-			
-			if (caller[0]) {
-				forEach(caller, function (i, node) {
-					switch (node.nodeName.toLowerCase()) {
-					case "script" :
-					case "style" :
-					case "link" :
-						break;
+			if (child.selector) {
+				caller = lib(child.selector);
 
-					default :
-						if (node.parentNode === parent) {
-							// Flag each unique node with FLX_DOM_ID
-							node.FLX_DOM_ID = node.FLX_DOM_ID || (++FLX_DOM_ID);
+				if (caller[0]) {
+					forEach(caller, function (i, node) {
+						switch (node.nodeName.toLowerCase()) {
+						case "script" :
+						case "style" :
+						case "link" :
+							break;
 
-							unique = {};
+						default :
+							if (node.parentNode === parent) {
+								// Flag each unique node with FLX_DOM_ID
+								node.FLX_DOM_ID = node.FLX_DOM_ID || (++FLX_DOM_ID);
 
-							forEach(child, function (key) {
-								unique[key] = child[key];
-							});
+								unique = {};
 
-							unique.match = node;
-							matches.push(unique);
+								forEach(child, function (key) {
+									unique[key] = child[key];
+								});
+
+								unique.match = node;
+								matches.push(unique);
+							}
+							break;
 						}
-						break;
-					}
+					});
+				}
+			} else {
+				node.FLX_DOM_ID = node.FLX_DOM_ID || (++FLX_DOM_ID);
+				
+				matches.push({
+					match : node
 				});
 			}
 		});
