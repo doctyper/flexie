@@ -964,6 +964,24 @@ var Flexie = (function (win, doc) {
 		return dimension;
 	}
 	
+	function updateChildValues (params) {
+		var children = params.children;
+		
+		if (params.flexMatrix) {
+			forEach(params.children, function (i, x) {
+				x.flex = params.flexMatrix[i];
+			});
+		}
+		
+		if (params.ordinalMatrix) {
+			forEach(params.children, function (i, x) {
+				x["ordinal-group"] = params.ordinalMatrix[i];
+			});
+		}
+		
+		return params;
+	}
+	
 	selectivizrEngine = (function () {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
 		    RE_IMPORT = /@import\s*(?:url\(\s*?)?(["'])?(.*?)\1\s*\)?[\w\W]*?;/g,
@@ -1577,6 +1595,10 @@ var Flexie = (function (win, doc) {
 			
 			// Null properties
 			cleanPositioningProperties(children);
+			
+			if (params.flexMatrix || params.ordinalMatrix) {
+				params = updateChildValues(params);
+			}
 
 			self.setup(target, children, params);
 			self.bubbleUp(target, params);
