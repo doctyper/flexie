@@ -34,7 +34,6 @@ In addition, Flexie attempts to normailze browser inconsistencies with the flexi
 #### Not There Yet
 * box-lines (as far as I can tell, no browser currently supports this property)
 
-
 ### Why?
 I *really* wanted to use the CSS3 Flexible Box Model.
 
@@ -55,6 +54,44 @@ As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their fl
 * As of version 0.8, Flexie normalizes the `box-pack` property in Gecko.
 
 Be careful of pseudo-selectors (i.e., `:nth-child`, `:first-child`). While native flexbox does not modify the DOM, Flexie must. Thus, your CSS properties might not apply as intended. For example, if you use a combination of `box-direction: reverse` and a `:first-child` selector, that selector will target the wrong element. And if you followed all of that, congratulations.
+
+### Asynchronous API
+You can run Flexie asynchronously in case you cannot purely on style sheets. All parameters are optional, unless otherwise stated:
+
+	var foo = document.querySelector("#foo");
+	var box = new Flexie.box({
+		target : foo,
+		orient : "horizontal",
+		align : "stretch",
+		direction : "normal",
+		pack : "start",
+		flexMatrix : [1, 1, 1, 1],
+		ordinalMatrix : [0, 0, 0, 0]
+	});
+
+##### target (required)
+The flexbox parent element. This must be a DOM node.
+
+##### orient
+(Optional) Possible values: `horizontal`, `vertical`
+
+##### align
+(Optional) Possible values: `stretch`, `start`, `end`, `center`
+
+##### direction
+(Optional) Possible values: `normal`, `reverse`
+
+##### pack
+(Optional) Possible values: `start`, `end`, `center`, `justify`
+
+##### flexMatrix
+(Optional) An array of values to apply to the parent's children. e.g.:
+	flexMatrix : [1, 0, 0] // Three child nodes contained, the parent's first child has a box-flex value of 1
+	flexMatrix : [1, 0, 1] // Three child nodes contained, the parent's first and last child have a box-flex value of 1
+	flexMatrix : [1, 1, 1] // Three child nodes contained, all children have a box-flex value of 1
+
+##### ordinalMatrix
+(Optional) An array of values to apply to the parent's children. See `flexMatrix` for an example.
 
 ### Acknowledgements
 Selectivizr, for their fantastic CSS parsing engine.
