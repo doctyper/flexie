@@ -1641,12 +1641,26 @@ var Flexie = (function (win, doc) {
 		}
 	};
 	
-	FLX.updateInstance = function (target) {
+	FLX.updateInstance = function (target, params) {
+		var exists;
+		
 		forEach(FLEX_INSTANCES, function (i, instance) {
-			if (!target || (instance && instance.params && instance.params.target === target)) {
+			if (!target || (instance && instance.params && instance.params.target.FLX_DOM_ID === target.FLX_DOM_ID)) {
+				forEach(params, function (key, value) {
+					if (value !== UNDEFINED) {
+						instance.params[key] = value;
+					}
+				});
 				instance.construct.updateModel(instance.params);
+				exists = true;
+				return false;
 			}
 		});
+		
+		if (params && !exists) {
+			exists = new FLX.box(params);
+		}
+	};
 	
 	FLX.getInstance = function (target) {
 		return FLEX_BOXES[target.FLX_DOM_ID];
