@@ -1633,7 +1633,6 @@ var Flexie = (function (win, doc) {
 				});
 				instance.construct.updateModel(instance.params);
 				exists = true;
-				return false;
 			}
 		});
 		
