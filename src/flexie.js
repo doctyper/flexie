@@ -1212,9 +1212,8 @@ var Flexie = (function (win, doc) {
 						kid.style[floatType] = LEFT;
 
 						if (params.orient === VERTICAL) {
-							forEach(children, function (i, kid) {
-								kid.style.clear = LEFT;
-							});
+							kid.style.clear = LEFT;
+						}
 						
 						if (BROWSER.IE === 6) {
 							kid.style.display = "inline";
