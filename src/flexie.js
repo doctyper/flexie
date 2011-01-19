@@ -1469,15 +1469,6 @@ var Flexie = (function (win, doc) {
 					groupDimension += getComputedStyle(kid, self.props.opp, TRUE);
 				});
 
-				if (params.orient === VERTICAL) {
-					// Fixes IE < 8 collapsing margin
-					if (BROWSER.IE < 8) {
-						targetPadding = getComputedStyle(target, self.props.pad[0], TRUE);
-					}
-				} else if (BROWSER.IE === 6) {
-					targetPadding -= getComputedStyle(children[0], self.props.pos, TRUE);
-				}
-
 				firstComputedMargin = getComputedStyle(children[0], self.props.pos, TRUE);
 				totalDimension = target[self.props.out] - groupDimension;
 				
@@ -1489,6 +1480,7 @@ var Flexie = (function (win, doc) {
 				// IE6 double float margin bug
 				// http://www.positioniseverything.net/explorer/doubled-margin.html
 				if (params.orient === HORIZONTAL && BROWSER.IE === 6) {
+					targetPadding -= getComputedStyle(children[0], self.props.pos, TRUE);
 					totalDimension /= 2;
 				}
 				
