@@ -425,10 +425,11 @@ var Flexie = (function (win, doc) {
 					});
 				}
 			} else {
-				node.FLX_DOM_ID = node.FLX_DOM_ID || (++FLX_DOM_ID);
+				child.FLX_DOM_ID = child.FLX_DOM_ID || (++FLX_DOM_ID);
 				
 				matches.push({
-					match : node
+					match : child,
+					selector : buildSelector(child)
 				});
 			}
 		});
