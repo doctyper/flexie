@@ -982,6 +982,38 @@ var Flexie = (function (win, doc) {
 		return params;
 	}
 	
+	function ensureStructuralIntegrity (params) {
+		var target = params.target;
+		
+		if (!params.nodes) {
+			params.nodes = sanitizeChildren(target, target.childNodes);
+		}
+		
+		if (!target.FLX_DOM_ID) {
+			target.FLX_DOM_ID = target.FLX_DOM_ID || (++FLX_DOM_ID);
+		}
+		
+		if (!target.selector) {
+			target.selector = target.nodeName.toLowerCase() + "[FLX_DOM_ID=" + target.FLX_DOM_ID + "]";
+			target.setAttribute("data-flexie-parent", TRUE);
+		}
+		
+		if (!target.properties) {
+			target.properties = [];
+		}
+		
+		if (!target.children) {
+			target.children = matchFlexChildren(target, LIBRARY, sanitizeChildren(target.childNodes));
+		}
+		
+		if (!target.nested) {
+			target.nested = target.selector + " [data-flexie-parent]";
+		}
+		
+		params.target = target;
+		return params;
+	}
+	
 	selectivizrEngine = (function () {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
 		    RE_IMPORT = /@import\s*(?:url\(\s*?)?(["'])?(.*?)\1\s*\)?[\w\W]*?;/g,
@@ -1614,7 +1646,7 @@ var Flexie = (function (win, doc) {
 				return;
 			}
 			
-			params.nodes = sanitizeChildren(target, nodes);
+			params = ensureStructuralIntegrity(params);
 			
 			// Setup properties
 			self.updateModel(params);
