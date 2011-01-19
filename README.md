@@ -58,9 +58,8 @@ Be careful of pseudo-selectors (i.e., `:nth-child`, `:first-child`). While nativ
 ### Asynchronous API
 You can run Flexie asynchronously in case you cannot purely on style sheets. All parameters are optional, unless otherwise stated:
 
-	var foo = document.querySelector("#foo");
 	var box = new Flexie.box({
-		target : foo,
+		target : document.getElementById("foo"),
 		orient : "horizontal",
 		align : "stretch",
 		direction : "normal",
@@ -69,29 +68,23 @@ You can run Flexie asynchronously in case you cannot purely on style sheets. All
 		ordinalMatrix : [0, 0, 0, 0]
 	});
 
-##### target (required)
-The flexbox parent element. This must be a DOM node.
-
-##### orient
-(Optional) Possible values: `horizontal`, `vertical`
-
-##### align
-(Optional) Possible values: `stretch`, `start`, `end`, `center`
-
-##### direction
-(Optional) Possible values: `normal`, `reverse`
-
-##### pack
-(Optional) Possible values: `start`, `end`, `center`, `justify`
-
-##### flexMatrix
-(Optional) An array of values to apply to the parent's children. e.g.:
-	flexMatrix : [1, 0, 0] // Three child nodes contained, the parent's first child has a box-flex value of 1
-	flexMatrix : [1, 0, 1] // Three child nodes contained, the parent's first and last child have a box-flex value of 1
-	flexMatrix : [1, 1, 1] // Three child nodes contained, all children have a box-flex value of 1
-
-##### ordinalMatrix
-(Optional) An array of values to apply to the parent's children. See `flexMatrix` for an example.
+*	**target**
+	(required) The flexbox parent element. This must be a DOM node.
+*	**orient**
+	(optional) Possible values: `horizontal`, `vertical`
+*	**align**
+	(optional) Possible values: `stretch`, `start`, `end`, `center`
+*	**direction**
+	(optional) Possible values: `normal`, `reverse`
+*	**pack**
+	(optional) Possible values: `start`, `end`, `center`, `justify`
+*	**flexMatrix**
+	(optional) An array of values to apply to the parent's children. e.g.:
+		flexMatrix : [1, 0, 0] // Three child nodes contained, the parent's first child has a box-flex value of 1
+		flexMatrix : [1, 0, 1] // Three child nodes contained, the parent's first and last child have a box-flex value of 1
+		flexMatrix : [1, 1, 1] // Three child nodes contained, all children have a box-flex value of 1
+*	**ordinalMatrix**
+	(optional) An array of values to apply to the parent's children. See `flexMatrix` for an example.
 
 ### Acknowledgements
 Selectivizr, for their fantastic CSS parsing engine.
