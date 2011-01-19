@@ -1647,6 +1647,9 @@ var Flexie = (function (win, doc) {
 				instance.construct.updateModel(instance.params);
 			}
 		});
+	
+	FLX.getInstance = function (target) {
+		return FLEX_BOXES[target.FLX_DOM_ID];
 	};
 	
 	FLX.destroyInstance = function (target) {
@@ -1747,5 +1750,6 @@ var Flexie = (function (win, doc) {
 window["Flexie"] = Flexie;
 Flexie["version"] = Flexie.version;
 Flexie["updateInstance"] = Flexie.updateInstance;
+Flexie["getInstance"] = Flexie.getInstance;
 Flexie["destroyInstance"] = Flexie.destroyInstance;
 Flexie["flexboxSupported"] = Flexie.flexboxSupported;
