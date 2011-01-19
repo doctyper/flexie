@@ -1394,9 +1394,10 @@ var Flexie = (function (win, doc) {
 			
 			boxAlign : function (target, children, params) {
 				var self = this, floatType,
-				    targetDimension, kidDimension;
+				    targetDimension, kidDimension,
+				    flexCheck = parentFlex(target);
 				
-				if (!SUPPORT && !parentFlex(target)) {
+				if (!SUPPORT && !flexCheck.flex) {
 					if (!dimensionValues(target, self.anti.dim)) {
 						appendPixelValue(target, self.anti.dim, NULL);
 					}
