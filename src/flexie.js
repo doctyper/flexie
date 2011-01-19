@@ -1210,23 +1210,9 @@ var Flexie = (function (win, doc) {
 				if (!SUPPORT) {
 					forEach(children, function (i, kid) {
 						floatType = (BROWSER.IE >= 9) ? "cssFloat" : "styleFloat";
-						
 						kid.style[floatType] = LEFT;
 
 						if (params.orient === VERTICAL) {
-							// Margins collapse on a normal box
-							// But not on flexbox
-							// So we hack away...
-							if (i) {
-								combinedMargin = getComputedStyle(kid, high.pos, TRUE) + getComputedStyle(children[i - 1], high.opp, TRUE);
-								appendPixelValue(kid, high.pos, combinedMargin);
-							} else if (BROWSER.IE < 8) {
-								// For IE < 8, make sure we account for parent padding as well.
-								targetPadding = getComputedStyle(target, high.pad[0], TRUE);
-								firstComputedMargin = targetPadding + getComputedStyle(kid, high.pos, TRUE);
-								appendPixelValue(kid, high.pos, firstComputedMargin);
-							}
-
 							forEach(children, function (i, kid) {
 								kid.style.clear = LEFT;
 							});
