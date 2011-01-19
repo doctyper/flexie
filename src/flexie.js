@@ -273,7 +273,7 @@ var Flexie = (function (win, doc) {
 				
 				match = (/(.*)\{(.*)\}/).exec(rule);
 				
-				if (match.length && match[2]) {
+				if (match && match[2]) {
 					selector = match[1];
 					proptext = match[2].split(";");
 					properties = [];
