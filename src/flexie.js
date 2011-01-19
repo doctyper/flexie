@@ -990,31 +990,32 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function ensureStructuralIntegrity (params) {
-		var target = params.target;
-		
-		if (!params.nodes) {
-			params.nodes = sanitizeChildren(target, target.childNodes);
-		}
+		var target = params.target,
+		    flexieParentAttribute = "data-flexie-parent";
 		
 		if (!target.FLX_DOM_ID) {
 			target.FLX_DOM_ID = target.FLX_DOM_ID || (++FLX_DOM_ID);
 		}
 		
-		if (!target.selector) {
-			target.selector = target.nodeName.toLowerCase() + "[FLX_DOM_ID=" + target.FLX_DOM_ID + "]";
-			target.setAttribute("data-flexie-parent", TRUE);
+		if (!params.nodes) {
+			params.nodes = sanitizeChildren(target, target.childNodes);
 		}
 		
-		if (!target.properties) {
-			target.properties = [];
+		if (!params.selector) {
+			params.selector = buildSelector(target);
+			target.setAttribute(flexieParentAttribute, TRUE);
 		}
 		
-		if (!target.children) {
-			target.children = matchFlexChildren(target, LIBRARY, sanitizeChildren(target.childNodes));
+		if (!params.properties) {
+			params.properties = [];
 		}
 		
-		if (!target.nested) {
-			target.nested = target.selector + " [data-flexie-parent]";
+		if (!params.children) {
+			params.children = matchFlexChildren(target, LIBRARY, sanitizeChildren(target, target.childNodes));
+		}
+		
+		if (!params.nested) {
+			params.nested = params.selector + " [" + flexieParentAttribute + "]";
 		}
 		
 		params.target = target;
