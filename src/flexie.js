@@ -928,18 +928,22 @@ var Flexie = (function (win, doc) {
 	function parentFlex (target) {
 		var totalFlex = 0,
 		    parent = target.parentNode,
-		    obj, matrix;
+		    obj, matrix, isNested;
 		
 		while (parent.FLX_DOM_ID) {
 			obj = FLEX_BOXES[parent.FLX_DOM_ID];
 			matrix = createMatchMatrix(obj.children, sanitizeChildren(parent, parent.childNodes));
 			
 			totalFlex += matrix.total;
+			isNested = true;
 			
 			parent = parent.parentNode;
 		}
 		
-		return totalFlex;
+		return {
+			nested : isNested,
+			flex : totalFlex
+		};
 	}
 	
 	function dimensionValues (target, prop) {
