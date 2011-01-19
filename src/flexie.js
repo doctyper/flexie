@@ -1475,7 +1475,7 @@ var Flexie = (function (win, doc) {
 				if (params.orient === VERTICAL) {
 					groupDimension += getComputedStyle(children[children.length - 1], self.props.opp, TRUE);
 					
-					// Fixe IE < 8 collapsing margin
+					// Fixes IE < 8 collapsing margin
 					if (BROWSER.IE < 8) {
 						targetPadding = getComputedStyle(target, self.props.pad[0], TRUE);
 					}
