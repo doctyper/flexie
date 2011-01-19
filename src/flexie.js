@@ -1539,6 +1539,12 @@ var Flexie = (function (win, doc) {
 					
 					break;
 				}
+				
+				// Float drop fix
+				// Test offset values. If different, let's bring the widow back
+				if ((params.pack === "end" || params.pack === "justify") && (params.orient === HORIZONTAL)) {
+					floatDropFix(target, params, self);
+				}
 			}
 		},
 
