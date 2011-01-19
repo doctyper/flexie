@@ -16,82 +16,68 @@ PARENT_CSS_PROPERTIES = {
 
 CHILD_CSS_PROPERTIES = {};
 
-function applyFlexboxProperty (target, property, value) {
-	var domPrefixes = DOM_PREFIXES, box,
-	    propertyFragments = property.split("-"),
-	    domProperty = "", props, values,
-	    SUPPORT = Flexie.flexboxSupported,
-	    noStretchSupport, noJustifySupport;
+function getPresetValues () {
+	return {
+		orient : $("#box-orient").val(),
+		align : $("#box-align").val(),
+		direction : $("#box-direction").val(),
+		pack : $("#box-pack").val(),
+		flexMatrix : [$("#box-flex-1").val(), $("#box-flex-2").val(), $("#box-flex-3").val()],
+		ordinalMatrix : [$("#box-ordinal-group-1").val(), $("#box-ordinal-group-2").val(), $("#box-ordinal-group-3").val()]
+	};
+}
+
+function applyFlexboxProperties (target) {
+	var instance = Flexie.getInstance(target.get(0)),
+	    values = getPresetValues(),
+	    SUPPORT = Flexie.flexboxSupported;
 	
-	$.each(propertyFragments, function (i, fragment) {
-		domProperty += fragment.charAt(0).toUpperCase() + fragment.substr(1);
+	$.each(values, function (key, value) {
+		if (value !== undefined) {
+			instance[key] = value;
+		}
 	});
 	
-	props = (/(.*)\-(\d)+/).exec(property);
+	$.each(instance.children, function (i, child) {
+		child["ordinal-group"] = values.ordinalMatrix[i];
+		child.flex = values.flexMatrix[i];
+	});
 	
-	if (SUPPORT) {
-		if (SUPPORT.partialSupport) {
-			target.children().attr("style", "");
+	target.children().andSelf().removeAttr("style").css("opacity", 0);
+	
+	window.setTimeout(function() {
+		target.removeAttr("style");
+		
+		if (!SUPPORT || SUPPORT.partialSupport) {
+			Flexie.updateInstance(target.get(0), instance);
 		}
 		
-		$.each(domPrefixes, function (i, prefix) {
-			if (/box\-(flex|ordinal\-group)/.test(property)) {
-				domProperty = domProperty.replace(/\d$/, "");
-				
-				// Null values first
-				// Set display to something other than block
-				// Set opacity to 0 to hide new display setting
-				// Solves a bug in Webkit browsers where box-flex properties do not revert once a value is applied.
-				$("#box-" + props[2]).css("opacity", "0").css(prefix + domProperty, "0").css("display", "inline-block");
-				
-				// Set a timeout.
-				// Solves the same Webkit bug. Webkit needs a pause to register the new values.
-				window.setTimeout(function() {
-					// Set correct box-flex property
-					// Remove display/opacity values
-					$("#box-" + props[2]).css(prefix + domProperty, value).css("display", "").css("opacity", "");
-				}, 0);
-			} else {
-				target.get(0).style[prefix + domProperty] = value;
-			}
-		});
-	}
-	
-	// Partial Support
-	noStretchSupport = (!SUPPORT.boxAlignStretch && (target.css("-webkit-box-align") === "stretch" || value === "stretch"));
-	noJustifySupport = (!SUPPORT.boxPackJustify && (target.css("-moz-box-pack") === "justify" || value === "justify"));
-	
-	if (!SUPPORT || (SUPPORT.partialSupport && (noStretchSupport || noJustifySupport))) {
 		if (SUPPORT) {
-			target.children().attr("style", "");
-		}
-		
-		DEFAULTS.target = DEFAULTS.target || target.get(0);
-		DEFAULTS.selector = DEFAULTS.selector || target.selector;
-		DEFAULTS.children = DEFAULTS.children || function () {
-			var matches = [];
+			var prefix;
 			
-			target.children().each(function () {
-				var obj = {
-					selector : "#" + $(this).attr("id"),
-					properties : [],
-					match : this
-				};
-				
-				matches.push(obj);
-			});
+			if ($.browser.mozilla) {
+				prefix = "Moz";
+			} else if ($.browser.webkit) {
+				prefix = "Webkit";
+			} else if ($.browser.opera) {
+				prefix = "O";
+			}
 			
-			return matches;
-		}();
-		
-		if (/box\-(flex|ordinal\-group)/.test(property)) {
-			DEFAULTS.children[props[2] - 1][props[1].replace("box-", "")] = value;
-		} else {
-			DEFAULTS[property.replace(/box\-|\-\d/g, "")] = value;
+			target.css(prefix + "BoxOrient", values.orient);
+			target.css(prefix + "BoxAlign", values.align);
+			target.css(prefix + "BoxDirection", values.direction);
+			target.css(prefix + "BoxPack", values.pack);
+			
+			window.setTimeout(function() {
+				target.children().each(function (i) {
+					var child = $(this);
+					
+					child.css("-webkit-box-ordinal-group", values.ordinalMatrix[i]);
+					child.css(prefix + "BoxFlex", values.flexMatrix[i]);
+				});
+			}, 0);
 		}
-		
-		box = new Flexie.box(DEFAULTS);
-	}
+	}, 0);
 }
 
 function parentRuleOutput (target, prefixes, rules) {
@@ -141,7 +127,7 @@ function childRuleOutput (children, prefixes, rules) {
 }
 
 function outputFlexboxCSS (target, property, value) {
-	var output = $("#flexie-css-output pre"), cssText;
+	var output = $("#flexie-css-output"), cssText;
 	
 	if (/box\-(flex|ordinal\-group)/.test(property)) {
 		CHILD_CSS_PROPERTIES[property] = value;
@@ -174,7 +160,11 @@ $(document).ready(function () {
 		property = select.attr("id");
 		value = select.val();
 
-		applyFlexboxProperty(target, property, value);
+		applyFlexboxProperties(target);
 		outputFlexboxCSS(target, property, value);
+	});
+	
+	$(window).bind("resize", function () {
+		selects.eq(0).trigger("change");
 	});
 });
