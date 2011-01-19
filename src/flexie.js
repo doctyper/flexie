@@ -1142,11 +1142,10 @@ var Flexie = (function (win, doc) {
 					].join(";");
 				
 					if (stylesheet.addRule) {
-						stylesheet.addRule(selector, paddingFix, 0);
 						if (BROWSER.IE === 6) {
-							stylesheet.addRule(selector, "zoom:1;", 0);
+							stylesheet.addRule(selector, paddingFix + "zoom:1;", 0);
 						} else if (BROWSER.IE === 7) {
-							stylesheet.addRule(selector, "display:inline-block;", 0);
+							stylesheet.addRule(selector, paddingFix + "display:inline-block;", 0);
 						} else {
 							stylesheet.addRule(selector + ":after", generatedRules, 0);
 						}
