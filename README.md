@@ -60,6 +60,7 @@ Be careful of pseudo-selectors (i.e., `:nth-child`, `:first-child`). While nativ
 ## Asynchronous API
 You can run Flexie asynchronously in case you cannot purely on style sheets. All parameters are optional, unless otherwise stated:
 
+### Creating a new Flexie Object
 	var box = new Flexie.box({
 		target : document.getElementById("foo"),
 		orient : "horizontal",
@@ -87,6 +88,31 @@ You can run Flexie asynchronously in case you cannot purely on style sheets. All
 		flexMatrix : [1, 1, 1] // Three child nodes contained, all children have a box-flex value of 1
 *	**ordinalMatrix**
 	(optional) An array of values to apply to the parent's children. See `flexMatrix` for an example.
+
+### Flexie.updateInstance(target, params)
+Used to redraw currently active Flexie objects (i.e., after dynamically updating a flexbox element). All parameters optional.
+Note: Calling this method without parameters will update all instances.
+
+*	**target**
+	(optional) The flexbox element to update.
+*	**params**
+	(optional) An object of flexbox properties to update. See Creating a new Flexie Object for accepted parameters.
+
+### Flexie.getInstance(target)
+Returns the target instance
+
+*	**target**
+	(optional) The flexbox instance to retrieve.
+	
+### Flexie.destroyInstance(target)
+Destroys the target instance
+Note: Calling this method without parameters will destroy all instances.
+
+*	**target**
+	(optional) The flexbox instance to retrieve.
+	
+### Flexie.flexBoxSupported
+An exposed object detailing the level of flexbox support. Returns false for no support.
 
 ## Acknowledgements
 Selectivizr, for their fantastic CSS parsing engine.
