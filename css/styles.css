@@ -1,9 +1,9 @@
 @font-face {
 	font-family: "Chunk Five";
-	src: url("../fonts/chunk-webfont.eot");
+	src: url("/fonts/chunk-webfont.eot");
 	src: local("☺"),
-	     url("../fonts/chunk-webfont.woff") format("woff"),
-	     url("../fonts/chunk-webfont.ttf") format("truetype");
+	     url("/fonts/chunk-webfont.woff") format("woff"),
+	     url("/fonts/chunk-webfont.ttf") format("truetype");
 }
 
 html, body {
@@ -11,15 +11,15 @@ html, body {
 }
 
 body {
-	font: 11px/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font: normal 11px/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-align: right;
-	background: #eee url("../images/bg-body-texture.jpg") center top;
+	background: #eee url("/images/bg-body-texture.jpg") center top;
 	color: #fefefe;
 	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.8);
 	font-weight: normal;
 }
 
-body > * {
+section, header, footer {
 	padding: 20px;
 	
 	-webkit-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
@@ -28,12 +28,12 @@ body > * {
 }
 
 h1 {
-	font: 24px "Chunk Five" serif;
+	font: normal 24px "Chunk Five" serif;
 }
 
 section, footer {
 	border-top: 1px solid #2a2a2a;
-	background: #2a2a2a url("../images/bg-texture.jpg") center;
+	background: #2a2a2a url("/images/bg-texture.jpg") center;
 }
 
 header h1 {
@@ -64,16 +64,21 @@ header h1 em {
 	z-index: 1;
 	letter-spacing: -0.02em;
 	color: #2a2a2a;
+	font-style: normal;
 }
 
 h2 {
 	padding: 0 5px;
 	display: inline-block;
+	zoom: 1; /* IE 6 & 7 */
+	*display: inline; /* IE 6 & 7 */
 	background: #962d3e;
 	font-size: 20px;
 	border-radius: 3px;
 	color: #fefefe;
 }
+
+
 
 h3 {
 	margin-bottom: 5px;

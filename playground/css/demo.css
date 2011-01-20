@@ -2,10 +2,10 @@
 /* (See what I did there?) */
 @font-face {
 	font-family: "Chunk Five";
-	src: url("../../fonts/chunk-webfont.eot");
+	src: url("/fonts/chunk-webfont.eot");
 	src: local("☺"),
-	     url("../../fonts/chunk-webfont.woff") format("woff"),
-	     url("../../fonts/chunk-webfont.ttf") format("truetype");
+	     url("/fonts/chunk-webfont.woff") format("woff"),
+	     url("/fonts/chunk-webfont.ttf") format("truetype");
 }
 
 body, html {
@@ -35,6 +35,7 @@ header h1 em {
 	z-index: 1;
 	letter-spacing: -0.02em;
 	color: #8ec1da;
+	font-style: normal;
 }
 
 header a {
