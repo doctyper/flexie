@@ -118,7 +118,7 @@
 		</script>
 		
 		<script type="text/javascript">
-			$(document).ready(function() {
+			Flexie.initModules = function () {
 				var THRESHOLD = 3;
 				
 				// This is a fix for Gecko
@@ -5400,6 +5400,16 @@
 							start();
 						}, 0);
 					});
+			};
+		</script>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				if ($.browser.mozilla) {
+					$("#firefox-fail").show();
+				} else {
+					Flexie.initModules();
+				}
 			});
 		</script>
 	</head>
@@ -5419,6 +5429,11 @@
 		<div id="qunit-testrunner-toolbar"></div>
 		<h2 id="qunit-userAgent"></h2>
 		<ol id="qunit-tests"></ol>
+		
+		<div id="firefox-fail">
+			<p>Unfortunately, Firefox has myriad issues with flexbox dimension and positioning values. It's so bad, that I believe it fails <em>every</em> test in this suite (and even hangs the browser), despite all other supported browsers passing with flying colors. A bug report will be filed soon, but until Mozilla acts on it, this suite will remain disabled for Firefox.</p>
+			<div></div>
+		</div>
 		
 		<!-- Google Analytics -->
 		<script type="text/javascript">
