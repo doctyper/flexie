@@ -591,7 +591,7 @@ var Flexie = (function (win, doc) {
 						});
 					} else {
 						flexboxes[target.FLX_DOM_ID] = getParams(params);
-						flexboxes[target.FLX_DOM_ID].target.setAttribute(flexieParentAttribute, true);
+						flexboxes[target.FLX_DOM_ID].target.setAttribute(flexieParentAttribute, TRUE);
 					}
 				}
 			});
@@ -782,7 +782,7 @@ var Flexie = (function (win, doc) {
 			if ((!type && x.flex) || (type && x["ordinal-group"])) {
 				x[spec] = x[spec] || calculateSpecificity(x.selector);
 				
-				exists = false;
+				exists = FALSE;
 			
 				forEach(filteredMatches, function (j, f) {
 					if (f.match === x.match) {
@@ -790,8 +790,8 @@ var Flexie = (function (win, doc) {
 							filteredMatches[j] = x;
 						}
 					
-						exists = true;
-						return false;
+						exists = TRUE;
+						return FALSE;
 					}
 				});
 			
@@ -960,7 +960,7 @@ var Flexie = (function (win, doc) {
 			matrix = createMatchMatrix(obj.children, sanitizeChildren(parent, parent.childNodes));
 			
 			totalFlex += matrix.total;
-			isNested = true;
+			isNested = TRUE;
 			
 			parent = parent.parentNode;
 		}
@@ -980,8 +980,8 @@ var Flexie = (function (win, doc) {
 			
 			forEach(obj.properties, function (i, rule) {
 				if ((new RegExp(prop)).test(rule.property)) {
-					dimension = true;
-					return false;
+					dimension = TRUE;
+					return FALSE;
 				}
 			});
 		}
@@ -1330,7 +1330,7 @@ var Flexie = (function (win, doc) {
 					});
 				};
 
-				matrix = createMatchMatrix(params.children, children, true);
+				matrix = createMatchMatrix(params.children, children, TRUE);
 
 				if (matrix.keys.length > 1) {
 					organizeChildren(matrix);
@@ -1777,7 +1777,7 @@ var Flexie = (function (win, doc) {
 			result = tests[key]();
 			
 			if (!result) {
-				partialSupportGrid.partialSupport = true;
+				partialSupportGrid.partialSupport = TRUE;
 			}
 			
 			partialSupportGrid[key] = result;
