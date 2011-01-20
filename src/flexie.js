@@ -1548,13 +1548,6 @@ var Flexie = (function (win, doc) {
 					totalDimension -= getComputedStyle(target, pad, TRUE);
 				});
 				
-				// IE6 double float margin bug
-				// http://www.positioniseverything.net/explorer/doubled-margin.html
-				if (params.orient === HORIZONTAL && BROWSER.IE === 6) {
-					targetPadding -= getComputedStyle(children[0], self.props.pos, TRUE);
-					totalDimension /= 2;
-				}
-				
 				// If totalDimension is less than 0, we have a problem...
 				if (totalDimension < 0) {
 					totalDimension = Math.max(0, totalDimension);
