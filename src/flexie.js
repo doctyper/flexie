@@ -1004,7 +1004,7 @@ var Flexie = (function (win, doc) {
 		return params;
 	}
 	
-	function ensureStructuralIntegrity (params) {
+	function ensureStructuralIntegrity (params, instance) {
 		var target = params.target,
 		    flexieParentAttribute = "data-flexie-parent";
 		
@@ -1034,6 +1034,8 @@ var Flexie = (function (win, doc) {
 		}
 		
 		params.target = target;
+		params._instance = instance;
+		
 		return params;
 	}
 	
@@ -1663,7 +1665,7 @@ var Flexie = (function (win, doc) {
 				return;
 			}
 			
-			params = ensureStructuralIntegrity(params);
+			params = ensureStructuralIntegrity(params, this);
 			
 			// Setup properties
 			self.updateModel(params);
@@ -1699,14 +1701,13 @@ var Flexie = (function (win, doc) {
 			box = FLEX_BOXES[target.FLX_DOM_ID];
 			
 			if (box) {
-				FLX.box.updateModel(box);
+				box._instance.updateModel(box);
 			} else {
 				box = new FLX.box(params);
 			}
 		} else {
 			forEach(FLEX_BOXES, function (i, box) {
-				console.log(box.target.id);
-				FLX.box.prototype.updateModel(box);
+				box._instance.updateModel(box);
 			});
 		}
 	};
