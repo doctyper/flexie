@@ -12,7 +12,7 @@ body {
 	box-pack: end;
 }
 
-#examples > ul {
+#examples .example-list {
 	display: -webkit-box;
 	display: -moz-box;
 	display: box;
@@ -22,7 +22,7 @@ body {
 	box-align: center;
 }
 
-#examples > ul > li {
+#examples .example-list .example-group {
 	-webkit-box-flex: 1;
 	-moz-box-flex: 1;
 	box-flex: 1;

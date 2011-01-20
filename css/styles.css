@@ -112,25 +112,12 @@ a:hover {
 	padding-top: 50px;
 }
 
-#examples > ul {
+#examples .example-list {
+	width: 100%;
 	margin-top: 20px;
 }
 
-#examples > ul:after {
-	content: "\0020";
-	display: block;
-	height: 0;
-	clear: both;
-	overflow: hidden;
-	visibility: hidden;
-}
-
-#examples > ul {
-	display: inline-block;
-	display: block;
-}
-
-#examples > ul > li {
+#examples .example-list  .example-group {
 	margin-bottom: 20px;
 	min-width: 150px;
 }
@@ -139,6 +126,7 @@ a:hover {
 	margin-left: 10px;
 	display: inline;
 	position: relative;
+	zoom: 1;
 }
 
 #examples li li:last-child {
@@ -157,6 +145,11 @@ a:hover {
 	width: 60px;
 	line-height: 1.2;
 	text-align: center;
+}
+
+* html #examples li li ul {
+	left: auto;
+	right: 0;
 }
 
 #examples li li li {
