@@ -1,0 +1,12 @@
+#flexie-playground fieldset legend {
+	margin: 0 auto;
+	display: block;
+}
+
+*:first-child + html #flexie-playground fieldset legend {
+	display: inline;
+}
+
+* html #flexie-playground fieldset legend {
+	display: inline;
+}
