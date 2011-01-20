@@ -866,15 +866,20 @@ var Flexie = (function (win, doc) {
 		// Float drop fix
 		// Test offset values. If different, let's bring the widow back
 		var offsetProp = "offsetTop",
-		    offset, dim;
+		    children = params.nodes,
+		    calcOffset;
 		
-		forEach(target.childNodes, function (i, kid) {
-			offset = offset || kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE);
-			
-			while ((dim = getComputedStyle(kid, instance.props.dim, TRUE)) && (kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE)) !== offset) {
-				kid.style[instance.props.dim] = dim - 1;
-			}
-		});
+		calcOffset = function (kid) {
+			return kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE);
+		};
+		
+		while (calcOffset(children[0]) !== calcOffset(children[children.length - 1])) {
+			forEach(children, function (i, kid) {
+				if (!params.hasFlex || kid.getAttribute("data-flex")) {
+					kid.style[instance.props.dim] = getComputedStyle(kid, instance.props.dim, TRUE) - 1;
+				}
+			});
+		}
 	}
 	
 	function attachResizeListener(construct, params) {
