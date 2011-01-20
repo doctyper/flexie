@@ -1443,6 +1443,8 @@ var Flexie = (function (win, doc) {
 				matrix = createMatchMatrix(params.children, children);
 
 				if (matrix.total) {
+					params.hasFlex = true;
+					
 					restrict = testForRestrictiveProperties(matrix);
 					whitespace = findTotalWhitespace(matrix);
 				
