@@ -29,7 +29,7 @@ end
 
 def google_compiler(src, target)
   puts "Minifying #{src} with Google Closure Compiler..."
-  `java -jar vendor/google-compiler/compiler.jar --compilation_level ADVANCED_OPTIMIZATIONS --js #{src} --summary_detail_level 3 --js_output_file #{target}`
+  `java -jar vendor/google-compiler/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js #{src} --summary_detail_level 3 --js_output_file #{target}`
 end
 
 def yui_compressor(src, target)
