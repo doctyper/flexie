@@ -48,6 +48,7 @@ var Flexie = (function (win, doc) {
 	
 	// Each Flexie-modified DOM node gets a unique identifier
 	FLX_DOM_ID = 0,
+	FLX_DOM_ATTR = "data-flexie-id",
 	
 	// Store support for flexbox
 	SUPPORT,
@@ -249,10 +250,15 @@ var Flexie = (function (win, doc) {
 		if (node.id) {
 			selector += "#" + node.id;
 		} else if (node.FLX_DOM_ID) {
-			selector += "[FLX_DOM_ID='" + node.FLX_DOM_ID + "']";
+			selector += "[" + FLX_DOM_ATTR + "='" + node.FLX_DOM_ID + "']";
 		}
 		
 		return selector;
+	}
+	
+	function setFlexieId (node) {
+		node.FLX_DOM_ID = node.FLX_DOM_ID || (++FLX_DOM_ID);
+		node.setAttribute(FLX_DOM_ATTR, node.FLX_DOM_ID);
 	}
 	
 	function buildSelectorTree(text) {
@@ -421,7 +427,7 @@ var Flexie = (function (win, doc) {
 						default :
 							if (node.parentNode === parent) {
 								// Flag each unique node with FLX_DOM_ID
-								node.FLX_DOM_ID = node.FLX_DOM_ID || (++FLX_DOM_ID);
+								setFlexieId(node);
 
 								unique = {};
 
@@ -437,7 +443,8 @@ var Flexie = (function (win, doc) {
 					});
 				}
 			} else {
-				child.FLX_DOM_ID = child.FLX_DOM_ID || (++FLX_DOM_ID);
+				// Flag each unique node with FLX_DOM_ID
+				setFlexieId(child);
 				
 				matches.push({
 					match : child,
@@ -526,10 +533,7 @@ var Flexie = (function (win, doc) {
 				// If is DOM object
 				if (target.nodeType) {
 					// Flag each unique node with FLX_DOM_ID
-					if (!target.FLX_DOM_ID) {
-						FLX_DOM_ID++;
-						target.FLX_DOM_ID = FLX_DOM_ID;
-					}
+					setFlexieId(target);
 					
 					// Find possible child node matches
 					children = matchFlexChildren(target, lib, flexers.children);
