@@ -1431,13 +1431,13 @@ var Flexie = (function (win, doc) {
 								}
 							}
 						});
-						
-						// Float drop fix
-						// Test offset values. If different, let's bring the widow back
-						if (params.orient === HORIZONTAL) {
-							floatDropFix(target, params, self);
-						}
 					});
+					
+					// Float drop fix
+					// Test offset values. If different, let's bring the widow back
+					if (params.orient === HORIZONTAL) {
+						floatDropFix(target, params, self);
+					}
 				};
 
 				matrix = createMatchMatrix(params.children, children);
