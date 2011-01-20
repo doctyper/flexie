@@ -24,7 +24,9 @@ header {
 }
 
 header h1 {
-	font: 24px "Chunk Five" serif;
+	font-weight: normal;
+	font-family: "Chunk Five", serif;
+	font-size: 24px;
 }
 
 header h1 em {
@@ -32,6 +34,8 @@ header h1 em {
 	right: 20px;
 	position: absolute;
 	font-size: 30px;
+	height: 30px;
+	line-height: 30px;
 	z-index: 1;
 	letter-spacing: -0.02em;
 	color: #8ec1da;

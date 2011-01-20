@@ -7,6 +7,7 @@
 }
 
 html, body {
+	width: 100%;
 	height: 100%;
 }
 
@@ -21,14 +22,12 @@ body {
 
 section, header, footer {
 	padding: 20px;
-	
-	-webkit-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
-	-moz-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 }
 
 h1 {
-	font: normal 24px "Chunk Five" serif;
+	font-weight: normal;
+	font-family: "Chunk Five", serif;
+	font-size: 24px;
 }
 
 section, footer {
