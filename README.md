@@ -4,11 +4,8 @@ Cross-browser support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css
 ### Version
 0.9
 
-### See it in Action?
+### See it in Action
 [Flexie Playground](http://doctyper.github.com/flexie/playground/)
-
-### Ready For Prime Time?
-...Possibly.
 
 ## Browser Support
 * IE 6-9
@@ -31,9 +28,6 @@ In addition, Flexie attempts to normailze browser inconsistencies with the flexi
 * box-flex-group
 * box-ordinal-group
 
-### Not There Yet
-* box-lines (as far as I can tell, no browser currently supports this property)
-
 ## Why?
 I *really* wanted to use the CSS3 Flexible Box Model.
 
@@ -45,7 +39,7 @@ Note: Flexie looks for non-namespaced properties. For example, it will ignore `-
 No setup on your end, just stick Flexie in your markup after your [selector engine of choice](http://selectivizr.com/#things).
 
 ## Requirements
-See the [Things you need to know](http://selectivizr.com/#things)
+See the [things you need to know](http://selectivizr.com/#things)
 
 ## Caveats
 For older browsers (IE < 8), please remember that some advanced selectors (child, adjacent, pseudo-selectors) will fail. Flexie does not attempt to bridge this gap, so if you must support legacy browsers, class names and ID selectors are your best bets.
