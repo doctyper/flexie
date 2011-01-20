@@ -1,13 +1,13 @@
 # Flexie
 Cross-browser support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/).
 
-## Version
+### Version
 0.9
 
-## See it in Action?
+### See it in Action?
 [Flexie Playground](http://doctyper.github.com/flexie/playground/)
 
-## Ready For Prime Time?
+### Ready For Prime Time?
 ...Possibly.
 
 ## Browser Support
