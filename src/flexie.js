@@ -46,95 +46,94 @@ var Flexie = (function (win, doc) {
 	// Scope public properties
 	var FLX = {},
 	
-	// Each Flexie-modified DOM node gets a unique identifier
-	FLX_DOM_ID = 0,
-	FLX_DOM_ATTR = "data-flexie-id",
+	    // Each Flexie-modified DOM node gets a unique identifier
+	    FLX_DOM_ID = 0,
+	    FLX_DOM_ATTR = "data-flexie-id",
+	    
+	    // Store support for flexbox
+	    SUPPORT,
+	    
+	    // Store reference to engine
+	    ENGINE,
 	
-	// Store support for flexbox
-	SUPPORT,
-	
-	// Store reference to library
-	ENGINE, LIBRARY,
-	
-	// Regular Expressions
-	PIXEL = /^-?\d+(?:px)?$/i,
-	NUMBER = /^-?\d/,
-	SIZES = /width|height|margin|padding|border/,
-	MSIE = /(msie) ([\w.]+)/,
-	WHITESPACE_CHARACTERS = /\t|\n|\r/g,
-	RESTRICTIVE_PROPERTIES = /^max\-([a-z]+)/,
-	PROTOCOL = /^https?:\/\//i,
-	LEADINGTRIM = /^\s\s*/,
-	TRAILINGTRIM = /\s\s*$/,
-	ONLY_WHITESPACE = /^\s*$/,
-	CSS_SELECTOR = /\s?(\#|\.|\[|\:(\:)?[^first\-(line|letter)|before|after]+)/g,
-	
-	// String constants
-    EMPTY_STRING = "",
-    SPACE_STRING = " ",
-    PLACEHOLDER_STRING = "$1",
-
-	PADDING_RIGHT = "paddingRight",
-	PADDING_BOTTOM = "paddingBottom",
-	PADDING_LEFT = "paddingLeft",
-	PADDING_TOP = "paddingTop",
-	
-	BORDER_RIGHT = "borderRightWidth",
-	BORDER_BOTTOM = "borderBottomWidth",
-	BORDER_LEFT = "borderLeftWidth",
-	BORDER_TOP = "borderTopWidth",
-	
-	HORIZONTAL = "horizontal",
-	VERTICAL = "vertical",
-	INHERIT = "inherit",
-	
-	LEFT = "left",
-	
-	END_MUSTACHE = "}",
-	
-	PREFIXES = " -o- -moz- -ms- -webkit- -khtml- ".split(SPACE_STRING),
-	
-	DEFAULTS = {
-		orient : HORIZONTAL,
-		align : "stretch",
-		direction : INHERIT,
-		pack : "start"
-	},
-	
-	// Global reference objects
-	FLEX_BOXES = [],
-	POSSIBLE_FLEX_CHILDREN = [],
-	DOM_ORDERED,
-	
-	RESIZE_LISTENER,
-	
-	// Minification optimizations
-	TRUE = true,
-	FALSE = false,
-	NULL = null,
-	UNDEFINED = undefined,
-	
-	// If IE, which version?
-	BROWSER = {
-		IE : (function () {
-			var ie, ua = win.navigator.userAgent,
-			    match = (MSIE).exec(ua.toLowerCase());
+	    // Store reference to library
+	    LIBRARY,
+	    
+	    // Regular Expressions
+	    PIXEL = /^-?\d+(?:px)?$/i,
+	    NUMBER = /^-?\d/,
+	    SIZES = /width|height|margin|padding|border/,
+	    MSIE = /(msie) ([\w.]+)/,
+	    WHITESPACE_CHARACTERS = /\t|\n|\r/g,
+	    RESTRICTIVE_PROPERTIES = /^max\-([a-z]+)/,
+	    PROTOCOL = /^https?:\/\//i,
+	    LEADINGTRIM = /^\s\s*/,
+	    TRAILINGTRIM = /\s\s*$/,
+	    ONLY_WHITESPACE = /^\s*$/,
+	    CSS_SELECTOR = /\s?(\#|\.|\[|\:(\:)?[^first\-(line|letter)|before|after]+)/g,
+		
+	    // String constants
+	    EMPTY_STRING = "",
+	    SPACE_STRING = " ",
+	    PLACEHOLDER_STRING = "$1",
+	    PADDING_RIGHT = "paddingRight",
+	    PADDING_BOTTOM = "paddingBottom",
+	    PADDING_LEFT = "paddingLeft",
+	    PADDING_TOP = "paddingTop",
+	    BORDER_RIGHT = "borderRightWidth",
+	    BORDER_BOTTOM = "borderBottomWidth",
+	    BORDER_LEFT = "borderLeftWidth",
+	    BORDER_TOP = "borderTopWidth",
+	    HORIZONTAL = "horizontal",
+	    VERTICAL = "vertical",
+	    INHERIT = "inherit",
+	    LEFT = "left",
+		
+	    END_MUSTACHE = "}",
+		
+	    PREFIXES = " -o- -moz- -ms- -webkit- -khtml- ".split(SPACE_STRING),
+		
+	    DEFAULTS = {
+			orient : HORIZONTAL,
+			align : "stretch",
+			direction : INHERIT,
+			pack : "start"
+	    },
+	    
+	    // Global reference objects
+	    FLEX_BOXES = [],
+	    POSSIBLE_FLEX_CHILDREN = [],
+	    DOM_ORDERED,
+	    
+	    RESIZE_LISTENER,
+	    
+	    // Minification optimizations
+	    TRUE = true,
+	    FALSE = false,
+	    NULL = null,
+	    UNDEFINED,
+	    
+	    // If IE, which version?
+	    BROWSER = {
+			IE : (function () {
+				var ie, ua = win.navigator.userAgent,
+				    match = (MSIE).exec(ua.toLowerCase());
 			
-			if (match) {
-				ie = parseInt(match[2], 10);
-			}
+				if (match) {
+					ie = parseInt(match[2], 10);
+				}
 			
-			return ie;
-		}())
-	},
-	
-	/*
-	selectivizr v1.0.0 - (c) Keith Clark, freely distributable under the terms 
-	of the MIT license.
-
-	selectivizr.com
-	*/
-	selectivizrEngine;
+				return ie;
+			}())
+	    },
+	    
+	    /*
+	    selectivizr v1.0.0 - (c) Keith Clark, freely distributable under the terms 
+	    of the MIT license.
+        
+	    selectivizr.com
+	    */
+	    selectivizrEngine;
 	
 	function trim (string) {
 		if (string) {
@@ -185,8 +184,12 @@ var Flexie = (function (win, doc) {
 		}, method;
 		
 		forEach(selectorEngines, function (engine, value) {
-			if (win[engine] && !method && (method = eval(value.replace("*", engine)))) {
-				ENGINE = engine;
+			if (win[engine] && !method) {
+				method = eval(value.replace("*", engine));
+				
+				if (method) {
+					ENGINE = engine;
+				}
 			}
 		});
 		
@@ -223,8 +226,10 @@ var Flexie = (function (win, doc) {
 		
 		current = selectorEngines[ENGINE];
 		
-		if (current && (method = eval(current[0].replace("*", ENGINE)))) {
-			if (current[2]) {
+		if (current && !method) {
+			method = eval(current[0].replace("*", ENGINE));
+			
+			if (method && current[2]) {
 				method = method[current[1]];
 			}
 			
@@ -363,8 +368,9 @@ var Flexie = (function (win, doc) {
 						multiSelectors = selector.split(selectorSplit);
 
 						forEach(multiSelectors, function (i, multi) {
-							if (multi && (multi = trim(multi))) {
-
+							multi = trim(multi);
+							
+							if (multi) {
 								if (!uniqueChildren[multi]) {
 									updatedRule = {};
 
@@ -920,7 +926,7 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function sanitizeChildren (target, nodes) {
-		var children = [], node;
+		var children = [], node, i, j;
 		
 		for (i = 0, j = nodes.length; i < j; i++) {
 			node = nodes[i];
@@ -950,7 +956,9 @@ var Flexie = (function (win, doc) {
 	function parentFlex (target) {
 		var totalFlex = 0,
 		    parent = target.parentNode,
-		    obj, matrix, isNested;
+		    obj,
+		    matrix,
+		    isNested;
 		
 		while (parent.FLX_DOM_ID) {
 			obj = FLEX_BOXES[parent.FLX_DOM_ID];
@@ -970,7 +978,8 @@ var Flexie = (function (win, doc) {
 	
 	function dimensionValues (target, prop) {
 		var parent = target.parentNode,
-		    obj, dimension;
+		    obj,
+		    dimension;
 		
 		if (parent.FLX_DOM_ID) {
 			obj = FLEX_BOXES[parent.FLX_DOM_ID];
@@ -1262,8 +1271,7 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxOrient : function (target, children, params) {
-				var self = this, wide, high,
-				    targetPadding, firstComputedMargin, combinedMargin;
+				var self = this, wide, high;
 
 				wide = {
 					pos : "marginLeft",
@@ -1304,8 +1312,6 @@ var Flexie = (function (win, doc) {
 					self.anti = wide;
 					break;
 				
-				case HORIZONTAL :
-				case "inline-axis" :
 				default :
 					self.props = wide;
 					self.anti = high;
@@ -1314,7 +1320,7 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxOrdinalGroup : function (target, children, params) {
-				var self = this, organizeChildren,
+				var organizeChildren,
 				    matrix;
 
 				if (!children.length) {
@@ -1345,9 +1351,10 @@ var Flexie = (function (win, doc) {
 				    testForRestrictiveProperties,
 				    findTotalWhitespace,
 				    distributeRatio,
-				    reBoxAlign,
-				    group = "flex-group",
-				    matrix, restrict, whitespace, distro, realign;
+				    matrix,
+				    restrict,
+				    whitespace,
+				    distro;
 
 				if (!children.length) {
 					return;
@@ -1355,7 +1362,8 @@ var Flexie = (function (win, doc) {
 				
 				testForRestrictiveProperties = function (matrix) {
 					var flexers = matrix.groups,
-					    keys = matrix.keys, max;
+					    keys = matrix.keys,
+					    max;
 					
 					forEach(keys, function (i, key) {
 						forEach(flexers[key], function (i, x) {
@@ -1377,7 +1385,8 @@ var Flexie = (function (win, doc) {
 
 				findTotalWhitespace = function (matrix) {
 					var groupDimension = 0,
-					    whitespace, ration;
+					    whitespace,
+					    ration;
 
 					forEach(children, function (i, kid) {
 						groupDimension += getComputedStyle(kid, self.props.dim, TRUE);
@@ -1407,9 +1416,12 @@ var Flexie = (function (win, doc) {
 				distributeRatio = function (matrix, whitespace) {
 					var flexers = matrix.groups,
 					    keys = matrix.keys,
-					    flex, specificity,
+					    flex,
+					    specificity,
 					    ration = whitespace.ration,
-					    widthRation, trueDim, newDimension;
+					    widthRation,
+					    trueDim,
+					    newDimension;
 
 					forEach(keys, function (i, key) {
 						widthRation = (ration * key);
@@ -1459,7 +1471,8 @@ var Flexie = (function (win, doc) {
 			
 			boxAlign : function (target, children, params) {
 				var self = this,
-				    targetDimension, kidDimension,
+				    targetDimension,
+				    kidDimension,
 				    flexCheck = parentFlex(target);
 				
 				if (!SUPPORT && !flexCheck.flex) {
@@ -1494,7 +1507,6 @@ var Flexie = (function (win, doc) {
 					});
 					break;
 				
-				case "stretch" :
 				default :
 					forEach(children, function (i, kid) {
 						switch (kid.nodeName.toLowerCase()) {
@@ -1538,9 +1550,12 @@ var Flexie = (function (win, doc) {
 				    groupDimension = 0,
 				    firstComputedMargin = 0,
 				    targetPadding = 0,
-				    totalDimension, fractionedDimension,
-				    currentDimension, remainder,
-				    length = children.length - 1;
+				    totalDimension,
+				    fractionedDimension,
+				    currentDimension,
+				    remainder,
+				    length = children.length - 1,
+				    kid;
 
 				forEach(children, function (i, kid) {
 					groupDimension += kid[self.props.out];
@@ -1659,7 +1674,7 @@ var Flexie = (function (win, doc) {
 
 		renderModel : function (params) {
 			var self = this,
-			    target = params.target, i, j,
+			    target = params.target,
 			    nodes = target.childNodes;
 			
 			// Sanity check.
@@ -1697,7 +1712,7 @@ var Flexie = (function (win, doc) {
 	};
 	
 	FLX.updateInstance = function (target, params) {
-		var self = this, box;
+		var box;
 		
 		if (target) {
 			box = FLEX_BOXES[target.FLX_DOM_ID];
@@ -1719,7 +1734,8 @@ var Flexie = (function (win, doc) {
 	};
 	
 	FLX.destroyInstance = function (target) {
-		var self = this, box, destroy;
+		var box,
+		    destroy;
 		
 		destroy = function (box) {
 			box.target.FLX_DOM_ID = NULL;
@@ -1746,18 +1762,16 @@ var Flexie = (function (win, doc) {
 	};
 
 	FLX.flexboxSupport = function () {
-		var partialSupportGrid = {};
-		
-		var height = 100, childHeight,
+		var partialSupportGrid = {},
+		    height = 100,
+		    childHeight,
 		    dummy = doc.createElement("flxbox"),
 		    child = '<b style="margin: 0; padding: 0; display:block; width: 10px; height:' + (height / 2) + 'px"></b>',
-		    i, j, tests, key, result;
+		    tests,
+		    result;
 
 		dummy.style.width = dummy.style.height = height + "px";
-		
-		for (i = 0, j = 3; i < j; i++) {
-			dummy.innerHTML += child;
-		}
+		dummy.innerHTML = (child + child + child);
 
 		appendProperty(dummy, "display", "box");
 		appendProperty(dummy, "box-align", "stretch", TRUE);
@@ -1772,27 +1786,25 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxPackJustify : function () {
-				var totalOffset = 0,
-				    i, j, child;
+				var totalOffset = 0;
 				
-				for (i = 0, j = dummy.childNodes.length; i < j; i++) {
-					child = dummy.childNodes[i];
+				forEach(dummy.childNodes, function (i, child) {
 					totalOffset += child.offsetLeft;
-				}
+				});
 				
 				return (totalOffset === 135);
 			}
 		};
 		
-		for (key in tests) {
-			result = tests[key]();
+		forEach(tests, function (key, value) {
+			result = value();
 			
 			if (!result) {
 				partialSupportGrid.partialSupport = TRUE;
 			}
 			
 			partialSupportGrid[key] = result;
-		}
+		});
 		
 		doc.body.removeChild(dummy);
 		return ~ (dummy.style.display).indexOf("box") ? partialSupportGrid : FALSE;
