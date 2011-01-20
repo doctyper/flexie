@@ -1,21 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>Flexie | Legacy support for the CSS3 Flexible Box Model</title>
+		<title>Flexie Demo</title>
 		
-		<link rel="stylesheet" href="css/test.css" type="text/css" />
+		<!-- Flexie -->
+		<style type="text/css" media="screen">
+			* {
+				margin: 0;
+				padding: 0;
+				border: 0;
+			}
+			
+			html, body {
+				width: 100%;
+				height: 100%;
+			}
+
+			body {
+				background: #444;
+				text-align: center;
+				color: #ddd;
+				font: bold 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+			}
+
+			#box-child-1 {
+				background: #111;
+			}
+
+			#box-child-2 {
+				background: #222;
+			}
+
+			#box-child-3 {
+				background: #333;
+			}
+
+			#nested-child-1 {
+				background: #444;
+			}
+
+			#nested-child-2 {
+				background: #555;
+			}
+
+			#nested-child-3 {
+				background: #666;
+			}
+
+			#deep-child-1 {
+				background: #777;
+			}
+
+			#deep-child-2 {
+				background: #888;
+			}
+
+			#deep-child-3 {
+				background: #999;
+			}
+		</style>
+		<link rel="stylesheet" href="css/box-flex.css" type="text/css" />
 	</head>
 	<body>
-		<!-- Note that there is no extra markup needed for layout purposes -->
-		<div id="doc">
-			<p id="header">Header</p>
-			<div id="products">
-				<p id="phones">Phones</p>
-				<p id="computers">Computers</p>
-				<p id="fast-cars">Fast Cars</p>
+		<div id="box-parent">
+			<div id="box-child-1"><span>Box Child 1</span></div>
+			<div id="box-child-2">
+				<div id="nested-child-1"><span>Nested Child 1</span></div>
+				<div id="nested-child-2">
+					<div id="deep-child-1"><span>Deep Child 1</span></div>
+					<div id="deep-child-2"><span>Deep Child 2</span></div>
+					<div id="deep-child-3"><span>Deep Child 3</span></div>
+				</div>
+				<div id="nested-child-3"><span>Nested Child 3</span></div>
 			</div>
-			<p id="footer">Footer</p>
+			<div id="box-child-3"><span>Box Child 3</span></div>
 		</div>
 		
 		<!-- DOMAssistant -->
@@ -25,7 +84,7 @@
 		<!-- <script src="http://nwevents.googlecode.com/svn/trunk/nwmatcher.js" type="text/javascript"></script> -->
 		
 		<!-- jQuery -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
 		
 		<!-- Sizzle -->
 		<!-- <script src="http://github.com/jeresig/sizzle/raw/master/sizzle.js" type="text/javascript"></script> -->
@@ -43,6 +102,7 @@
 		<!-- Dojo -->
 		<!-- <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.5/dojo/dojo.xd.js" type="text/javascript"></script> -->
 		
-		<script src="../src/flexie.js" type="text/javascript"></script>
+		<!-- Flexie -->
+		<script src="/src/flexie.js" type="text/javascript"></script>
 	</body>
 </html>

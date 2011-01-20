@@ -1,0 +1,30 @@
+#box-parent {
+	width: 100%; /* Firefox needs this */
+	height: 100%;
+}
+
+#box-parent, #box-child-2, #nested-child-2 {
+	display: -webkit-box;
+	display: -moz-box;
+	display: box;
+	
+	-webkit-box-orient: vertical;
+	-moz-box-orient: vertical;
+	box-orient: vertical;
+	
+	-webkit-box-direction: reverse;
+	-moz-box-direction: reverse;
+	box-direction: reverse;
+}
+
+#box-parent div {
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	box-flex: 1;
+}
+
+#box-child-2 {
+	-webkit-box-ordinal-group: 2;
+	-moz-box-ordinal-group: 2;
+	box-ordinal-group: 2;
+}
