@@ -635,31 +635,31 @@
 							direction : "normal"
 						});
 						
-						same(children.eq(0).offset(), {
+						same(true, withinThreshold(children.eq(0).offset(), {
 							top : 176,
 							left : boxModelFix(children.eq(0), 29)
-						}, "First Child Offset");
+						}), "First Child Offset Within Threshold");
 						same(children.eq(0).width(), 514, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
 				
-						same(children.eq(1).offset(), {
+						same(true, withinThreshold(children.eq(1).offset(), {
 							top : 236,
 							left : boxModelFix(children.eq(1), 30)
-						}, "Second Child Offset");
+						}), "Second Child Offset Within Threshold");
 						same(children.eq(1).width(), 507, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
 				
-						same(children.eq(2).offset(), {
+						same(true, withinThreshold(children.eq(2).offset(), {
 							top : 308,
 							left : boxModelFix(children.eq(2), 31)
-						}, "Third Child Offset");
+						}), "Third Child Offset Within Threshold");
 						same(children.eq(2).width(), 509, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
 				
-						same(children.eq(3).offset(), {
+						same(true, withinThreshold(children.eq(3).offset(), {
 							top : 386,
 							left : boxModelFix(children.eq(3), 31)
-						}, "Fourth Child Offset");
+						}), "Fourth Child Offset Within Threshold");
 						same(children.eq(3).width(), 514, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
 				
@@ -681,28 +681,28 @@
 						same(true, withinThreshold(children.eq(0).offset(), {
 							top : 57,
 							left : boxModelFix(children.eq(0), 29)
-						}), "First Child Offset Within One");
+						}), "First Child Offset Within Threshold");
 						same(children.eq(0).width(), 514, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
 				
 						same(true, withinThreshold(children.eq(1).offset(), {
 							top : 196,
 							left : boxModelFix(children.eq(1), 30)
-						}), "Second Child Offset Within One");
+						}), "Second Child Offset Within Threshold");
 						same(children.eq(1).width(), 507, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
 				
 						same(true, withinThreshold(children.eq(2).offset(), {
 							top : 348,
 							left : boxModelFix(children.eq(2), 31)
-						}), "Third Child Offset Within One");
+						}), "Third Child Offset Within Threshold");
 						same(children.eq(2).width(), 509, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
 				
 						same(true, withinThreshold(children.eq(3).offset(), {
 							top : 506,
 							left : boxModelFix(children.eq(3), 31)
-						}), "Fourth Child Offset Within One");
+						}), "Fourth Child Offset Within Threshold");
 						same(children.eq(3).width(), 514, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
 				
@@ -1335,31 +1335,31 @@
 							direction : "reverse"
 						});
 					
-						same(children.eq(0).offset(), {
+						same(true, withinThreshold(children.eq(0).offset(), {
 							top : 419,
 							left : boxModelFix(children.eq(0), 29)
-						}, "First Child Offset");
+						}), "First Child Offset Within Threshold");
 						same(children.eq(0).width(), 514, "First Child Width");
 						same(children.eq(0).height(), 44, "First Child Height");
 					
-						same(children.eq(1).offset(), {
+						same(true, withinThreshold(children.eq(1).offset(), {
 							top : 346,
 							left : boxModelFix(children.eq(1), 30)
-						}, "Second Child Offset");
+						}), "Second Child Offset Within Threshold");
 						same(children.eq(1).width(), 507, "Second Child Width");
 						same(children.eq(1).height(), 53, "Second Child Height");
 					
-						same(children.eq(2).offset(), {
+						same(true, withinThreshold(children.eq(2).offset(), {
 							top : 267,
 							left : boxModelFix(children.eq(2), 31)
-						}, "Third Child Offset");
+						}), "Third Child Offset Within Threshold");
 						same(children.eq(2).width(), 509, "Third Child Width");
 						same(children.eq(2).height(), 62, "Third Child Height");
 				
-						same(children.eq(3).offset(), {
+						same(true, withinThreshold(children.eq(3).offset(), {
 							top : 174,
 							left : boxModelFix(children.eq(3), 31)
-						}, "Fourth Child Offset");
+						}), "Fourth Child Offset Within Threshold");
 						same(children.eq(3).width(), 514, "Fourth Child Width");
 						same(children.eq(3).height(), 71, "Fourth Child Height");
 						
@@ -1987,25 +1987,25 @@
 							direction : "normal"
 						});
 					
-						same(children.eq(0).offset(), {
+						same(true, withinThreshold(children.eq(0).offset(), {
 							top : 176,
 							left : boxModelFix(children.eq(0), 29)
-						}, "First Child Offset");
+						}), "First Child Offset Within Threshold");
 					
-						same(children.eq(1).offset(), {
+						same(true, withinThreshold(children.eq(1).offset(), {
 							top : 236,
 							left : boxModelFix(children.eq(1), 30)
-						}, "Second Child Offset");
+						}), "Second Child Offset Within Threshold");
 					
-						same(children.eq(2).offset(), {
+						same(true, withinThreshold(children.eq(2).offset(), {
 							top : 308,
 							left : boxModelFix(children.eq(2), 31)
-						}, "Third Child Offset");
+						}), "Third Child Offset Within Threshold");
 				
-						same(children.eq(3).offset(), {
+						same(true, withinThreshold(children.eq(3).offset(), {
 							top : 386,
 							left : boxModelFix(children.eq(3), 31)
-						}, "Fourth Child Offset");
+						}), "Fourth Child Offset Within Threshold");
 						
 						start();
 					});
@@ -2623,25 +2623,25 @@
 							direction : "reverse"
 						});
 					
-						same(children.eq(0).offset(), {
+						same(true, withinThreshold(children.eq(0).offset(), {
 							top : 419,
 							left : boxModelFix(children.eq(0), 29)
-						}, "First Child Offset");
+						}), "First Child Offset Within Threshold");
 					
-						same(children.eq(1).offset(), {
+						same(true, withinThreshold(children.eq(1).offset(), {
 							top : 346,
 							left : boxModelFix(children.eq(1), 30)
-						}, "Second Child Offset");
+						}), "Second Child Offset Within Threshold");
 					
-						same(children.eq(2).offset(), {
+						same(true, withinThreshold(children.eq(2).offset(), {
 							top : 267,
 							left : boxModelFix(children.eq(2), 31)
-						}, "Third Child Offset");
+						}), "Third Child Offset Within Threshold");
 				
-						same(children.eq(3).offset(), {
+						same(true, withinThreshold(children.eq(3).offset(), {
 							top : 174,
 							left : boxModelFix(children.eq(3), 31)
-						}, "Fourth Child Offset");
+						}), "Fourth Child Offset Within Threshold");
 						
 						start();
 					});
@@ -3259,25 +3259,25 @@
 							direction : "normal"
 						});
 					
-						same(children.eq(0).offset(), {
+						same(true, withinThreshold(children.eq(0).offset(), {
 							top : 176,
 							left : boxModelFix(children.eq(0), 499)
-						}, "First Child Offset");
+						}), "First Child Offset Within Threshold");
 					
-						same(children.eq(1).offset(), {
+						same(true, withinThreshold(children.eq(1).offset(), {
 							top : 236,
 							left : boxModelFix(children.eq(1), 484)
-						}, "Second Child Offset");
+						}), "Second Child Offset Within Threshold");
 					
-						same(children.eq(2).offset(), {
+						same(true, withinThreshold(children.eq(2).offset(), {
 							top : 308,
 							left : boxModelFix(children.eq(2), 478)
-						}, "Third Child Offset");
+						}), "Third Child Offset Within Threshold");
 				
-						same(children.eq(3).offset(), {
+						same(true, withinThreshold(children.eq(3).offset(), {
 							top : 386,
 							left : boxModelFix(children.eq(3), 474)
-						}, "Fourth Child Offset");
+						}), "Fourth Child Offset Within Threshold");
 						
 						start();
 					});
@@ -3895,25 +3895,25 @@
 							direction : "reverse"
 						});
 					
-						same(children.eq(0).offset(), {
+						same(true, withinThreshold(children.eq(0).offset(), {
 							top : 419,
 							left : boxModelFix(children.eq(0), 499)
-						}, "First Child Offset");
+						}), "First Child Offset Within Threshold");
 					
-						same(children.eq(1).offset(), {
+						same(true, withinThreshold(children.eq(1).offset(), {
 							top : 346,
 							left : boxModelFix(children.eq(1), 484)
-						}, "Second Child Offset");
+						}), "Second Child Offset Within Threshold");
 					
-						same(children.eq(2).offset(), {
+						same(true, withinThreshold(children.eq(2).offset(), {
 							top : 267,
 							left : boxModelFix(children.eq(2), 478)
-						}, "Third Child Offset");
+						}), "Third Child Offset Within Threshold");
 				
-						same(children.eq(3).offset(), {
+						same(true, withinThreshold(children.eq(3).offset(), {
 							top : 174,
 							left : boxModelFix(children.eq(3), 474)
-						}, "Fourth Child Offset");
+						}), "Fourth Child Offset Within Threshold");
 						
 						start();
 					});
@@ -4146,22 +4146,22 @@
 						same(true, withinThreshold(children.eq(0).offset(), {
 							top : 298,
 							left : boxModelFix(children.eq(0), 29)
-						}), "First Child Offset Within One");
+						}), "First Child Offset Within Threshold");
 					
 						same(true, withinThreshold(children.eq(1).offset(), {
 							top : 291,
 							left : boxModelFix(children.eq(1), 95)
-						}), "Second Child Offset Within One");
+						}), "Second Child Offset Within Threshold");
 					
 						same(true, withinThreshold(children.eq(2).offset(), {
 							top : 288,
 							left : boxModelFix(children.eq(2), 177)
-						}), "Third Child Offset Within One");
+						}), "Third Child Offset Within Threshold");
 				
 						same(true, withinThreshold(children.eq(3).offset(), {
 							top : 280,
 							left : boxModelFix(children.eq(3), 265)
-						}), "Fourth Child Offset Within One");
+						}), "Fourth Child Offset Within Threshold");
 						
 						start();
 					});
