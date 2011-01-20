@@ -238,8 +238,6 @@ var Flexie = (function (win, doc) {
 			if (!method && handler) {
 				handler();
 			}
-			
-			FLX.updateInstance();
 		});
 	}
 	
