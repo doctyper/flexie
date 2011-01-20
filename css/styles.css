@@ -117,6 +117,10 @@ a:hover {
 	margin-top: 20px;
 }
 
+*:first-child + html #examples .example-list {
+	margin-bottom: 20px;
+}
+
 #examples .example-list  .example-group {
 	margin-bottom: 20px;
 	min-width: 150px;
