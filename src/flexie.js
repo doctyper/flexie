@@ -1812,15 +1812,3 @@ var Flexie = (function (win, doc) {
 	
 	return FLX;
 }(this, document));
-
-// For Google's Closure Compiler
-// Exports Public Properties
-
-// Turn off dot notation warning for GCC
-/*jslint sub: true */
-window["Flexie"] = Flexie;
-Flexie["version"] = Flexie.version;
-Flexie["updateInstance"] = Flexie.updateInstance;
-Flexie["getInstance"] = Flexie.getInstance;
-Flexie["destroyInstance"] = Flexie.destroyInstance;
-Flexie["flexboxSupported"] = Flexie.flexboxSupported;
