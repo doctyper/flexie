@@ -1,5 +1,5 @@
 ## Flexie
-Legacy support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/).
+Cross-browser support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/).
 
 ### Version
 0.9
@@ -48,6 +48,8 @@ No setup on your end, just stick Flexie in your markup after your [selector engi
 See the [Things you need to know](http://selectivizr.com/#things)
 
 ### Caveats
+For older browsers (IE < 8), please remember that some advanced selectors (child, adjacent, pseudo-selectors) will fail. Flexie does not attempt to bridge this gap, so if you must support legacy browsers, class names and ID selectors are your friend.
+
 As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. <strike>Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.</strike>
 
 * As of version 0.7, Flexie normalizes the `box-align` property across Webkit browsers.
