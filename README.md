@@ -91,7 +91,8 @@ You can run Flexie asynchronously in case you cannot purely on style sheets. All
 
 ### Flexie.updateInstance(target, params)
 Used to redraw currently active Flexie objects (i.e., after dynamically updating a flexbox element). All parameters optional.
-Note: Calling this method without parameters will update all instances.
+
+_Note: Calling this method without parameters will update all instances._
 
 *	**target**
 	(optional) The flexbox element to update.
@@ -105,8 +106,9 @@ Returns the target instance
 	(optional) The flexbox instance to retrieve.
 	
 ### Flexie.destroyInstance(target)
-Destroys the target instance
-Note: Calling this method without parameters will destroy all instances.
+Destroys the target instance.
+
+_Note: Calling this method without parameters will destroy all instances._
 
 *	**target**
 	(optional) The flexbox instance to retrieve.
