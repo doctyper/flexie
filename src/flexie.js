@@ -104,7 +104,6 @@ var Flexie = (function (win, doc) {
 	// Global reference objects
 	FLEX_BOXES = [],
 	POSSIBLE_FLEX_CHILDREN = [],
-	FLEX_INSTANCES = [],
 	DOM_ORDERED,
 	
 	RESIZE_LISTENER,
@@ -879,11 +878,6 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function attachResizeListener(construct, params) {
-		FLEX_INSTANCES.push({
-			construct : construct,
-			params : params
-		});
-		
 		if (!RESIZE_LISTENER) {
 			var storedWidth, storedHeight,
 			    currentWidth, currentHeight,
@@ -1692,22 +1686,21 @@ var Flexie = (function (win, doc) {
 	};
 	
 	FLX.updateInstance = function (target, params) {
-		var exists;
+		var self = this, box;
 		
-		forEach(FLEX_INSTANCES, function (i, instance) {
-			if (!target || (instance && instance.params && instance.params.target.FLX_DOM_ID === target.FLX_DOM_ID)) {
-				forEach(params, function (key, value) {
-					if (value !== UNDEFINED) {
-						instance.params[key] = value;
-					}
-				});
-				instance.construct.updateModel(instance.params);
-				exists = true;
+		if (target) {
+			box = FLEX_BOXES[target.FLX_DOM_ID];
+			
+			if (box) {
+				FLX.box.updateModel(box);
+			} else {
+				box = new FLX.box(params);
 			}
-		});
-		
-		if (params && !exists) {
-			exists = new FLX.box(params);
+		} else {
+			forEach(FLEX_BOXES, function (i, box) {
+				console.log(box.target.id);
+				FLX.box.prototype.updateModel(box);
+			});
 		}
 	};
 	
@@ -1716,22 +1709,30 @@ var Flexie = (function (win, doc) {
 	};
 	
 	FLX.destroyInstance = function (target) {
-		var instances = FLEX_INSTANCES;
+		var self = this, box, destroy;
 		
-		forEach(FLEX_INSTANCES, function (i, instance) {
-			if (instance && instance.params && instance.params.target === target) {
-				instance.params.target.FLX_DOM_ID = null;
-				instance.params.target.style.cssText = EMPTY_STRING;
-				
-				forEach(instance.params.children, function (i, x) {
-					x.match.style.cssText = EMPTY_STRING;
-				});
-				
-				instances = FLEX_INSTANCES.splice(i, 1);
+		destroy = function (box) {
+			box.target.FLX_DOM_ID = NULL;
+			box.target.style.cssText = EMPTY_STRING;
+			
+			forEach(box.children, function (i, x) {
+				x.match.style.cssText = EMPTY_STRING;
+			});
+		};
+		
+		if (target) {
+			box = FLEX_BOXES[target.FLX_DOM_ID];
+			
+			if (box) {
+				destroy(box);
 			}
-		});
-		
-		FLEX_INSTANCES = instances;
+		} else {
+			forEach(FLEX_BOXES, function (i, box) {
+				destroy(box);
+			});
+			
+			FLEX_BOXES = [];
+		}
 	};
 
 	FLX.flexboxSupport = function () {
