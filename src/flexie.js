@@ -1218,6 +1218,7 @@ var Flexie = (function (win, doc) {
 				
 					if (stylesheet.addRule) {
 						if (BROWSER.IE === 6) {
+							target.style.zoom = "1";
 							stylesheet.addRule(selector.replace(/\>|\+|\~/g, ""), paddingFix + "zoom:1;", 0);
 						} else if (BROWSER.IE === 7) {
 							stylesheet.addRule(selector, paddingFix + "display:inline-block;", 0);
