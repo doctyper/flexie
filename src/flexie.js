@@ -1816,4 +1816,4 @@ Flexie["version"] = Flexie.version;
 Flexie["updateInstance"] = Flexie.updateInstance;
 Flexie["getInstance"] = Flexie.getInstance;
 Flexie["destroyInstance"] = Flexie.destroyInstance;
-Flexie["flexboxSupported"] = Flexie.flexboxSupported;
+Flexie["flexboxSupport"] = Flexie.flexboxSupport;
