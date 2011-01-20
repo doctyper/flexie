@@ -1220,7 +1220,7 @@ var Flexie = (function (win, doc) {
 							stylesheet.addRule(selector + ":after", generatedRules, 0);
 						}
 					} else if (stylesheet.insertRule) {
-						stylesheet.insertRule(selector, paddingFix, 0);
+						stylesheet.insertRule(selector + "{" + paddingFix + "}", 0);
 						stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
 					}
 
