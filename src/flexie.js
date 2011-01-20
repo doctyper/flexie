@@ -311,99 +311,98 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function findFlexboxElements(rules) {
-		var selector, properties,
+		var selectors, properties,
 		    property, value, shortProp,
-		    selectorSplit = /(\s)?,(\s)?/,
-		    addRules, multiSelectors, updatedRule,
+		    selectorSplit = /\s?,\s?/,
+		    createUniqueObject, addRules,
 		    uniqueChildren = {}, uniqueBoxes = {};
 		
-		addRules = function (selector, rules) {
-			var element = uniqueBoxes[selector];
-			
-			rules.selector = trim(rules.selector);
-			
+		createUniqueObject = function (selector, rules, prop, value) {
+			var unique = {
+				selector : trim(selector),
+				properties : []
+			};
+
 			forEach(rules.properties, function (i, prop) {
-				prop.property = trim(prop.property);
-				prop.value = trim(prop.value);
+				unique.properties.push({
+					property : trim(prop.property),
+					value : trim(prop.value)
+				});
 			});
 			
-			if (element) {
-				element.properties.push(rules);
+			if (prop && value) {
+				unique[prop] = value;
+			}
+			
+			return unique;
+		};
+		
+		addRules = function (selector, rules, prop, value) {
+			var box = (prop && value) ? uniqueChildren[selector] : uniqueBoxes[selector];
+			
+			if (box) {
+				forEach(rules.properties, function (i, rule) {
+					forEach(box.properties, function (j, x) {
+						if (rule.property === x.property) {
+							box.properties[j] = rules.properties[i];
+							return false;
+						}
+					});
+				});
 			} else {
-				uniqueBoxes[selector] = rules;
+				if (prop && value) {
+					uniqueChildren[selector] = createUniqueObject(selector, rules, prop, value);
+				} else {
+					uniqueBoxes[selector] = createUniqueObject(selector, rules);
+				}
 			}
 		};
 		
 		forEach(rules, function (i, rule) {
-			selector = trim(rule.selector);
-			properties = rule.properties;
+			selectors = trim(rule.selector).replace(selectorSplit, ",").split(selectorSplit);
 			
-			forEach(properties, function (i, prop) {
-			
-				property = trim(prop.property);
-				value = trim(prop.value);
+			forEach(selectors, function (i, selector) {
+				selector = trim(selector);
+				properties = rule.properties;
 
-				
-				if (property) {
-					shortProp = property.replace("box-", EMPTY_STRING);
+				forEach(properties, function (i, prop) {
+					property = trim(prop.property);
+					value = trim(prop.value);
 
-					switch (shortProp) {
-					case "display" :
-						if (value === "box") {
-							addRules(selector, rule);
-						}
-						break;
+					if (property) {
+						shortProp = property.replace("box-", EMPTY_STRING);
 
-					case "orient" :
-					case "align" :
-					case "direction" :
-					case "pack" :
-						addRules(selector, rule);
-						break;
-
-					case "flex" :
-					case "flex-group" :
-					case "ordinal-group" :
-						// Multiple selectors?
-						multiSelectors = selector.split(selectorSplit);
-
-						forEach(multiSelectors, function (i, multi) {
-							multi = trim(multi);
-							
-							if (multi) {
-								if (!uniqueChildren[multi]) {
-									updatedRule = {};
-
-									// Each selector gets its own call
-									forEach(rule, function (key) {
-										updatedRule[key] = rule[key];
-									});
-
-									updatedRule.selector = multi;
-
-									// Easy access for later
-									updatedRule[shortProp] = value;
-
-									uniqueChildren[multi] = updatedRule;
-								} else {
-									// Easy access for later
-									uniqueChildren[multi][shortProp] = value;
-								}
-
+						switch (shortProp) {
+						case "display" :
+							if (value === "box") {
+								addRules(selector, rule);
 							}
-						});
-						break;
+							break;
+
+						case "orient" :
+						case "align" :
+						case "direction" :
+						case "pack" :
+							addRules(selector, rule);
+							break;
+
+						case "flex" :
+						case "flex-group" :
+						case "ordinal-group" :
+							addRules(selector, rule, shortProp, value);
+							break;
+						}
 					}
-				}
+				});
 			});
 		});
 		
-		forEach(uniqueBoxes, function (key, node) {
-			FLEX_BOXES.push(node);
+		forEach(uniqueBoxes, function (key, box) {
+			FLEX_BOXES.push(box);
 		});
 		
-		forEach(uniqueChildren, function (key, node) {
-			POSSIBLE_FLEX_CHILDREN.push(node);
+		forEach(uniqueChildren, function (key, child) {
+			POSSIBLE_FLEX_CHILDREN.push(child);
 		});
 		
 		return {
