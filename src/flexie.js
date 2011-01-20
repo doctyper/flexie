@@ -1255,7 +1255,7 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxOrient : function (target, children, params) {
-				var self = this, wide, high, floatType,
+				var self = this, wide, high,
 				    targetPadding, firstComputedMargin, combinedMargin;
 
 				wide = {
@@ -1278,8 +1278,7 @@ var Flexie = (function (win, doc) {
 
 				if (!SUPPORT) {
 					forEach(children, function (i, kid) {
-						floatType = (BROWSER.IE >= 9) ? "cssFloat" : "styleFloat";
-						kid.style[floatType] = LEFT;
+						kid.style[(BROWSER.IE >= 9) ? "cssFloat" : "styleFloat"] = LEFT;
 
 						if (params.orient === VERTICAL) {
 							kid.style.clear = LEFT;
@@ -1450,7 +1449,7 @@ var Flexie = (function (win, doc) {
 			},
 			
 			boxAlign : function (target, children, params) {
-				var self = this, floatType,
+				var self = this,
 				    targetDimension, kidDimension,
 				    flexCheck = parentFlex(target);
 				
