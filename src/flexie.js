@@ -338,16 +338,23 @@ var Flexie = (function (win, doc) {
 		};
 		
 		addRules = function (selector, rules, prop, value) {
-			var box = (prop && value) ? uniqueChildren[selector] : uniqueBoxes[selector];
+			var box = (prop && value) ? uniqueChildren[selector] : uniqueBoxes[selector],
+			    exists;
 			
 			if (box) {
 				forEach(rules.properties, function (i, rule) {
 					forEach(box.properties, function (j, x) {
 						if (rule.property === x.property) {
-							box.properties[j] = rules.properties[i];
+							exists = j;
 							return false;
 						}
 					});
+					
+					if (exists) {
+						box.properties[exists] = rule;
+					} else {
+						box.properties.push(rule);
+					}
 				});
 				
 				if (prop && value) {
