@@ -417,6 +417,7 @@ var Flexie = (function (win, doc) {
 		forEach(possibleChildren, function (i, child) {
 			if (child.selector) {
 				caller = lib(child.selector);
+				caller = caller[0] ? caller : [caller];
 
 				if (caller[0]) {
 					forEach(caller, function (i, node) {
