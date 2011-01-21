@@ -349,6 +349,10 @@ var Flexie = (function (win, doc) {
 						}
 					});
 				});
+				
+				if (prop && value) {
+					box[prop] = value;
+				}
 			} else {
 				if (prop && value) {
 					uniqueChildren[selector] = createUniqueObject(selector, rules, prop, value);
