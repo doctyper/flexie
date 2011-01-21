@@ -1249,6 +1249,7 @@ var Flexie = (function (win, doc) {
 									stylesheet.addRule(selector, paddingFix + "display:inline-block;", 0);
 								}
 							} else {
+								stylesheet.addRule(selector, paddingFix, 0);
 								stylesheet.addRule(selector + ":after", generatedRules, 0);
 							}
 						} else if (stylesheet.insertRule) {
