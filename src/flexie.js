@@ -1225,12 +1225,13 @@ var Flexie = (function (win, doc) {
 					paddingFix = "padding-top:" + (getComputedStyle(target, PADDING_TOP, NULL) || "0.1px;");
 				
 					generatedRules = [
-						"content:' '",
+						"content:'\0020'",
 						"display:block",
 						"margin:0",
 						"padding:0",
 						"border:0",
-						"height:0",
+						"width:0",
+						"height:1px",
 						"background:none",
 						"clear:both",
 						"font-size:0",
