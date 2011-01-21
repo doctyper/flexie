@@ -49,6 +49,7 @@ var Flexie = (function (win, doc) {
 	    // Each Flexie-modified DOM node gets a unique identifier
 	    FLX_DOM_ID = 0,
 	    FLX_DOM_ATTR = "data-flexie-id",
+	    FLX_PARENT_ATTR = "data-flexie-parent",
 	    
 	    // Store support for flexbox
 	    SUPPORT,
@@ -484,8 +485,7 @@ var Flexie = (function (win, doc) {
 		    lib, caller, children,
 		    box, params, flexboxes = {},
 		    match, childMatch, nestedFlexboxes,
-		    flexieParentAttribute = "data-flexie-parent",
-		    flexieParentSelector = "[" + flexieParentAttribute + "]";
+		    flexieParentSelector = "[" + FLX_PARENT_ATTR + "]";
 		
 		// No boxflex? No dice.
 		if (!flexers) {
@@ -605,7 +605,7 @@ var Flexie = (function (win, doc) {
 						});
 					} else {
 						flexboxes[target.FLX_DOM_ID] = getParams(params);
-						flexboxes[target.FLX_DOM_ID].target.setAttribute(flexieParentAttribute, TRUE);
+						flexboxes[target.FLX_DOM_ID].target.setAttribute(FLX_PARENT_ATTR, TRUE);
 					}
 				}
 			});
@@ -1023,8 +1023,7 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function ensureStructuralIntegrity (params, instance) {
-		var target = params.target,
-		    flexieParentAttribute = "data-flexie-parent";
+		var target = params.target;
 		
 		if (!target.FLX_DOM_ID) {
 			target.FLX_DOM_ID = target.FLX_DOM_ID || (++FLX_DOM_ID);
@@ -1036,7 +1035,7 @@ var Flexie = (function (win, doc) {
 		
 		if (!params.selector) {
 			params.selector = buildSelector(target);
-			target.setAttribute(flexieParentAttribute, TRUE);
+			target.setAttribute(FLX_PARENT_ATTR, TRUE);
 		}
 		
 		if (!params.properties) {
@@ -1048,7 +1047,7 @@ var Flexie = (function (win, doc) {
 		}
 		
 		if (!params.nested) {
-			params.nested = params.selector + " [" + flexieParentAttribute + "]";
+			params.nested = params.selector + " [" + FLX_PARENT_ATTR + "]";
 		}
 		
 		params.target = target;
