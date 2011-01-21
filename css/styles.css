@@ -166,3 +166,44 @@ a:hover {
 #examples li li li:last-child {
 	font-weight: normal;
 }
+
+#code {
+	margin: 10px;
+	padding: 5px;
+	display: block;
+	top: 0;
+	left: 0;
+	position: absolute;
+	text-align: left;
+	text-shadow: none;
+	border: 1px solid #aaa;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: #999 url("/images/bg-body-texture.jpg") center;
+}
+
+#code a {
+	color: #6a6a6a;
+	background: none;
+}
+
+#code pre {
+	margin-top: 5px;
+	padding: 20px;
+	display: none;
+	background: #555;
+	background: rgba(0, 0, 0, 0.6);
+	font-family: "Monaco", "Courier New", Courier, monospace;
+	line-height: 13px;
+}
+
+#code:hover {
+	-webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
+	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+#code:hover pre {
+	display: block;
+}

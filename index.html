@@ -117,6 +117,39 @@
 		<footer>
 			<p><a href="http://twitter.com/doctyper">Richard Herrera</a></p>
 			<p>Licensed under the <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>.</p>
+			
+			<div id="code">
+				<a href="css/flex.css">See the code driving the site</a>
+				<pre><code>body {
+	display: -webkit-box;
+	display: -moz-box;
+	display: box;
+
+	-webkit-box-orient: vertical;
+	-moz-box-orient: vertical;
+	box-orient: vertical;
+
+	-webkit-box-pack: end;
+	-moz-box-pack: end;
+	box-pack: end;
+}
+
+#examples .example-list {
+	display: -webkit-box;
+	display: -moz-box;
+	display: box;
+
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	box-align: center;
+}
+
+#examples .example-list .example-group {
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	box-flex: 1;
+}</code></pre>
+			</div>
 		</footer>
 		
 		<!-- Flexie -->
