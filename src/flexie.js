@@ -576,7 +576,7 @@ var Flexie = (function (win, doc) {
 							switch (key) {
 							case "selector" :
 								if (value && !(new RegExp(value).test(match[key]))) {
-									match[key] += value;
+									match[key] += ", " + value;
 								}
 								break;
 							
@@ -1216,7 +1216,7 @@ var Flexie = (function (win, doc) {
 				// We'll be using floats, so the easiest way to retain layout
 				// is the dreaded clear fix:
 				if (!params.cleared) {
-					selector = params.selector;
+					selectors = params.selector.split(/\s?,\s?/);
 					stylesheet = doc.styleSheets;
 					stylesheet = stylesheet[stylesheet.length - 1];
 					paddingFix = "padding-top:" + (getComputedStyle(target, PADDING_TOP, NULL) || "0.1px;");
@@ -1234,23 +1234,25 @@ var Flexie = (function (win, doc) {
 						"visibility:hidden"
 					].join(";");
 				
-					if (stylesheet.addRule) {
-						if (BROWSER.IE < 8) {
-							target.style.zoom = "1";
-							
-							if (BROWSER.IE === 6) {
-								stylesheet.addRule(selector.replace(/\>|\+|\~/g, ""), paddingFix + "zoom:1;", 0);
-							} else if (BROWSER.IE === 7) {
-								stylesheet.addRule(selector, paddingFix + "display:inline-block;", 0);
-							}
-						} else {
-							stylesheet.addRule(selector + ":after", generatedRules, 0);
-						}
-					} else if (stylesheet.insertRule) {
-						stylesheet.insertRule(selector + "{" + paddingFix + "}", 0);
-						stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
-					}
+					forEach(selectors, function (i, selector) {
+						if (stylesheet.addRule) {
+							if (BROWSER.IE < 8) {
+								target.style.zoom = "1";
 
+								if (BROWSER.IE === 6) {
+									stylesheet.addRule(selector.replace(/\>|\+|\~/g, ""), paddingFix + "zoom:1;", 0);
+								} else if (BROWSER.IE === 7) {
+									stylesheet.addRule(selector, paddingFix + "display:inline-block;", 0);
+								}
+							} else {
+								stylesheet.addRule(selector + ":after", generatedRules, 0);
+							}
+						} else if (stylesheet.insertRule) {
+							stylesheet.insertRule(selector + "{" + paddingFix + "}", 0);
+							stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
+						}
+					});
+					
 					params.cleared = TRUE;
 				}
 			},
