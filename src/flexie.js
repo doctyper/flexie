@@ -260,8 +260,12 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function setFlexieId (node) {
-		node.FLX_DOM_ID = node.FLX_DOM_ID || (++FLX_DOM_ID);
-		node.setAttribute(FLX_DOM_ATTR, node.FLX_DOM_ID);
+		if (!node.FLX_DOM_ID) {
+			FLX_DOM_ID = (FLX_DOM_ID + 1);
+			
+			node.FLX_DOM_ID = FLX_DOM_ID;
+			node.setAttribute(FLX_DOM_ATTR, node.FLX_DOM_ID);
+		}
 	}
 	
 	function buildSelectorTree(text) {
