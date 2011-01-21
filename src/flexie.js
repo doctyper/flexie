@@ -1448,12 +1448,6 @@ var Flexie = (function (win, doc) {
 									x.match.setAttribute("data-specificity", x.flexSpecificity);
 									
 									trueDim = getComputedStyle(x.match, self.props.dim, TRUE);
-									
-									if (params.orient === HORIZONTAL) {
-										trueDim += getComputedStyle(target, self.props.pos, TRUE);
-										trueDim += getComputedStyle(target, self.props.opp, TRUE);
-									}
-									
 									newDimension = Math.max(0, (trueDim + widthRation));
 									appendPixelValue(x.match, self.props.dim, newDimension);
 								}
