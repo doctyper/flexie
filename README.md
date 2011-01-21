@@ -36,14 +36,15 @@ No setup on your end, just stick Flexie in your markup after your [selector engi
 See the [things you need to know](http://selectivizr.com/#things)
 
 ## Caveats
-For older browsers (IE < 8), please remember that some advanced selectors (child, adjacent, pseudo-selectors) will fail. Flexie does not attempt to bridge this gap, so if you must support legacy browsers, class names and ID selectors are your best bets.
+* For older browsers (IE < 8), please remember that some advanced selectors (child, adjacent, pseudo-selectors) will fail. Flexie does not attempt to bridge this gap, so if you must support legacy browsers, class names and ID selectors are your best bets.
 
-As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. <strike>Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.</strike>
+* As of FF 4.0 / Chrome 7 / Safari 5, Gecko and Webkit differ slightly in their flexbox implementations. <strike>Of note is their default values. Webkit will default to `box-align: start`, while Gecko defaults to the spec-defined `box-align: stretch`. Make sure your flexbox CSS works on both these browsers before adding Flexie.</strike>
+	* As of version 0.7, Flexie normalizes the `box-align` property across Webkit browsers.
+	* As of version 0.8, Flexie normalizes the `box-pack` property in Gecko.
 
-* As of version 0.7, Flexie normalizes the `box-align` property across Webkit browsers.
-* As of version 0.8, Flexie normalizes the `box-pack` property in Gecko.
+* Be careful of pseudo-selectors (i.e., `:nth-child`, `:first-child`). While native flexbox does not modify the DOM, Flexie must. Thus, your CSS properties might not apply as intended. For example, if you use a combination of `box-direction: reverse` and a `:first-child` selector, that selector will target the wrong element. And if you followed all of that, congratulations.
 
-Be careful of pseudo-selectors (i.e., `:nth-child`, `:first-child`). While native flexbox does not modify the DOM, Flexie must. Thus, your CSS properties might not apply as intended. For example, if you use a combination of `box-direction: reverse` and a `:first-child` selector, that selector will target the wrong element. And if you followed all of that, congratulations.
+* There may be cases where the floats used to mimic the flexbox layout drop in Internet Explorer browsers. If possible, you can try the [overflow fix](http://css-tricks.com/all-about-floats/) to snap these into place _(Flexie assumes it cannot use this as a workaround due to the impact this may have in your layouts)_.
 
 ## Asynchronous API
 You can run Flexie asynchronously in case you cannot purely on style sheets. All parameters are optional, unless otherwise stated:
