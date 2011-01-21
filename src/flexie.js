@@ -1486,7 +1486,7 @@ var Flexie = (function (win, doc) {
 				    kidDimension,
 				    flexCheck = parentFlex(target);
 				
-				if (!SUPPORT && !flexCheck.flex) {
+				if (!SUPPORT && !flexCheck.flex && params.orient === VERTICAL) {
 					if (!dimensionValues(target, self.anti.dim)) {
 						appendPixelValue(target, self.anti.dim, NULL);
 					}
@@ -1547,7 +1547,7 @@ var Flexie = (function (win, doc) {
 
 							kidDimension -= getComputedStyle(kid, self.anti.opp, TRUE);
 							kidDimension = Math.max(0, kidDimension);
-						
+							
 							appendPixelValue(kid, self.anti.dim, kidDimension);
 							break;
 						}
