@@ -1206,7 +1206,7 @@ var Flexie = (function (win, doc) {
 	
 	// Flexie box constructor
 	FLX.box = function (params) {
-		this.renderModel(params);
+		return this.renderModel(params);
 	};
 	
 	FLX.box.prototype = {
@@ -1691,7 +1691,7 @@ var Flexie = (function (win, doc) {
 			
 			// Sanity check.
 			if (!target.length && !nodes) {
-				return;
+				return false;
 			}
 			
 			params = ensureStructuralIntegrity(params, this);
@@ -1704,6 +1704,8 @@ var Flexie = (function (win, doc) {
 			win.setTimeout(function () {
 				self.trackDOM(params);
 			}, 0);
+			
+			return self;
 		},
 		
 		bubbleUp : function (target, params) {
