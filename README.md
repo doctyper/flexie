@@ -28,7 +28,7 @@ I *really* wanted to use the CSS3 Flexible Box Model.
 ## How?
 It works like [Selectivizr](http://selectivizr.com). In fact, it uses Selectivizr's engine to traverse your style sheets and looks for `display: box` elements. After that, it looks for any of the currently supported properties.
 
-Note: Flexie looks for non-namespaced properties. For example, it will ignore `-moz-box-pack`, but not `box-pack`. For best results, make sure to use a non-namespaced property. But you were already doing that to future-proof your code, weren't you?
+Note: Flexie looks for non-vendor-prefixed properties. For example, it will ignore `-moz-box-pack`, but not `box-pack`. For best results, make sure to use a non-vendor-prefixed property _in addition to_ your prefixed properties. But you were already doing that to future-proof your code, weren't you?
 
 No setup on your end, just stick Flexie in your markup after your [selector engine of choice](http://selectivizr.com/#things).
 
