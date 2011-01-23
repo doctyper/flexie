@@ -146,7 +146,7 @@ var Flexie = (function (win, doc) {
 	
 	// Via jQuery 1.4.3
 	// http://github.com/jquery/jquery/blob/master/src/core.js#L593
-	function forEach(object, callback, reverse) {
+	function forEach(object, callback) {
 		var name, i = 0, value,
 			length = object ? object.length : UNDEFINED,
 			isObj = length === UNDEFINED;
@@ -369,7 +369,7 @@ var Flexie = (function (win, doc) {
 				if (prop && value) {
 					uniqueChildren[selector] = createUniqueObject(selector, rules, prop, value);
 				} else {
-					uniqueBoxes[selector] = createUniqueObject(selector, rules);
+					uniqueBoxes[selector] = createUniqueObject(selector, rules, NULL, NULL);
 				}
 			}
 		};
@@ -391,7 +391,7 @@ var Flexie = (function (win, doc) {
 						switch (shortProp) {
 						case "display" :
 							if (value === "box") {
-								addRules(selector, rule);
+								addRules(selector, rule, NULL, NULL);
 							}
 							break;
 
@@ -399,7 +399,7 @@ var Flexie = (function (win, doc) {
 						case "align" :
 						case "direction" :
 						case "pack" :
-							addRules(selector, rule);
+							addRules(selector, rule, NULL, NULL);
 							break;
 
 						case "flex" :
@@ -762,7 +762,7 @@ var Flexie = (function (win, doc) {
 		});
 	}
 	
-	function calculateSpecificity (selector, index) {
+	function calculateSpecificity (selector) {
 		var selectorGrid, matrix, total;
 		
 		selectorGrid = selector.replace(CSS_SELECTOR, function (e, f) {
@@ -776,7 +776,7 @@ var Flexie = (function (win, doc) {
 		};
 		
 		// Start with rule index position
-		total = index || 0;
+		total = 0;
 		
 		// Add each selector value to total.
 		forEach(selectorGrid, function (i, chunk) {
@@ -915,7 +915,7 @@ var Flexie = (function (win, doc) {
 				currentHeight = win[innerHeight] || docEl[innerHeight] || docEl[clientHeight] || docBody[clientHeight];
 				
 				if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
-					FLX.updateInstance();
+					FLX.updateInstance(NULL, NULL);
 					
 					storedWidth = currentWidth;
 					storedHeight = currentHeight;
@@ -977,7 +977,7 @@ var Flexie = (function (win, doc) {
 		
 		while (parent.FLX_DOM_ID) {
 			obj = FLEX_BOXES[parent.FLX_DOM_ID];
-			matrix = createMatchMatrix(obj.children, sanitizeChildren(parent, parent.childNodes));
+			matrix = createMatchMatrix(obj.children, sanitizeChildren(parent, parent.childNodes), NULL);
 			
 			totalFlex += matrix.total;
 			isNested = TRUE;
@@ -1468,7 +1468,7 @@ var Flexie = (function (win, doc) {
 					}
 				};
 
-				matrix = createMatchMatrix(params.children, children);
+				matrix = createMatchMatrix(params.children, children, NULL);
 
 				if (matrix.total) {
 					params.hasFlex = TRUE;
@@ -1642,7 +1642,7 @@ var Flexie = (function (win, doc) {
 			}
 			
 			if (SUPPORT && SUPPORT.partialSupport) {
-				matrix = createMatchMatrix(params.children, children);
+				matrix = createMatchMatrix(params.children, children, NULL);
 				flexCheck = parentFlex(target);
 				children = sanitizeChildren(target, target.childNodes);
 				
@@ -1785,7 +1785,7 @@ var Flexie = (function (win, doc) {
 		dummy.style.width = dummy.style.height = height + "px";
 		dummy.innerHTML = (child + child + child);
 
-		appendProperty(dummy, "display", "box");
+		appendProperty(dummy, "display", "box", NULL);
 		appendProperty(dummy, "box-align", "stretch", TRUE);
 		appendProperty(dummy, "box-pack", "justify", TRUE);
 
