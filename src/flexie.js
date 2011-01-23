@@ -1648,12 +1648,12 @@ var Flexie = (function (win, doc) {
 				
 				self.properties.boxOrient.call(self, target, children, params);
 				
-				if ((!matrix.total || !LIBRARY(params.nested).length) && (!flexCheck.nested || !flexCheck.flex)) {
-					if ((params.align === "stretch") && !SUPPORT.boxAlignStretch) {
+				if (!matrix.total || !LIBRARY(params.nested).length) {
+					if ((params.align === "stretch") && !SUPPORT.boxAlignStretch && (!flexCheck.nested || !flexCheck.flex)) {
 						self.properties.boxAlign.call(self, target, children, params);
 					}
 
-					if ((params.pack === "justify") && !SUPPORT.boxPackJustify) {
+					if ((params.pack === "justify") && !SUPPORT.boxPackJustify && !matrix.total) {
 						self.properties.boxPack.call(self, target, children, params);
 					}
 				}
