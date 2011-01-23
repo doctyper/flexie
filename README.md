@@ -102,7 +102,7 @@ _Note: Calling this method without parameters will destroy all instances._
 *	**target**
 	(optional) The flexbox instance to retrieve.
 	
-### Flexie.flexBoxSupported
+### Flexie.flexboxSupported
 An exposed object detailing the level of flexbox support. Returns false for no support.
 
 ## Acknowledgements
