@@ -1245,6 +1245,7 @@ var Flexie = (function (win, doc) {
 				var selector, stylesheet, paddingFix, generatedRules;
 
 				target.style.display = "block";
+				target.style.overflow = "hidden";
 
 				// We'll be using floats, so the easiest way to retain layout
 				// is the dreaded clear fix:
@@ -1255,17 +1256,10 @@ var Flexie = (function (win, doc) {
 					paddingFix = "padding-top:" + (getComputedStyle(target, PADDING_TOP, NULL) || "0.1px;");
 				
 					generatedRules = [
-						"content:' '",
-						"display:block",
-						"margin:0",
-						"padding:0",
-						"border:0",
-						"width:" + (BROWSER.IE ? "0" : "auto"),
-						"height:" + (BROWSER.IE ? "1px" : "0"),
-						"background:none",
-						"clear:both",
-						"font-size:0",
-						"visibility:hidden"
+						"content: '.'",
+						"display: block",
+						"height: 0",
+						"overflow: hidden"
 					].join(";");
 				
 					forEach(selectors, function (i, selector) {
@@ -1280,11 +1274,12 @@ var Flexie = (function (win, doc) {
 								}
 							} else {
 								stylesheet.addRule(selector, paddingFix, 0);
-								stylesheet.addRule(selector + ":after", generatedRules, 0);
+								stylesheet.addRule(selector + ":before", generatedRules, 0);
+								stylesheet.addRule(selector + ":after", generatedRules + ";clear:both;", 0);
 							}
 						} else if (stylesheet.insertRule) {
 							stylesheet.insertRule(selector + "{" + paddingFix + "}", 0);
-							stylesheet.insertRule(selector + ":after{" + generatedRules + "}", 0);
+							stylesheet.insertRule(selector + ":after{" + generatedRules + ";clear:both;}", 0);
 						}
 					});
 					
@@ -1661,6 +1656,8 @@ var Flexie = (function (win, doc) {
 				if ((params.pack === "end" || params.pack === "justify") && (params.orient === HORIZONTAL || params.orient === INLINE_AXIS)) {
 					floatDropFix(target, params, self);
 				}
+				
+				target.style.overflow = "";
 			}
 		},
 
