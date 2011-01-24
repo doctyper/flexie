@@ -915,16 +915,17 @@ var Flexie = (function (win, doc) {
 		// Test offset values. If different, let's bring the widow back
 		var offsetProp = "offsetTop",
 		    children = params.nodes,
-		    calcOffset;
+		    calcOffset, val = true;
 		
 		calcOffset = function (kid) {
 			return kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE);
 		};
 		
-		while (calcOffset(children[0]) !== calcOffset(children[children.length - 1])) {
+		while (val && calcOffset(children[0]) !== calcOffset(children[children.length - 1])) {
 			forEach(children, function (i, kid) {
 				if (!params.hasFlex || kid.getAttribute("data-flex")) {
-					kid.style[instance.props.dim] = getComputedStyle(kid, instance.props.dim, TRUE) - 1;
+					val = Math.max(0, getComputedStyle(kid, instance.props.dim, TRUE) - 1);
+					kid.style[instance.props.dim] = val;
 				}
 			});
 		}
