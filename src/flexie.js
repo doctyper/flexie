@@ -244,36 +244,34 @@ var Flexie = (function (win, doc) {
 	}
 	
 	function attachLoadMethod(handler) {
-		// compatiable selector engines in order of CSS3 support
-		var selectorEngines = {
-			"DOMAssistant" : ["*.DOMReady", "%"],
-			"Prototype" : ["document.observe", "'dom:loaded', %"],
-			"YAHOO" : ["*.util.Event", "onDOMReady", "%"],
-			"MooTools" : ["window.addEvent", "'domready', %"],
-			"jQuery" : ["*(document).ready", "%"],
-			"dojo" : ["*.addOnLoad", "%"]
-		}, method, current;
-		
-		current = selectorEngines[ENGINE];
-		
-		if (current && !method) {
-			method = eval(current[0].replace("*", ENGINE));
-			
-			if (method && current[2]) {
-				method = method[current[1]];
-			}
-			
-			// This works in IE9 Preview 6, but throws an error anyway(?)
-			try {
-				eval(method + "(" + current[current.length - 1].replace("%", handler) + ")");
-			} catch (e) {}
+		if (!ENGINE) {
+			LIBRARY = determineSelectorMethod();
 		}
 		
-		addEvent("load", function () {
-			if (!method && handler) {
-				handler();
+		// compatiable selector engines in order of CSS3 support
+		var engines = ENGINES,
+		    method, caller, args;
+		
+		forEach(engines, function (engine, obj) {
+			if (win[engine] && !method && obj.m) {
+				method = eval(obj.m.replace("*", engine));
+				caller = obj.c ? eval(obj.c.replace("*", engine)) : win;
+				args = [];
+				
+				if (method && caller) {
+					if (obj.p) {
+						args.push(obj.p);
+					}
+					args.push(handler);
+					method.apply(caller, args);
+					return false;
+				}
 			}
 		});
+		
+		if (!method) {
+			addEvent("load", handler);
+		}
 	}
 	
 	function buildSelector (node) {
@@ -1855,7 +1853,6 @@ var Flexie = (function (win, doc) {
 	
 	FLX.init = function () {
 		FLX.flexboxSupported = SUPPORT = FLX.flexboxSupport();
-		LIBRARY = determineSelectorMethod();
 
 		if ((!SUPPORT || SUPPORT.partialSupport) && LIBRARY) {
 			selectivizrEngine();
