@@ -46,6 +46,8 @@ See the [things you need to know](http://selectivizr.com/#things)
 
 * There may be cases where the floats used to mimic the flexbox layout drop in Internet Explorer browsers. If possible, you can try the [overflow fix](http://css-tricks.com/all-about-floats/) to snap these into place _(Flexie assumes it cannot use this as a workaround due to the impact this may have in your layouts)_.
 
+* As of YUI 2.8.2r1, YUI's selector engine does not recognize dashed attributes (i.e. [data-name="foo"]). Flexie uses several [data- attributes](http://ejohn.org/blog/html-5-data-attributes/) as element flags. A bug report [has been filed](http://yuilibrary.com/projects/yui2/ticket/2529254) about this issue, but in the meantime YUI remains incompatible with Flexie.
+
 ## Asynchronous API
 You can run Flexie asynchronously in case you cannot purely on style sheets. All parameters are optional, unless otherwise stated:
 
