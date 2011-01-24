@@ -1,5 +1,5 @@
-Cross-browser support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/). Check out [The Playground](http://doctyper.github.com/flexie/playground/) to see it in action.
-# Flexie v0.9 [![](http://stillmaintained.com/doctyper/flexie.png)](http://stillmaintained.com/doctyper/flexie)
+Cross-browser support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/). Check out [The Playground](http://flexiejs.com/playground/) to see it in action.
+# Flexie v1.0 [![](http://stillmaintained.com/doctyper/flexie.png)](http://stillmaintained.com/doctyper/flexie)
 
 ## Browser Support
 * IE 6-9

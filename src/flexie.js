@@ -2,7 +2,7 @@
 File: flexie.js
 
 About: Version
-	0.9
+	1.0
 
 Project: Flexie
 
@@ -1863,7 +1863,7 @@ var Flexie = (function (win, doc) {
 	};
 	
 	// Flexie Version
-	FLX.version = 0.9;
+	FLX.version = 1.0;
 
 	// Load when the DOM is ready
 	attachLoadMethod(FLX.init);
