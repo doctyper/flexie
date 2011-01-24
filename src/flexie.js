@@ -124,6 +124,8 @@ var Flexie = (function (win, doc) {
 	    BORDER_TOP = "borderTopWidth",
 	    HORIZONTAL = "horizontal",
 	    VERTICAL = "vertical",
+	    INLINE_AXIS = "inline-axis",
+	    BLOCK_AXIS = "block-axis",
 	    INHERIT = "inherit",
 	    LEFT = "left",
 		
@@ -1340,7 +1342,7 @@ var Flexie = (function (win, doc) {
 					forEach(children, function (i, kid) {
 						kid.style[(BROWSER.IE >= 9) ? "cssFloat" : "styleFloat"] = LEFT;
 
-						if (params.orient === VERTICAL) {
+						if (params.orient === VERTICAL || params.orient === BLOCK_AXIS) {
 							kid.style.clear = LEFT;
 						}
 						
@@ -1352,7 +1354,7 @@ var Flexie = (function (win, doc) {
 
 				switch (params.orient) {
 				case VERTICAL :
-				case "block-axis":
+				case BLOCK_AXIS:
 					self.props = high;
 					self.anti = wide;
 					break;
@@ -1490,7 +1492,7 @@ var Flexie = (function (win, doc) {
 					
 					// Float drop fix
 					// Test offset values. If different, let's bring the widow back
-					if (params.orient === HORIZONTAL) {
+					if (params.orient === HORIZONTAL || params.orient === INLINE_AXIS) {
 						floatDropFix(target, params, self);
 					}
 				};
@@ -1514,7 +1516,7 @@ var Flexie = (function (win, doc) {
 				    kidDimension,
 				    flexCheck = parentFlex(target);
 				
-				if (!SUPPORT && !flexCheck.flex && params.orient === VERTICAL) {
+				if (!SUPPORT && !flexCheck.flex && (params.orient === VERTICAL || params.orient === BLOCK_AXIS)) {
 					if (!dimensionValues(target, self.anti.dim)) {
 						appendPixelValue(target, self.anti.dim, NULL);
 					}
@@ -1655,7 +1657,7 @@ var Flexie = (function (win, doc) {
 				
 				// Float drop fix
 				// Test offset values. If different, let's bring the widow back
-				if ((params.pack === "end" || params.pack === "justify") && (params.orient === HORIZONTAL)) {
+				if ((params.pack === "end" || params.pack === "justify") && (params.orient === HORIZONTAL || params.orient === INLINE_AXIS)) {
 					floatDropFix(target, params, self);
 				}
 			}
