@@ -18,6 +18,10 @@ body {
 	color: #fefefe;
 	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.8);
 	font-weight: normal;
+	
+	/* IE 8 */
+	overflow-x: hidden;
+	overflow-y: visible;
 }
 
 section, header, footer {
