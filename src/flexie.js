@@ -1245,7 +1245,10 @@ var Flexie = (function (win, doc) {
 				var selector, stylesheet, paddingFix, generatedRules;
 
 				target.style.display = "block";
-				target.style.overflow = "hidden";
+				
+				if (BROWSER.IE === 8) {
+					target.style.overflow = "hidden";
+				}
 
 				// We'll be using floats, so the easiest way to retain layout
 				// is the dreaded clear fix:
