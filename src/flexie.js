@@ -57,6 +57,43 @@ var Flexie = (function (win, doc) {
 	    // Store reference to engine
 	    ENGINE,
 	
+	    ENGINES = {
+			"NW" : {
+				s : "*.Dom.select"
+			},
+			"DOMAssistant" : {
+				s : "*.$",
+				m : "*.DOMReady"
+			},
+			"Prototype" : {
+				s : "$$",
+				m : "document.observe",
+				p : "dom:loaded",
+				c : "document"
+			},
+			"YAHOO" : {
+				s : "*.util.Selector.query",
+				m : "*.util.Event.onDOMReady",
+				c : "*.util.Event"
+			},
+			"MooTools" : {
+				s : "$$",
+				m : "window.addEvent",
+				p : "domready"
+			},
+			"Sizzle" : {
+				s : "*"
+			},
+			"jQuery" : {
+				s : "*",
+				m : "*(document).ready"
+			},
+			"dojo" : {
+				s : "*.query",
+				m : "*.addOnLoad"
+			}
+		},
+	    
 	    // Store reference to library
 	    LIBRARY,
 	    
@@ -167,29 +204,21 @@ var Flexie = (function (win, doc) {
 	}
 	
 	// --[ determineSelectorMethod() ]--------------------------------------
-	// walks through the selectorEngines object testing for an suitable
+	// walks through the engines object testing for an suitable
 	// selector engine.
 	
 	// Moving outside Selectivizr scope because detection is needed before running selectivizrEngine
 	function determineSelectorMethod() {
 		// compatiable selector engines in order of CSS3 support
-		var selectorEngines = {
-			"NW" : "*.Dom.select",
-			"DOMAssistant" : "*.$", 
-			"Prototype" : "$$",
-			"YAHOO" : "*.util.Selector.query",
-			"MooTools" : "$$",
-			"Sizzle" : "*", 
-			"jQuery" : "*",
-			"dojo" : "*.query"
-		}, method;
+		var engines = ENGINES, method;
 		
-		forEach(selectorEngines, function (engine, value) {
+		forEach(engines, function (engine, obj) {
 			if (win[engine] && !method) {
-				method = eval(value.replace("*", engine));
+				method = eval(obj.s.replace("*", engine));
 				
 				if (method) {
 					ENGINE = engine;
+					return false;
 				}
 			}
 		});
