@@ -466,27 +466,29 @@ var Flexie = (function (win, doc) {
 
 				if (caller[0]) {
 					forEach(caller, function (i, node) {
+						if(node.nodeName != undefined) {
 						switch (node.nodeName.toLowerCase()) {
-						case "script" :
-						case "style" :
-						case "link" :
-							break;
+							case "script" :
+							case "style" :
+							case "link" :
+								break;
 
-						default :
-							if (node.parentNode === parent) {
-								// Flag each unique node with FLX_DOM_ID
-								setFlexieId(node);
+							default :
+								if (node.parentNode === parent) {
+									// Flag each unique node with FLX_DOM_ID
+									setFlexieId(node);
 
-								unique = {};
+									unique = {};
 
-								forEach(child, function (key) {
-									unique[key] = child[key];
-								});
+									forEach(child, function (key) {
+										unique[key] = child[key];
+									});
 
-								unique.match = node;
-								matches.push(unique);
+									unique.match = node;
+									matches.push(unique);
+								}
+								break;
 							}
-							break;
 						}
 					});
 				}
