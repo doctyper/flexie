@@ -1,7 +1,7 @@
 require 'rake'
 require 'rake/packagetask'
 
-FLEXIE_VERSION  = "1.0"
+FLEXIE_VERSION  = "1.0.1"
 
 FLEXIE_ROOT     = File.expand_path(File.dirname(__FILE__))
 FLEXIE_SRC_DIR  = File.join(FLEXIE_ROOT, 'src')

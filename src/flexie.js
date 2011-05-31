@@ -1865,7 +1865,7 @@ var Flexie = (function (win, doc) {
 	};
 	
 	// Flexie Version
-	FLX.version = 1.0;
+	FLX.version = "1.0.1";
 
 	// Load when the DOM is ready
 	attachLoadMethod(FLX.init);
