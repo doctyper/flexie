@@ -82,8 +82,16 @@ header a {
 }
 
 #flexie-css-output {
-	margin: 20px auto 0;
+	margin: 20px auto;
 	width: 70%;
+	position: relative;
+}
+
+#flexie-css-output label {
+	top: 10px;
+	right: 10px;
+	font-size: 11px;
+	position: absolute;
 }
 
 #flexie-css-output pre {

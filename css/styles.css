@@ -18,6 +18,10 @@ body {
 	color: #fefefe;
 	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.8);
 	font-weight: normal;
+	
+	/* IE 8 */
+	overflow-x: hidden;
+	overflow-y: visible;
 }
 
 section, header, footer {
@@ -50,10 +54,6 @@ header h1 span {
 	opacity: 0.9;
 }
 
-header h1 span:after {
-	content: ".";
-}
-
 header h1 em {
 	margin-top: -20px;
 	top: 0;
@@ -64,6 +64,17 @@ header h1 em {
 	letter-spacing: -0.02em;
 	color: #2a2a2a;
 	font-style: normal;
+}
+
+header h1 a {
+	padding: 0;
+	color: #ddd;
+	border-bottom: 1px dashed #555;
+}
+
+header h1 a:hover {
+	color: #fff;
+	border-bottom: 0;
 }
 
 h2 {
@@ -99,16 +110,12 @@ a {
 	transition: all 250ms ease-in-out;
 }
 
-img {
+section img {
 	border: 3px solid #8e8e8e;
 }
 
 a:hover {
 	background: #348899;
-}
-
-#playground {
-	padding-top: 50px;
 }
 
 #examples .example-list {
@@ -167,6 +174,12 @@ a:hover {
 	font-weight: normal;
 }
 
+#info a {
+	border-bottom: 1px dashed;
+	border-bottom-color: #fff;
+	border-bottom-color: rgba(255, 255, 255, 0.4);
+}
+
 #code {
 	margin: 10px;
 	padding: 5px;
@@ -174,12 +187,14 @@ a:hover {
 	top: 0;
 	left: 0;
 	position: absolute;
+	z-index: 3;
 	text-align: left;
 	text-shadow: none;
 	border: 1px solid #aaa;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	-webkit-transition: all 350ms ease-in-out;
 	background: #999 url("/images/bg-body-texture.jpg") center;
 }
 
@@ -206,4 +221,12 @@ a:hover {
 
 #code:hover pre {
 	display: block;
+}
+
+#html5-logo {
+	float: left;
+}
+
+#html5-logo a {
+	background: none;
 }
