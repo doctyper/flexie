@@ -922,19 +922,26 @@ var Flexie = (function (win, doc) {
 			    currentWidth, currentHeight,
 			    docBody = doc.body,
 			    docEl = doc.documentElement,
+			    resizeTimer,
 			    innerWidth = "innerWidth", innerHeight = "innerHeight",
 			    clientWidth = "clientWidth", clientHeight = "clientHeight";
 			
 			addEvent("resize", function () {
-				currentWidth = win[innerWidth] || docEl[innerWidth] || docEl[clientWidth] || docBody[clientWidth];
-				currentHeight = win[innerHeight] || docEl[innerHeight] || docEl[clientHeight] || docBody[clientHeight];
-				
-				if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
-					FLX.updateInstance(NULL, NULL);
-					
-					storedWidth = currentWidth;
-					storedHeight = currentHeight;
+				if (resizeTimer) {
+					window.clearTimeout(resizeTimer);
 				}
+
+				resizeTimer = window.setTimeout(function () {
+					currentWidth = win[innerWidth] || docEl[innerWidth] || docEl[clientWidth] || docBody[clientWidth];
+					currentHeight = win[innerHeight] || docEl[innerHeight] || docEl[clientHeight] || docBody[clientHeight];
+					
+					if (storedWidth !== currentWidth || storedHeight !== currentHeight) {
+						FLX.updateInstance(NULL, NULL);
+						
+						storedWidth = currentWidth;
+						storedHeight = currentHeight;
+					}
+				}, 250);
 			});
 			
 			RESIZE_LISTENER = TRUE;
