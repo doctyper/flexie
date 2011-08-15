@@ -313,11 +313,11 @@ var Flexie = (function (win, doc) {
 			if (text) {
 				rule = [text, END_MUSTACHE].join(EMPTY_STRING);
 				
-				match = (/(.*)\{(.*)\}/).exec(rule);
+				match = (/(\@media[^\{]+\{)?(.*)\{(.*)\}/).exec(rule);
 				
-				if (match && match[2]) {
-					selector = match[1];
-					proptext = match[2].split(";");
+				if (match && match[3]) {
+					selector = match[2];
+					proptext = match[3].split(";");
 					properties = [];
 					
 					forEach(proptext, function (i, x) {
