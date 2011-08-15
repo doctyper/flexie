@@ -743,6 +743,10 @@ var Flexie = (function (win, doc) {
 	function getComputedStyle(element, property, returnAsInt) {
 		var value;
 		
+		if (element === UNDEFINED) {
+			return;
+		}
+		
 		if (win.getComputedStyle) {
 			value = win.getComputedStyle(element, NULL)[property];
 		} else {
