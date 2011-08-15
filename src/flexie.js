@@ -916,27 +916,6 @@ var Flexie = (function (win, doc) {
 		};
 	}
 	
-	function floatDropFix(target, params, instance) {
-		// Float drop fix
-		// Test offset values. If different, let's bring the widow back
-		var offsetProp = "offsetTop",
-		    children = params.nodes,
-		    calcOffset, val = true;
-		
-		calcOffset = function (kid) {
-			return kid[offsetProp] - getComputedStyle(kid, instance.anti.pos, TRUE);
-		};
-		
-		while (val && calcOffset(children[0]) !== calcOffset(children[children.length - 1])) {
-			forEach(children, function (i, kid) {
-				if (!params.hasFlex || kid.getAttribute("data-flex")) {
-					val = Math.max(0, getComputedStyle(kid, instance.props.dim, TRUE) - 1);
-					kid.style[instance.props.dim] = val;
-				}
-			});
-		}
-	}
-	
 	function attachResizeListener(construct, params) {
 		if (!RESIZE_LISTENER) {
 			var storedWidth, storedHeight,
@@ -1497,12 +1476,6 @@ var Flexie = (function (win, doc) {
 							}
 						});
 					});
-					
-					// Float drop fix
-					// Test offset values. If different, let's bring the widow back
-					if (params.orient === HORIZONTAL || params.orient === INLINE_AXIS) {
-						floatDropFix(target, params, self);
-					}
 				};
 
 				matrix = createMatchMatrix(params.children, children, NULL);
@@ -1661,12 +1634,6 @@ var Flexie = (function (win, doc) {
 					}
 					
 					break;
-				}
-				
-				// Float drop fix
-				// Test offset values. If different, let's bring the widow back
-				if ((params.pack === "end" || params.pack === "justify") && (params.orient === HORIZONTAL || params.orient === INLINE_AXIS)) {
-					floatDropFix(target, params, self);
 				}
 				
 				target.style.overflow = "";
