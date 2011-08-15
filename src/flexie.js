@@ -1097,16 +1097,16 @@ var Flexie = (function (win, doc) {
 	}
 	
 	selectivizrEngine = (function () {
-		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*/g,
-		    RE_IMPORT = /@import\s*(?:url\(\s*?)?(["'])?(.*?)\1\s*\)?[\w\W]*?;/g,
-		    RE_ASSET_URL = /\surl\((["'])?([^"')]+)\1\)/g,
-		    RE_SELECTOR_GROUP = /(^|\})\s*([^\{]*?[\[:][^\{]+)/g,
+		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*?/g,
+			RE_IMPORT = /@import\s*(?:(?:(?:url\(\s*(['"]?)(.*)\1)\s*\))|(?:(['"])(.*)\3))\s*([^;]*);/g,
+			RE_ASSET_URL = /(behavior\s*?:\s*)?\burl\(\s*(["']?)(?!data:)([^"')]+)\2\s*\)/g,
+			RE_SELECTOR_GROUP = /((?:^|(?:\s*})+)(?:\s*@media[^{]+{)?)\s*([^\{]*?[\[:][^{]+)/g,
 			
-		    // Whitespace normalization regexp's
-		    RE_TIDY_TRAILING_WHITESPACE = /([(\[+~])\s+/g,
-		    RE_TIDY_LEADING_WHITESPACE = /\s+([)\]+~])/g,
-		    RE_TIDY_CONSECUTIVE_WHITESPACE = /\s+/g,
-		    RE_TIDY_TRIM_WHITESPACE = /^\s*((?:[\S\s]*\S)?)\s*$/;
+			// Whitespace normalization regexp's
+			RE_TIDY_TRAILING_WHITESPACE = /([(\[+~])\s+/g,
+			RE_TIDY_LEADING_WHITESPACE = /\s+([)\]+~])/g,
+			RE_TIDY_CONSECUTIVE_WHITESPACE = /\s+/g,
+			RE_TIDY_TRIM_WHITESPACE = /^\s*((?:[\S\s]*\S)?)\s*$/;
 
 		// --[ trim() ]---------------------------------------------------------
 		// removes leading, trailing whitespace from a string
@@ -1202,13 +1202,16 @@ var Flexie = (function (win, doc) {
 		// Downloads the stylesheet specified by the URL, removes it's comments
 		// and recursivly replaces @import rules with their contents, ultimately
 		// returning the full cssText.
-		function parseStyleSheet(url) {
+		function parseStyleSheet( url ) {
 			if (url) {
-				return loadStyleSheet(url).replace(RE_COMMENT, EMPTY_STRING).replace(RE_IMPORT, function( match, quoteChar, importUrl ) {
-					return parseStyleSheet(resolveUrl(importUrl, url));
-				}).replace(RE_ASSET_URL, function( match, quoteChar, assetUrl ) {
+				return loadStyleSheet(url).replace(RE_COMMENT, EMPTY_STRING).
+				replace(RE_IMPORT, function( match, quoteChar, importUrl, quoteChar2, importUrl2, media ) {
+					var cssText = parseStyleSheet(resolveUrl(importUrl || importUrl2, url));
+					return (media) ? "@media " + media + " {" + cssText + "}" : cssText;
+				}).
+				replace(RE_ASSET_URL, function( match, isBehavior, quoteChar, assetUrl ) { 
 					quoteChar = quoteChar || EMPTY_STRING;
-					return " url(" + quoteChar + resolveUrl(assetUrl, url) + quoteChar + ") ";
+					return isBehavior ? match : " url(" + quoteChar + resolveUrl(assetUrl, url, true) + quoteChar + ") "; 
 				});
 			}
 			return EMPTY_STRING;
