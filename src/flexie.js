@@ -1608,7 +1608,7 @@ var Flexie = (function (win, doc) {
 						targetPadding /= 2;
 					}
 					
-					appendPixelValue(children[0], self.props.pos, targetPadding + firstComputedMargin + (totalDimension / 2));
+					appendPixelValue(children[0], self.props.pos, targetPadding + firstComputedMargin + Math.floor(totalDimension / 2));
 					break;
 
 				case "justify" :
