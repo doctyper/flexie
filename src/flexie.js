@@ -1148,7 +1148,14 @@ var Flexie = (function (win, doc) {
 			
 			xhr.open("GET", url, FALSE);
 			xhr.send();
-			return (xhr.status === 200) ? xhr.responseText : EMPTY_STRING;	
+
+			responseText = (xhr.status === 200) ? xhr.responseText : EMPTY_STRING;
+
+			if (url === window.location.href) {
+				responseText = parseInlineStyles(responseText);
+			}
+
+			return responseText;
 		}
 		
 		// --[ resolveUrl() ]---------------------------------------------------
@@ -1202,23 +1209,57 @@ var Flexie = (function (win, doc) {
 			}
 			return EMPTY_STRING;
 		}
+
+		function parseInlineStyles ( text ) {
+			var reg = /<style[^<>]*>([^<>]*)<\/style[\s]?>/img,
+				match = reg.exec(text),
+				stylesheets = [],
+				rawCSSText;
+
+			while (match) {
+				rawCSSText = match[1];
+
+				if (rawCSSText) {
+					stylesheets.push(rawCSSText);
+				}
+
+				match = reg.exec(text);
+			}
+
+			return stylesheets.join("\n\n");
+		}
 		
 		// --[ init() ]---------------------------------------------------------
 		return function () {
 			// honour the <base> tag
-			var url, stylesheet, i, j,
+			var url, stylesheets = [], stylesheet, i, j,
 			    baseTags = doc.getElementsByTagName("BASE"),
 			    baseUrl = (baseTags.length > 0) ? baseTags[0].href : doc.location.href,
+			    externalStyles = doc.styleSheets,
 			    cssText, tree, flexers;
 			
-			for (i = 0, j = doc.styleSheets.length; i < j; i++) {
-				stylesheet = doc.styleSheets[i];
-				
-				if (stylesheet && stylesheet.href !== NULL) {
+			for (i = 0, j = externalStyles.length; i < j; i++) {
+				stylesheet = externalStyles[i];
+
+				if (stylesheet != NULL) {
+					stylesheets.push(stylesheet);
+				}
+			}
+
+			// Add self to test for inline styles
+			stylesheets.push(window.location);
+
+			for (i = 0, j = stylesheets.length; i < j; i++) {
+				stylesheet = stylesheets[i];
+
+				if (stylesheet) {
 					url = resolveUrl(stylesheet.href, baseUrl);
-					
+
 					if (url) {
 						cssText = patchStyleSheet(parseStyleSheet(url));
+					}
+
+					if (cssText) {
 						tree = buildSelectorTree(cssText);
 						flexers = findFlexboxElements(tree);
 					}
