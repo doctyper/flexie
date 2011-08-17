@@ -1086,7 +1086,7 @@ var Flexie = (function (win, doc) {
 		var RE_COMMENT = /(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)\s*?/g,
 			RE_IMPORT = /@import\s*(?:(?:(?:url\(\s*(['"]?)(.*)\1)\s*\))|(?:(['"])(.*)\3))\s*([^;]*);/g,
 			RE_ASSET_URL = /(behavior\s*?:\s*)?\burl\(\s*(["']?)(?!data:)([^"')]+)\2\s*\)/g,
-			RE_SELECTOR_GROUP = /((?:^|(?:\s*})+)(?:\s*@media[^{]+{)?)\s*([^\{]*?[\[:][^{]+)/g,
+			RE_SELECTOR_GROUP = /((?:^|(?:\s*\})+)(?:\s*@media[^\{]+\{)?)\s*([^\{]*?[\[:][^{]+)/g,
 			
 			// Whitespace normalization regexp's
 			RE_TIDY_TRAILING_WHITESPACE = /([(\[+~])\s+/g,
@@ -1141,10 +1141,30 @@ var Flexie = (function (win, doc) {
 				return NULL;
 			}
 		}
+
+		function parseInlineStyles ( text ) {
+			var reg = /<style[^<>]*>([^<>]*)<\/style[\s]?>/img,
+				match = reg.exec(text),
+				stylesheets = [],
+				rawCSSText;
+
+			while (match) {
+				rawCSSText = match[1];
+
+				if (rawCSSText) {
+					stylesheets.push(rawCSSText);
+				}
+
+				match = reg.exec(text);
+			}
+
+			return stylesheets.join("\n\n");
+		}
 		
 		// --[ loadStyleSheet() ]-----------------------------------------------
 		function loadStyleSheet(url) {
-			var xhr = getXHRObject();
+			var xhr = getXHRObject(),
+				responseText;
 			
 			xhr.open("GET", url, FALSE);
 			xhr.send();
@@ -1209,25 +1229,6 @@ var Flexie = (function (win, doc) {
 			}
 			return EMPTY_STRING;
 		}
-
-		function parseInlineStyles ( text ) {
-			var reg = /<style[^<>]*>([^<>]*)<\/style[\s]?>/img,
-				match = reg.exec(text),
-				stylesheets = [],
-				rawCSSText;
-
-			while (match) {
-				rawCSSText = match[1];
-
-				if (rawCSSText) {
-					stylesheets.push(rawCSSText);
-				}
-
-				match = reg.exec(text);
-			}
-
-			return stylesheets.join("\n\n");
-		}
 		
 		// --[ init() ]---------------------------------------------------------
 		return function () {
@@ -1278,7 +1279,7 @@ var Flexie = (function (win, doc) {
 	FLX.box.prototype = {
 		properties : {
 			boxModel : function (target, children, params) {
-				var selector, stylesheet, paddingFix, generatedRules;
+				var selectors, stylesheet, paddingFix, generatedRules;
 
 				target.style.display = "block";
 				
