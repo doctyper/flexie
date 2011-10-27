@@ -1911,16 +1911,19 @@ var Flexie = (function (win, doc) {
 		if (target) {
 			box = FLEX_BOXES[target.FLX_DOM_ID];
 			
-			if (box) {
+			if (box && box._instance) {
 				box._instance.updateModel(box);
-			} else {
+			} else if (!box) {
 				box = new FLX.box(params);
 			}
 		} else {
 			for (key in FLEX_BOXES) {
 				if (FLEX_BOXES.hasOwnProperty(key)) {
 					box = FLEX_BOXES[key];
-					box._instance.updateModel(box);
+
+					if (box && box._instance) {
+						box._instance.updateModel(box);
+					}
 				}
 			}
 		}
