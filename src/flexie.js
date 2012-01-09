@@ -1067,14 +1067,14 @@ var Flexie = (function (win, doc) {
 		    isNested;
 		
 		while (parent.FLX_DOM_ID) {
-			obj = FLEX_BOXES[parent.FLX_DOM_ID];
-			matrix = createMatchMatrix(obj.children, sanitizeChildren(parent, parent.childNodes), NULL);
-			
-			totalFlex += matrix.total;
-			isNested = TRUE;
-			
-			parent = parent.parentNode;
-		}
+            if (FLEX_BOXES[parent.FLX_DOM_ID]) {
+                obj = FLEX_BOXES[parent.FLX_DOM_ID];
+                matrix = createMatchMatrix(obj.children, sanitizeChildren(parent, parent.childNodes), NULL);
+                totalFlex += matrix.total;
+                isNested = TRUE;
+            }
+            parent = parent.parentNode;
+        }
 		
 		return {
 			nested : isNested,
@@ -1895,7 +1895,7 @@ var Flexie = (function (win, doc) {
 			while (parent) {
 				flex = FLEX_BOXES[parent.FLX_DOM_ID];
 				
-				if (flex) {
+				if (flex && flex.nodes) {
 					cleanPositioningProperties(flex.nodes);
 					self.setup(flex.target, flex.nodes, flex);
 				}
