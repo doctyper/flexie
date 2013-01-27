@@ -1,5 +1,5 @@
 Cross-browser support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/). Check out [The Playground](http://flexiejs.com/playground/) to see it in action.
-# Flexie v1.0.3 [![](http://stillmaintained.com/doctyper/flexie.png)](http://stillmaintained.com/doctyper/flexie)
+# Flexie v1.0.4 [![](http://stillmaintained.com/doctyper/flexie.png)](http://stillmaintained.com/doctyper/flexie)
 
 ## Browser Support
 * IE 6-9
@@ -95,7 +95,7 @@ Returns the target instance
 
 *	**target**
 	(optional) The flexbox instance to retrieve.
-	
+
 ### Flexie.destroyInstance(target)
 Destroys the target instance.
 
@@ -103,7 +103,7 @@ _Note: Calling this method without parameters will destroy all instances._
 
 *	**target**
 	(optional) The flexbox instance to retrieve.
-	
+
 ### Flexie.flexboxSupported
 An exposed object detailing the level of flexbox support. Returns false for no support.
 
