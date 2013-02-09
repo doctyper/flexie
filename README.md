@@ -1,3 +1,8 @@
+### Flexie enables the 2009 Flexbox model. You're probably looking for the updated spec. There is currently no polyfill for the new spec.*
+
+__* I've been working on one in my off-time. It's a beast.__
+
+
 Cross-browser support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/). Check out [The Playground](http://flexiejs.com/playground/) to see it in action.
 # Flexie v1.0.3 [![](http://stillmaintained.com/doctyper/flexie.png)](http://stillmaintained.com/doctyper/flexie)
 
