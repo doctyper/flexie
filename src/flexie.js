@@ -1548,11 +1548,13 @@ var Flexie = (function (win, doc) {
 							x = flexers[key][k];
 							max = NULL;
 							
-							for (m = 0, n = x.properties.length; m < n; m++) {
-								rule = x.properties[m];
+							if (x.properties) {
+								for (m = 0, n = x.properties.length; m < n; m++) {
+									rule = x.properties[m];
 
-								if ((RESTRICTIVE_PROPERTIES).test(rule.property)) {
-									max = parseFloat(rule.value);
+									if ((RESTRICTIVE_PROPERTIES).test(rule.property)) {
+										max = parseFloat(rule.value);
+									}
 								}
 							}
 							
