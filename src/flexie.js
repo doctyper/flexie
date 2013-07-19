@@ -1067,14 +1067,14 @@ var Flexie = (function (win, doc) {
 		    isNested;
 		
 		while (parent.FLX_DOM_ID) {
-			obj = FLEX_BOXES[parent.FLX_DOM_ID];
-			matrix = createMatchMatrix(obj.children, sanitizeChildren(parent, parent.childNodes), NULL);
-			
-			totalFlex += matrix.total;
-			isNested = TRUE;
-			
-			parent = parent.parentNode;
-		}
+            if (FLEX_BOXES[parent.FLX_DOM_ID]) {
+                obj = FLEX_BOXES[parent.FLX_DOM_ID];
+                matrix = createMatchMatrix(obj.children, sanitizeChildren(parent, parent.childNodes), NULL);
+                totalFlex += matrix.total;
+                isNested = TRUE;
+            }
+            parent = parent.parentNode;
+        }
 		
 		return {
 			nested : isNested,
@@ -1548,11 +1548,13 @@ var Flexie = (function (win, doc) {
 							x = flexers[key][k];
 							max = NULL;
 							
-							for (m = 0, n = x.properties.length; m < n; m++) {
-								rule = x.properties[m];
+							if (x.properties) {
+								for (m = 0, n = x.properties.length; m < n; m++) {
+									rule = x.properties[m];
 
-								if ((RESTRICTIVE_PROPERTIES).test(rule.property)) {
-									max = parseFloat(rule.value);
+									if ((RESTRICTIVE_PROPERTIES).test(rule.property)) {
+										max = parseFloat(rule.value);
+									}
 								}
 							}
 							
@@ -1895,7 +1897,7 @@ var Flexie = (function (win, doc) {
 			while (parent) {
 				flex = FLEX_BOXES[parent.FLX_DOM_ID];
 				
-				if (flex) {
+				if (flex && flex.nodes) {
 					cleanPositioningProperties(flex.nodes);
 					self.setup(flex.target, flex.nodes, flex);
 				}
@@ -2028,7 +2030,7 @@ var Flexie = (function (win, doc) {
 	FLX.version = "1.0.3";
 
 	// Load when the DOM is ready
-	attachLoadMethod(FLX.init);
+	//attachLoadMethod(FLX.init);
 	
 	return FLX;
 }(this, document));

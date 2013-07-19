@@ -1,0 +1,33 @@
+/* set up stuff: */
+body, html {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font: normal 13px/16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#box-wrap {
+  margin: 0 auto;
+  width: 70%;
+  height: 99%;
+  border: 1px solid #8ec1da;
+  background: #d9ecf5;
+}
+
+#box-wrap-inner div {
+  margin: 10px;
+  background: #f8f8f8;
+  border: 1px solid #8ec1da;
+  text-align: center;
+  line-height: 50px;
+}
+
+/* Sizing of flex-boxes: */
+#box-wrap-inner {
+  height: 100%;
+}
+
+#menu {
+  width: 200px;
+}
