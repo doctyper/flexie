@@ -1329,7 +1329,7 @@ var Flexie = (function (win, doc) {
 			for (i = 0, j = stylesheets.length; i < j; i++) {
 				stylesheet = stylesheets[i];
 
-				if (stylesheet) {
+				if (stylesheet && stylesheet.href !== 'data:text/css,') {
 					url = resolveUrl(stylesheet.href, baseUrl);
 
 					if (url) {
