@@ -1,7 +1,7 @@
 Cross-browser support for the [CSS3 Flexible Box Model](http://www.w3.org/TR/css3-flexbox/). Check out [The Playground](http://flexiejs.com/playground/) to see it in action.
 # Flexie v1.0.4 [![](http://stillmaintained.com/doctyper/flexie.png)](http://stillmaintained.com/doctyper/flexie)
 
-## Latest update
+## Latest updates
 
 * Forked & fixed error resulting from a conflict between adblockers and flexie. 
 
